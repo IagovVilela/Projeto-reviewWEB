@@ -1,0 +1,27 @@
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Node modules (dentro de reviews-platform)
+reviews-platform/node_modules/
+reviews-platform/frontend/node_modules/
+
+# Vendor (dependências PHP)
+reviews-platform/vendor/
+
+# Arquivos de cache
+reviews-platform/bootstrap/cache/*
+reviews-platform/storage/logs/*
+reviews-platform/storage/framework/cache/*
+reviews-platform/storage/framework/sessions/*
+reviews-platform/storage/framework/views/*
+
+# Arquivo de ambiente
+reviews-platform/.env
