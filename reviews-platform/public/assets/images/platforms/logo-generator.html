@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Platform Logo Generator</title>
+    <style>
+        .logo-container {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            margin: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Platform Logos</h1>
+    <div id="logos"></div>
+    
+    <script>
+        const platforms = [
+            { name: 'Tripadvisor', color: '#00AA6C', text: 'TA' },
+            { name: 'Google', color: '#4285F4', text: 'G' },
+            { name: 'Facebook', color: '#1877F2', text: 'f' },
+            { name: 'Yelp', color: '#FF1A1A', text: 'Y' },
+            { name: 'Trustpilot', color: '#00B67A', text: 'T' },
+            { name: 'BBB', color: '#1E3A8A', text: 'BBB' },
+            { name: 'AutoTrader', color: '#FF6B35', text: 'AT' },
+            { name: 'Yell', color: '#FFD700', text: 'Y' }
+        ];
+        
+        const container = document.getElementById('logos');
+        
+        platforms.forEach(platform => {
+            const logo = document.createElement('div');
+            logo.className = 'logo-container';
+            logo.style.backgroundColor = platform.color;
+            logo.textContent = platform.text;
+            logo.title = platform.name;
+            container.appendChild(logo);
+        });
+    </script>
+</body>
+</html>
