@@ -81,6 +81,23 @@
             background-color: rgba(139, 92, 246, 0.1);
         }
         
+        .remove-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            transform: scale(1.05);
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        
+        .preview-container {
+            position: relative;
+        }
+        
+        .preview-container:hover .remove-btn {
+            opacity: 1;
+        }
+        
         .help-link {
             color: #8b5cf6;
             text-decoration: none;
@@ -219,11 +236,11 @@
                         </a>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <button type="submit" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
+                        <button type="button" onclick="submitForm()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
                             <i class="fas fa-upload mr-2"></i>
                             PUBLICAR
                         </button>
-                        <button class="btn-secondary text-white px-4 py-2 rounded-lg font-medium">
+                        <button type="button" onclick="saveForm()" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium">
                             <i class="fas fa-save mr-2"></i>
                             SALVAR
                         </button>
@@ -249,7 +266,7 @@
                     </div>
                     
                     <!-- Form Sections -->
-                    <form method="POST" action="{{ route('companies.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('companies.store') }}" enctype="multipart/form-data" id="companyForm">
                         @csrf
                         <div class="space-y-8">
                         <!-- CREATE BUSINESS Section -->
@@ -373,26 +390,26 @@
                                     <input 
                                         type="url" 
                                         id="businessWebsite" 
-                                        name="businessWebsite"
+                                        name="business_website"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                         placeholder="https://www.suaempresa.com"
                                     >
                                 </div>
                                 
-                                <!-- Contact Number -->
-                                <div>
-                                    <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Número de Contato
-                                        <a href="#" class="help-link ml-1">(Por que precisamos disso?)</a>
-                                    </label>
-                                    <input 
-                                        type="tel" 
-                                        id="contactNumber" 
-                                        name="contactNumber"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                        placeholder="(11) 99999-9999"
-                                    >
-                                </div>
+                                    <!-- Contact Number -->
+                                    <div>
+                                        <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Número de Contato
+                                            <a href="#" class="help-link ml-1">(Por que precisamos disso?)</a>
+                                        </label>
+                                        <input 
+                                            type="tel" 
+                                            id="contactNumber" 
+                                            name="contact_number"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            placeholder="(11) 99999-9999"
+                                        >
+                                    </div>
                                 
                                 <!-- Business Address -->
                                 <div>
@@ -401,7 +418,7 @@
                                     </label>
                                     <textarea 
                                         id="businessAddress" 
-                                        name="businessAddress"
+                                        name="business_address"
                                         rows="3"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                                         placeholder="Rua, número, bairro, cidade, estado, CEP"
@@ -443,7 +460,7 @@
                                 <input 
                                     type="url" 
                                     id="googleBusinessUrl" 
-                                    name="googleBusinessUrl"
+                                    name="google_business_url"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     placeholder="https://g.page/sua-empresa"
                                 >
@@ -465,26 +482,21 @@
                                 <!-- Logo Upload -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Logo
+                                        Logo da Empresa
                                     </label>
-                                    <div class="upload-area rounded-lg p-8 text-center cursor-pointer border-2 border-dashed border-gray-300 hover:border-purple-400 transition-colors" onclick="document.getElementById('logoFile').click()">
-                                        <div id="logoPreview" class="hidden mb-4">
-                                            <img id="logoPreviewImg" class="w-16 h-16 object-cover rounded-lg mx-auto">
+                                    <div class="upload-area rounded-lg p-8 text-center cursor-pointer" onclick="document.getElementById('logoFile').click()">
+                                        <div id="logoPreview" class="hidden mb-4 preview-container">
+                                            <img id="logoPreviewImg" src="" alt="Preview" class="w-20 h-20 object-contain mx-auto rounded-lg border-2 border-gray-200">
+                                            <button type="button" onclick="removeLogo()" class="remove-btn mt-2 text-red-500 hover:text-red-700 text-sm px-3 py-1 rounded-full border border-red-200 hover:border-red-300 hover:bg-red-50">
+                                                <i class="fas fa-trash mr-1"></i> Remover Logo
+                                            </button>
                                         </div>
-                                        <i id="logoIcon" class="fas fa-image text-4xl text-gray-400 mb-4"></i>
-                                        <p id="logoText" class="text-sm text-gray-600 mb-2">Clique para fazer upload do logo</p>
-                                        <p class="text-xs text-gray-500">PNG, JPG até 2MB</p>
+                                        <div id="logoPlaceholder">
+                                            <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
+                                            <p class="text-sm text-gray-600 mb-2">Clique para fazer upload do logo</p>
+                                            <p class="text-xs text-gray-500">PNG, JPG até 2MB</p>
+                                        </div>
                                         <input type="file" id="logoFile" name="logo" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'logo')">
-                                    </div>
-                                    <div id="logoActions" class="hidden mt-3 flex space-x-2">
-                                        <button type="button" onclick="document.getElementById('logoFile').click()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-                                            <i class="fas fa-edit mr-2"></i>
-                                            ALTERAR
-                                        </button>
-                                        <button type="button" onclick="removeFile('logo')" class="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600">
-                                            <i class="fas fa-trash mr-2"></i>
-                                            REMOVER
-                                        </button>
                                     </div>
                                 </div>
                                 
@@ -493,24 +505,19 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">
                                         Imagem de Fundo
                                     </label>
-                                    <div class="upload-area rounded-lg p-8 text-center cursor-pointer border-2 border-dashed border-gray-300 hover:border-purple-400 transition-colors" onclick="document.getElementById('bgFile').click()">
-                                        <div id="bgPreview" class="hidden mb-4">
-                                            <img id="bgPreviewImg" class="w-16 h-16 object-cover rounded-lg mx-auto">
+                                    <div class="upload-area rounded-lg p-8 text-center cursor-pointer" onclick="document.getElementById('bgFile').click()">
+                                        <div id="bgPreview" class="hidden mb-4 preview-container">
+                                            <img id="bgPreviewImg" src="" alt="Preview" class="w-20 h-20 object-cover mx-auto rounded-lg border-2 border-gray-200">
+                                            <button type="button" onclick="removeBackground()" class="remove-btn mt-2 text-red-500 hover:text-red-700 text-sm px-3 py-1 rounded-full border border-red-200 hover:border-red-300 hover:bg-red-50">
+                                                <i class="fas fa-trash mr-1"></i> Remover Fundo
+                                            </button>
                                         </div>
-                                        <i id="bgIcon" class="fas fa-image text-4xl text-gray-400 mb-4"></i>
-                                        <p id="bgText" class="text-sm text-gray-600 mb-2">Clique para fazer upload da imagem</p>
-                                        <p class="text-xs text-gray-500">PNG, JPG até 5MB</p>
+                                        <div id="bgPlaceholder">
+                                            <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
+                                            <p class="text-sm text-gray-600 mb-2">Clique para fazer upload da imagem</p>
+                                            <p class="text-xs text-gray-500">PNG, JPG até 5MB</p>
+                                        </div>
                                         <input type="file" id="bgFile" name="background_image" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'background')">
-                                    </div>
-                                    <div id="bgActions" class="hidden mt-3 flex space-x-2">
-                                        <button type="button" onclick="document.getElementById('bgFile').click()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-                                            <i class="fas fa-edit mr-2"></i>
-                                            ALTERAR
-                                        </button>
-                                        <button type="button" onclick="removeFile('background')" class="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600">
-                                            <i class="fas fa-trash mr-2"></i>
-                                            REMOVER
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -522,6 +529,7 @@
         </div>
     </div>
     
+    <script src="/assets/js/google-reviews-system.js"></script>
     <script>
         // Update star display
         function updateStarDisplay(value) {
@@ -530,60 +538,160 @@
         
         // Handle file upload
         function handleFileUpload(input, type) {
-            console.log('handleFileUpload called with type:', type); // Debug
             const file = input.files[0];
-            console.log('Selected file:', file); // Debug
-            
             if (file) {
                 const uploadArea = input.closest('.upload-area');
                 const preview = document.getElementById(type + 'Preview');
+                const placeholder = document.getElementById(type + 'Placeholder');
                 const previewImg = document.getElementById(type + 'PreviewImg');
-                const icon = document.getElementById(type + 'Icon');
-                const text = document.getElementById(type + 'Text');
-                const actions = document.getElementById(type + 'Actions');
                 
-                console.log('Elements found:', { preview, previewImg, icon, text, actions }); // Debug
-                
-                // Show preview
-                if (preview) preview.classList.remove('hidden');
-                if (icon) icon.classList.add('hidden');
-                if (text) text.classList.add('hidden');
-                if (actions) actions.classList.remove('hidden');
+                // Show preview and hide placeholder
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
                 
                 // Add preview for images
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        if (previewImg) previewImg.src = e.target.result;
+                        previewImg.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
             }
         }
         
-        // Remove file
-        function removeFile(type) {
-            const input = document.getElementById(type + 'File');
-            const preview = document.getElementById(type + 'Preview');
-            const icon = document.getElementById(type + 'Icon');
-            const text = document.getElementById(type + 'Text');
-            const actions = document.getElementById(type + 'Actions');
+        // Remove logo
+        function removeLogo() {
+            const logoFile = document.getElementById('logoFile');
+            const logoPreview = document.getElementById('logoPreview');
+            const logoPlaceholder = document.getElementById('logoPlaceholder');
             
-            // Clear input
-            input.value = '';
+            // Animação de remoção
+            logoPreview.style.transform = 'scale(0.8)';
+            logoPreview.style.opacity = '0.5';
             
-            // Reset display
-            preview.classList.add('hidden');
-            icon.classList.remove('hidden');
-            text.classList.remove('hidden');
-            actions.classList.add('hidden');
+            setTimeout(() => {
+                logoFile.value = '';
+                logoPreview.classList.add('hidden');
+                logoPlaceholder.classList.remove('hidden');
+                
+                // Reset da animação
+                logoPreview.style.transform = 'scale(1)';
+                logoPreview.style.opacity = '1';
+                
+                // Feedback visual
+                showNotification('Logo removido com sucesso!', 'success');
+            }, 200);
+        }
+        
+        // Remove background
+        function removeBackground() {
+            const bgFile = document.getElementById('bgFile');
+            const bgPreview = document.getElementById('bgPreview');
+            const bgPlaceholder = document.getElementById('bgPlaceholder');
             
-            // Reset text content
-            if (type === 'logo') {
-                text.textContent = 'Clique para fazer upload do logo';
-            } else {
-                text.textContent = 'Clique para fazer upload da imagem';
+            // Animação de remoção
+            bgPreview.style.transform = 'scale(0.8)';
+            bgPreview.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                bgFile.value = '';
+                bgPreview.classList.add('hidden');
+                bgPlaceholder.classList.remove('hidden');
+                
+                // Reset da animação
+                bgPreview.style.transform = 'scale(1)';
+                bgPreview.style.opacity = '1';
+                
+                // Feedback visual
+                showNotification('Imagem de fundo removida com sucesso!', 'success');
+            }, 200);
+        }
+        
+        // Submit form function
+        function submitForm() {
+            console.log('submitForm() chamada');
+            
+            const form = document.getElementById('companyForm');
+            
+            if (!form) {
+                console.error('Formulário não encontrado!');
+                showNotification('Erro: Formulário não encontrado!', 'error');
+                return;
             }
+            
+            console.log('Formulário encontrado:', form);
+            
+            const businessName = document.getElementById('businessName').value;
+            const negativeEmail = document.getElementById('negativeEmail').value;
+            
+            console.log('Nome:', businessName);
+            console.log('Email:', negativeEmail);
+            
+            // Validação básica
+            if (!businessName || !negativeEmail) {
+                showNotification('Por favor, preencha pelo menos o nome da empresa e email de feedback negativo.', 'error');
+                return;
+            }
+            
+            console.log('Validação passou, submetendo formulário...');
+            
+            // Mostrar loading
+            const submitBtn = document.querySelector('button[onclick="submitForm()"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> PUBLICANDO...';
+            submitBtn.disabled = true;
+            
+            // Submeter formulário
+            form.submit();
+        }
+        
+        // Save form function (para salvar como rascunho)
+        function saveForm() {
+            showNotification('Funcionalidade de salvar será implementada em breve!', 'info');
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                padding: '1rem 1.5rem',
+                borderRadius: '12px',
+                color: 'white',
+                fontWeight: '500',
+                zIndex: '1000',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.3s ease',
+                background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6',
+                maxWidth: '400px',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+            });
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
         }
         
         // Drag and drop functionality
@@ -613,53 +721,30 @@
         
         // Form validation and progress update
         function updateProgress() {
-            console.log('updateProgress called'); // Debug
-            
             const fields = [
                 'businessName',
-                'negativeEmail', 
-                'positiveScore'
+                'url',
+                'negativeEmail',
+                'positiveScore',
+                'businessWebsite',
+                'contactNumber',
+                'businessAddress'
             ];
             
             let completed = 0;
-            fields.forEach(fieldId => {
-                const element = document.getElementById(fieldId);
-                console.log(`Field ${fieldId}:`, element); // Debug
-                
-                if (element) {
-                    if (element.type === 'range') {
-                        // Range slider - consider completed if has value
-                        if (element.value && element.value !== '') {
-                            completed++;
-                            console.log(`${fieldId} completed (range)`); // Debug
-                        }
-                    } else if (element.value && element.value.trim() !== '') {
-                        // Text inputs - consider completed if has content
-                        completed++;
-                        console.log(`${fieldId} completed (text)`); // Debug
-                    }
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element && element.value.trim() !== '') {
+                    completed++;
                 }
             });
             
-            console.log(`Total completed: ${completed}/${fields.length}`); // Debug
-            
             const progress = (completed / fields.length) * 100;
-            
-            // Update progress bar
-            const progressBar = document.querySelector('.progress-bar');
-            console.log('Progress bar element:', progressBar); // Debug
-            if (progressBar) {
-                progressBar.style.width = progress + '%';
-                console.log(`Progress bar updated to ${progress}%`); // Debug
-            }
+            document.querySelector('.progress-bar').style.width = progress + '%';
             
             // Update progress text
             const progressText = document.querySelector('.text-sm.font-medium.text-gray-600');
-            console.log('Progress text element:', progressText); // Debug
-            if (progressText) {
-                progressText.textContent = `${completed}/${fields.length} etapas completas`;
-                console.log(`Progress text updated to ${completed}/${fields.length}`); // Debug
-            }
+            progressText.textContent = `${completed}/${fields.length} etapas completas`;
         }
         
         // Category filter functionality
@@ -730,14 +815,36 @@
             input.addEventListener('change', updateProgress);
         });
         
-        // Initialize progress on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(updateProgress, 100);
+        // Save button functionality
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            // Collect form data
+            const formData = {
+                businessName: document.getElementById('businessName').value,
+                url: document.getElementById('url').value,
+                negativeEmail: document.getElementById('negativeEmail').value,
+                positiveScore: document.getElementById('positiveScore').value,
+                prizeDraw: document.getElementById('prizeDraw').checked,
+                logoFile: document.getElementById('logoFile').files[0],
+                bgFile: document.getElementById('bgFile').files[0]
+            };
+            
+            console.log('Form data:', formData);
+            alert('Dados salvos com sucesso!');
         });
         
-        // Also initialize immediately
-        setTimeout(updateProgress, 100);
-        
+        // Publish button functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            const businessName = document.getElementById('businessName').value;
+            const url = document.getElementById('url').value;
+            const negativeEmail = document.getElementById('negativeEmail').value;
+            
+            if (!businessName || !url || !negativeEmail) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            alert('Empresa publicada com sucesso!');
+        });
     </script>
 </body>
 </html>
