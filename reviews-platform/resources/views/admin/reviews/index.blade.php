@@ -299,9 +299,9 @@
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
                             <div class="flex space-x-2">
-                                <button onclick="updateChartPeriod('7d')" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
-                                <button onclick="updateChartPeriod('30d')" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
-                                <button onclick="updateChartPeriod('90d')" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
+                                <button onclick="updateChartPeriod('7d')" class="chart-period-btn period-tab active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
+                                <button onclick="updateChartPeriod('30d')" class="chart-period-btn period-tab px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
+                                <button onclick="updateChartPeriod('90d')" class="chart-period-btn period-tab px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -472,6 +472,7 @@
             updateChartsWithRealData(reviews) {
                 if (!reviews || reviews.length === 0) {
                     // Se não há avaliações, manter gráficos zerados
+                    this.updateChartsWithEmptyData();
                     return;
                 }
                 
@@ -490,32 +491,148 @@
                     this.charts.ratingDistribution.update();
                 }
                 
-                // Atualizar gráfico de avaliações ao longo do tempo
-                const last7Days = this.getLast7Days();
-                const timeData = {
-                    positive: new Array(7).fill(0),
-                    negative: new Array(7).fill(0)
-                };
+                // Atualizar gráfico de avaliações ao longo do tempo baseado no período selecionado
+                this.updateTimeChartWithRealData(reviews);
+            }
+            
+            updateChartsWithEmptyData() {
+                // Zerar gráfico de distribuição de notas
+                if (this.charts.ratingDistribution) {
+                    this.charts.ratingDistribution.data.datasets[0].data = [0, 0, 0, 0, 0];
+                    this.charts.ratingDistribution.update();
+                }
                 
-                reviews.forEach(review => {
-                    const reviewDate = new Date(review.created_at);
-                    const dayIndex = this.getDayIndex(reviewDate, last7Days);
+                // Zerar gráfico de avaliações ao longo do tempo
+                this.updateTimeChartWithEmptyData();
+            }
+            
+            updateTimeChartWithRealData(reviews) {
+                const selectedPeriod = this.getSelectedPeriod();
+                let timeData, labels;
+                
+                if (selectedPeriod === '7') {
+                    const last7Days = this.getLast7Days();
+                    timeData = {
+                        positive: new Array(7).fill(0),
+                        negative: new Array(7).fill(0)
+                    };
+                    labels = last7Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
                     
-                    if (dayIndex >= 0 && dayIndex < 7) {
-                        if (review.is_positive) {
-                            timeData.positive[dayIndex]++;
-                        } else {
-                            timeData.negative[dayIndex]++;
+                    reviews.forEach(review => {
+                        const reviewDate = new Date(review.created_at);
+                        const dayIndex = this.getDayIndex(reviewDate, last7Days);
+                        
+                        if (dayIndex >= 0 && dayIndex < 7) {
+                            if (review.is_positive) {
+                                timeData.positive[dayIndex]++;
+                            } else {
+                                timeData.negative[dayIndex]++;
+                            }
                         }
-                    }
-                });
+                    });
+                } else if (selectedPeriod === '30') {
+                    const last30Days = this.getLast30Days();
+                    timeData = {
+                        positive: new Array(30).fill(0),
+                        negative: new Array(30).fill(0)
+                    };
+                    labels = last30Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
+                    
+                    reviews.forEach(review => {
+                        const reviewDate = new Date(review.created_at);
+                        const dayIndex = this.getDayIndex(reviewDate, last30Days);
+                        
+                        if (dayIndex >= 0 && dayIndex < 30) {
+                            if (review.is_positive) {
+                                timeData.positive[dayIndex]++;
+                            } else {
+                                timeData.negative[dayIndex]++;
+                            }
+                        }
+                    });
+                } else if (selectedPeriod === '90') {
+                    const last90Days = this.getLast90Days();
+                    timeData = {
+                        positive: new Array(90).fill(0),
+                        negative: new Array(90).fill(0)
+                    };
+                    labels = last90Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
+                    
+                    reviews.forEach(review => {
+                        const reviewDate = new Date(review.created_at);
+                        const dayIndex = this.getDayIndex(reviewDate, last90Days);
+                        
+                        if (dayIndex >= 0 && dayIndex < 90) {
+                            if (review.is_positive) {
+                                timeData.positive[dayIndex]++;
+                            } else {
+                                timeData.negative[dayIndex]++;
+                            }
+                        }
+                    });
+                }
                 
-                if (this.charts.reviewsOverTime) {
-                    this.charts.reviewsOverTime.data.labels = last7Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
+                if (this.charts.reviewsOverTime && timeData && labels) {
+                    this.charts.reviewsOverTime.data.labels = labels;
                     this.charts.reviewsOverTime.data.datasets[0].data = timeData.positive;
                     this.charts.reviewsOverTime.data.datasets[1].data = timeData.negative;
                     this.charts.reviewsOverTime.update();
                 }
+            }
+            
+            updateTimeChartWithEmptyData() {
+                const selectedPeriod = this.getSelectedPeriod();
+                let labels;
+                
+                if (selectedPeriod === '7') {
+                    const last7Days = this.getLast7Days();
+                    labels = last7Days.map(day => day.substring(0, 3));
+                } else if (selectedPeriod === '30') {
+                    const last30Days = this.getLast30Days();
+                    labels = last30Days.map(day => day.substring(0, 3));
+                } else if (selectedPeriod === '90') {
+                    const last90Days = this.getLast90Days();
+                    labels = last90Days.map(day => day.substring(0, 3));
+                }
+                
+                if (this.charts.reviewsOverTime && labels) {
+                    this.charts.reviewsOverTime.data.labels = labels;
+                    this.charts.reviewsOverTime.data.datasets[0].data = new Array(labels.length).fill(0);
+                    this.charts.reviewsOverTime.data.datasets[1].data = new Array(labels.length).fill(0);
+                    this.charts.reviewsOverTime.update();
+                }
+            }
+            
+            getSelectedPeriod() {
+                // Verificar qual aba está ativa
+                const activeTab = document.querySelector('.period-tab.active');
+                if (activeTab) {
+                    const text = activeTab.textContent.trim();
+                    if (text.includes('7')) return '7';
+                    if (text.includes('30')) return '30';
+                    if (text.includes('90')) return '90';
+                }
+                return '7'; // Default
+            }
+            
+            getLast30Days() {
+                const days = [];
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    days.push(date.toLocaleDateString('pt-BR', { weekday: 'long' }));
+                }
+                return days;
+            }
+            
+            getLast90Days() {
+                const days = [];
+                for (let i = 89; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    days.push(date.toLocaleDateString('pt-BR', { weekday: 'long' }));
+                }
+                return days;
             }
             
             getLast7Days() {
@@ -618,30 +735,14 @@
             }
             
             async loadChartData(period) {
-                // Simulate loading different data based on period
-                const data = {
-                    '7d': {
-                        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                        positive: [12, 19, 3, 5, 2, 3, 8],
-                        negative: [2, 3, 1, 2, 1, 1, 2]
-                    },
-                    '30d': {
-                        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
-                        positive: [45, 52, 38, 61],
-                        negative: [8, 12, 6, 9]
-                    },
-                    '90d': {
-                        labels: ['Mês 1', 'Mês 2', 'Mês 3'],
-                        positive: [180, 195, 220],
-                        negative: [35, 28, 25]
-                    }
-                };
-                
-                const chartData = data[period];
-                this.charts.reviewsOverTime.data.labels = chartData.labels;
-                this.charts.reviewsOverTime.data.datasets[0].data = chartData.positive;
-                this.charts.reviewsOverTime.data.datasets[1].data = chartData.negative;
-                this.charts.reviewsOverTime.update();
+                // Usar dados reais em vez de dados fictícios
+                // Recarregar avaliações para atualizar os gráficos com dados reais
+                try {
+                    await this.loadReviews();
+                    console.log(`Gráficos atualizados com dados reais para período: ${period}`);
+                } catch (error) {
+                    console.error('Erro ao carregar dados reais:', error);
+                }
             }
             
             updateCompanyPerformanceTable(data) {

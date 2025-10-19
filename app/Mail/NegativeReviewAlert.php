@@ -39,3 +39,4 @@ class NegativeReviewAlert extends Mailable
 
 
 
+
