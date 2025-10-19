@@ -70,22 +70,22 @@ class GoogleReviewsSystem {
     handleFileUpload(input, type) {
         const file = input.files[0];
         if (file) {
-            const uploadArea = input.closest('.upload-area');
-            const icon = uploadArea.querySelector('i');
-            const text = uploadArea.querySelector('p');
+            // Show preview container
+            const previewContainer = document.getElementById(type + 'Preview');
+            const placeholder = document.getElementById(type + 'Placeholder');
+            const previewImg = document.getElementById(type + 'PreviewImg');
             
-            // Update display
-            icon.className = 'fas fa-check-circle text-4xl text-green-500 mb-4';
-            text.textContent = `Arquivo selecionado: ${file.name}`;
-            
-            // Add preview for images
-            if (file.type.startsWith('image/')) {
+            if (previewContainer && placeholder && previewImg) {
+                // Hide placeholder
+                placeholder.classList.add('hidden');
+                
+                // Show preview
+                previewContainer.classList.remove('hidden');
+                
+                // Create preview image
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const preview = document.createElement('img');
-                    preview.src = e.target.result;
-                    preview.className = 'w-16 h-16 object-cover rounded-lg mx-auto mb-2';
-                    uploadArea.insertBefore(preview, icon);
+                    previewImg.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -245,9 +245,58 @@ class GoogleReviewsSystem {
             }, 300);
         }, 5000);
     }
+    
+    removeLogo() {
+        const logoFile = document.getElementById('logoFile');
+        const logoPreview = document.getElementById('logoPreview');
+        const logoPlaceholder = document.getElementById('logoPlaceholder');
+        
+        // Clear file input
+        logoFile.value = '';
+        
+        // Hide preview and show placeholder
+        logoPreview.classList.add('hidden');
+        logoPlaceholder.classList.remove('hidden');
+        
+        this.showNotification('Logo removido com sucesso!', 'success');
+    }
+    
+    removeBackground() {
+        const bgFile = document.getElementById('bgFile');
+        const bgPreview = document.getElementById('bgPreview');
+        const bgPlaceholder = document.getElementById('bgPlaceholder');
+        
+        // Clear file input
+        bgFile.value = '';
+        
+        // Hide preview and show placeholder
+        bgPreview.classList.add('hidden');
+        bgPlaceholder.classList.remove('hidden');
+        
+        this.showNotification('Imagem de fundo removida com sucesso!', 'success');
+    }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new GoogleReviewsSystem();
+    window.googleReviewsSystem = new GoogleReviewsSystem();
 });
+
+// Global functions for HTML onclick events
+function removeLogo() {
+    if (window.googleReviewsSystem) {
+        window.googleReviewsSystem.removeLogo();
+    }
+}
+
+function removeBackground() {
+    if (window.googleReviewsSystem) {
+        window.googleReviewsSystem.removeBackground();
+    }
+}
+
+function handleFileUpload(input, type) {
+    if (window.googleReviewsSystem) {
+        window.googleReviewsSystem.handleFileUpload(input, type);
+    }
+}
