@@ -151,3 +151,6 @@ echo "   2. php artisan db:seed --class=AdminUserSeeder\n";
 echo "   3. php artisan serve\n";
 echo "   4. Acesse: http://localhost:8000/login\n";
 
+
+
+

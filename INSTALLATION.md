@@ -452,3 +452,6 @@ Para dúvidas ou problemas:
 2. Verificar queue: `php artisan queue:failed`
 3. Documentação Laravel: https://laravel.com/docs
 
+
+
+

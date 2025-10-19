@@ -34,3 +34,4 @@ if ($company) {
 } else {
     echo "NENHUMA empresa encontrada com token '$specificToken'\n";
 }
+

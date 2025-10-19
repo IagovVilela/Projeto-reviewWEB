@@ -11,7 +11,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             // DemoDataSeeder::class, // Descomentar para dados de teste
+            // CompleteDataSeeder::class, // Descomentar para dados completos
+            // RealDataSeeder::class, // Descomentar para dados reais exportados
         ]);
     }
 }
+
+
+
 

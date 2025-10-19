@@ -127,3 +127,4 @@ http://localhost:8000/companies/create
 - [ ] Temas de cores personalizáveis
 - [ ] Integração com APIs das plataformas
 - [ ] Analytics de seleção de plataformas
+

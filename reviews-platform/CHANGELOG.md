@@ -236,3 +236,4 @@ Este documento detalha todas as funcionalidades implementadas no sistema de aval
 ---
 
 **Desenvolvido com ❤️ usando Laravel, Tailwind CSS e JavaScript moderno**
+

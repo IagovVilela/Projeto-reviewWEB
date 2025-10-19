@@ -352,3 +352,6 @@ echo "✅ Backup criado: ${DB_NAME}_${DATE}.sql"
 
 **Dica**: Execute `php test_mysql_connection.php` para verificar se tudo está funcionando! 🚀
 
+
+
+

@@ -34,3 +34,4 @@ foreach ($companies as $company) {
         echo "Background de {$company->name}: " . (file_exists($bgPath) ? 'EXISTE' : 'NÃO EXISTE') . " - {$bgPath}\n";
     }
 }
+

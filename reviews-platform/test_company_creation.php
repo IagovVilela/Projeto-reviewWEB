@@ -32,3 +32,4 @@ $companies = Company::all();
 foreach ($companies as $company) {
     echo "Nome: " . $company->name . " - Token: " . $company->token . "\n";
 }
+

@@ -18,20 +18,98 @@
         @tailwind components;
         @tailwind utilities;
         
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
         .btn-primary {
-            @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+            @apply bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg;
         }
         
         .btn-secondary {
-            @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+            @apply bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg;
         }
         
         .card {
-            @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+            @apply bg-white rounded-2xl shadow-lg border border-gray-100 p-6 transition-all duration-300 hover:shadow-xl;
         }
         
         .input-field {
-            @apply block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+            @apply block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-all duration-300;
+        }
+        
+        /* Animações personalizadas */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Efeitos de hover personalizados */
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Gradientes personalizados */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         }
     </style>
 </head>
@@ -48,89 +126,124 @@
             const location = window.location.pathname;
             
             const navigation = [
-                { name: 'Dashboard', href: '/', icon: '🏠' },
-                { name: 'Empresas', href: '/companies', icon: '🏢' },
-                { name: 'Avaliações', href: '/reviews', icon: '💬' },
+                { name: 'Dashboard', href: '/', icon: 'fas fa-home', active: location === '/' },
+                { name: 'Empresas', href: '/companies', icon: 'fas fa-building', active: location === '/companies' },
+                { name: 'Avaliações', href: '/reviews', icon: 'fas fa-comments', active: location === '/reviews' },
+                { name: 'Avaliações Negativas', href: '/reviews', icon: 'fas fa-exclamation-triangle', active: location === '/reviews' },
             ];
             
             return (
-                <div className="min-h-screen bg-gray-50">
-                    {/* Sidebar Mobile */}
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+                    {/* Top Navigation Bar */}
+                    <div className="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-lg">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center h-16">
+                                <div className="flex items-center space-x-4">
+                                    <button
+                                        type="button"
+                                        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                        onClick={() => setSidebarOpen(true)}
+                                    >
+                                        <i className="fas fa-bars text-gray-600"></i>
+                                    </button>
+                                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                        Reviews Platform
+                                    </h1>
+                            </div>
+                                
+                                <div className="flex items-center space-x-4">
+                                    <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative">
+                                        <i className="fas fa-bell text-gray-600"></i>
+                                        <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                    </button>
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                            <i className="fas fa-user text-white text-sm"></i>
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-700">Admin</span>
+                                        <button className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                                            Sair
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Main Navigation */}
+                    <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <nav className="flex space-x-8">
+                                {navigation.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        to={item.href}
+                                        className={`group flex items-center px-4 py-4 text-sm font-medium border-b-2 transition-all duration-300 ${
+                                            item.active
+                                                ? 'border-blue-500 text-blue-600'
+                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <i className={`${item.icon} mr-2 ${item.active ? 'text-blue-500' : 'text-gray-400'}`}></i>
+                                        {item.name}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
+                    </div>
+                    
+                    {/* Mobile Sidebar */}
                     <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
-                        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-                        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
-                            <div className="flex h-16 items-center justify-between px-4">
-                                <h1 className="text-xl font-bold text-gray-900">Reviews Platform</h1>
-                                <button onClick={() => setSidebarOpen(false)}>✕</button>
+                        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+                        <div className="fixed inset-y-0 left-0 flex w-80 flex-col bg-white shadow-2xl">
+                            <div className="flex h-20 items-center justify-between px-6 border-b border-gray-100">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                        <i className="fas fa-shield-alt text-white text-lg"></i>
                             </div>
-                            <nav className="flex-1 px-4 py-4">
+                                    <h1 className="text-xl font-bold text-gray-800">Reviews Platform</h1>
+                                </div>
+                                <button 
+                                    onClick={() => setSidebarOpen(false)}
+                                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    <i className="fas fa-times text-gray-500"></i>
+                                </button>
+                            </div>
+                            <nav className="flex-1 px-4 py-6 space-y-2">
                                 {navigation.map((item) => (
                                     <Link
                                         key={item.name}
                                         to={item.href}
-                                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md mb-1 ${
-                                            location === item.href
-                                                ? 'bg-blue-100 text-blue-700'
+                                        className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                                            item.active
+                                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                                                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                         }`}
                                     >
-                                        <span className="mr-3">{item.icon}</span>
+                                        <i className={`${item.icon} mr-3 text-lg ${item.active ? 'text-white' : 'text-gray-400'}`}></i>
                                         {item.name}
                                     </Link>
                                 ))}
                             </nav>
+                            <div className="p-4 border-t border-gray-100">
+                                <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-50">
+                                    <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                                        <i className="fas fa-user text-white text-sm"></i>
                         </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-800">Admin</p>
+                                        <p className="text-xs text-gray-500">admin@reviewsplatform.com</p>
                     </div>
-                    
-                    {/* Sidebar Desktop */}
-                    <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-                        <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
-                            <div className="flex h-16 items-center px-4">
-                                <h1 className="text-xl font-bold text-gray-900">Reviews Platform</h1>
-                            </div>
-                            <nav className="flex-1 px-4 py-4">
-                                {navigation.map((item) => (
-                                    <Link
-                                        key={item.name}
-                                        to={item.href}
-                                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md mb-1 ${
-                                            location === item.href
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                        }`}
-                                    >
-                                        <span className="mr-3">{item.icon}</span>
-                                        {item.name}
-                                    </Link>
-                                ))}
-                            </nav>
-                        </div>
-                    </div>
-                    
-                    {/* Main Content */}
-                    <div className="lg:pl-64">
-                        {/* Top Bar */}
-                        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-                            <button
-                                type="button"
-                                className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-                                onClick={() => setSidebarOpen(true)}
-                            >
-                                ☰
-                            </button>
-                            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                                <div className="flex flex-1"></div>
-                                <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                    <div className="text-sm font-medium text-gray-700">Admin</div>
+                                </div>
                                 </div>
                             </div>
                         </div>
                         
-                        {/* Page Content */}
-                        <main className="py-6">
-                            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    {/* Main Content */}
+                    <div className="min-h-screen">
+                        <main>
                                 {children}
-                            </div>
                         </main>
                     </div>
                 </div>
@@ -140,159 +253,197 @@
         // Componente Dashboard
         const Dashboard = () => {
             const [stats, setStats] = useState({
-                totalCompanies: 12,
-                totalReviews: 156,
+                totalCompanies: 24,
+                totalReviews: 342,
                 averageRating: 4.2,
-                negativeReviews: 8,
-                positiveReviews: 148,
+                negativeReviews: 18,
+                positiveReviews: 324,
                 recentReviews: [
-                    { id: 1, company: 'Restaurante XYZ', rating: 5, whatsapp: '(11) 99999-9999', date: '2025-10-17' },
-                    { id: 2, company: 'Loja ABC', rating: 2, whatsapp: '(11) 88888-8888', date: '2025-10-17' },
-                    { id: 3, company: 'Café 123', rating: 4, whatsapp: '(11) 77777-7777', date: '2025-10-16' },
+                    { id: 1, company: 'Restaurante XYZ', rating: 5, whatsapp: '(11) 99999-9999', date: 'Hoje 14:30', status: 'positive' },
+                    { id: 2, company: 'Loja ABC', rating: 2, whatsapp: '(11) 88888-8888', date: 'Hoje 13:15', status: 'negative' },
+                    { id: 3, company: 'Café 123', rating: 4, whatsapp: '(11) 77777-7777', date: 'Hoje 12:45', status: 'positive' },
                 ]
             });
             
-            const statCards = [
+            const mainStatsCards = [
                 {
-                    name: 'Total de Empresas',
-                    value: stats.totalCompanies,
-                    icon: '🏢',
-                    color: 'bg-blue-500',
-                    change: '+2',
+                    title: 'Empresas',
+                    subtitle: 'Total: 24 empresas',
+                    icon: 'fas fa-building',
+                    gradient: 'from-blue-500 via-blue-600 to-indigo-600',
+                    bgPattern: 'bg-blue-50',
+                    buttonText: 'Gerenciar Empresas',
+                    buttonColor: 'bg-blue-600 hover:bg-blue-700',
+                    href: '/companies',
+                    stats: stats.totalCompanies,
+                    change: '+3',
                     changeType: 'positive'
                 },
                 {
-                    name: 'Total de Avaliações',
-                    value: stats.totalReviews,
-                    icon: '💬',
-                    color: 'bg-green-500',
-                    change: '+12',
+                    title: 'Avaliações',
+                    subtitle: 'Total: 342 avaliações',
+                    icon: 'fas fa-comments',
+                    gradient: 'from-emerald-500 via-green-500 to-teal-600',
+                    bgPattern: 'bg-green-50',
+                    buttonText: 'Ver Avaliações',
+                    buttonColor: 'bg-green-600 hover:bg-green-700',
+                    href: '/reviews',
+                    stats: stats.totalReviews,
+                    change: '+28',
                     changeType: 'positive'
                 },
                 {
-                    name: 'Avaliação Média',
-                    value: stats.averageRating.toFixed(1),
-                    icon: '⭐',
-                    color: 'bg-yellow-500',
-                    change: '+0.2',
-                    changeType: 'positive'
-                },
-                {
-                    name: 'Avaliações Negativas',
-                    value: stats.negativeReviews,
-                    icon: '⚠️',
-                    color: 'bg-red-500',
-                    change: '-1',
+                    title: 'Negativas',
+                    subtitle: '18 precisam atenção',
+                    icon: 'fas fa-exclamation-triangle',
+                    gradient: 'from-red-500 via-red-600 to-pink-600',
+                    bgPattern: 'bg-red-50',
+                    buttonText: 'Ver Negativas',
+                    buttonColor: 'bg-red-600 hover:bg-red-700',
+                    href: '/reviews',
+                    stats: stats.negativeReviews,
+                    change: '-2',
                     changeType: 'negative'
                 }
             ];
             
             return (
-                <div className="space-y-6">
-                    {/* Header */}
-                    <div className="md:flex md:items-center md:justify-between">
-                        <div className="min-w-0 flex-1">
-                            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-                                Dashboard
-                            </h2>
-                            <p className="mt-1 text-sm text-gray-500">
-                                Visão geral da plataforma de avaliações
-                            </p>
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+                    {/* Hero Section */}
+                    <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-3xl mx-4 mt-6 mb-8">
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        <div className="relative px-8 py-12">
+                            <div className="text-center">
+                                <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl mb-6">
+                                    <i className="fas fa-home text-white text-3xl"></i>
                         </div>
-                        <div className="mt-4 flex md:ml-4 md:mt-0">
-                            <Link to="/companies" className="btn-primary">
-                                Nova Empresa
-                            </Link>
+                                <h1 className="text-5xl font-bold text-white mb-4">Dashboard</h1>
+                                <p className="text-xl text-blue-100 mb-8">Visão geral da plataforma de avaliações</p>
+                                <div className="flex justify-center space-x-4">
+                                    <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
+                                        <div className="text-white text-sm opacity-90">Avaliação Média</div>
+                                        <div className="text-white text-2xl font-bold">{stats.averageRating} ⭐</div>
                         </div>
+                                    <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
+                                        <div className="text-white text-sm opacity-90">Taxa de Satisfação</div>
+                                        <div className="text-white text-2xl font-bold">94.7%</div>
                     </div>
-                    
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                        {statCards.map((card) => (
-                            <div key={card.name} className="card">
-                                <div className="flex items-center">
-                                    <div className="flex-shrink-0">
-                                        <div className={`${card.color} p-3 rounded-lg`}>
-                                            <span className="text-2xl">{card.icon}</span>
                                         </div>
                                     </div>
-                                    <div className="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt className="text-sm font-medium text-gray-500 truncate">
-                                                {card.name}
-                                            </dt>
-                                            <dd className="flex items-baseline">
-                                                <div className="text-2xl font-semibold text-gray-900">
-                                                    {card.value}
                                                 </div>
-                                                <div className={`ml-2 flex items-baseline text-sm font-semibold ${
-                                                    card.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                        {/* Decorative Elements */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
+                    </div>
+                    
+                    {/* Main Stats Cards */}
+                    <div className="px-4 mb-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {mainStatsCards.map((card, index) => (
+                                <div key={card.title} className={`${card.bgPattern} rounded-3xl p-8 shadow-2xl border border-white/50 backdrop-blur-sm relative overflow-hidden group hover:scale-105 transition-all duration-500`}>
+                                    {/* Background Pattern */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+                                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/20 to-transparent rounded-full translate-y-12 -translate-x-12"></div>
+                                    
+                                    <div className="relative z-10">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className={`w-16 h-16 bg-gradient-to-r ${card.gradient} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                                <i className={`${card.icon} text-white text-2xl`}></i>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className={`text-sm font-bold px-3 py-1 rounded-full ${
+                                                    card.changeType === 'positive' ? 'bg-green-100 text-green-700' : 
+                                                    card.changeType === 'negative' ? 'bg-red-100 text-red-700' : 
+                                                    'bg-gray-100 text-gray-700'
                                                 }`}>
-                                                    <span className="sr-only">
-                                                        {card.changeType === 'positive' ? 'Increased' : 'Decreased'} by
-                                                    </span>
                                                     {card.change}
                                                 </div>
-                                            </dd>
-                                        </dl>
                                     </div>
+                                        </div>
+                                        
+                                        <h3 className="text-2xl font-bold text-gray-800 mb-2">{card.title}</h3>
+                                        <p className="text-gray-600 mb-6 text-lg">{card.subtitle}</p>
+                                        
+                                        <Link
+                                            to={card.href}
+                                            className={`${card.buttonColor} text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center`}
+                                        >
+                                            {card.buttonText}
+                                            <i className="fas fa-arrow-right ml-2"></i>
+                                        </Link>
                                 </div>
                             </div>
                         ))}
+                        </div>
                     </div>
                     
-                    {/* Recent Reviews */}
-                    <div className="card">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Avaliações Recentes</h3>
-                        <div className="flow-root">
-                            <ul className="-my-5 divide-y divide-gray-200">
-                                {stats.recentReviews.map((review) => (
-                                    <li key={review.id} className="py-5">
+                    {/* Recent Reviews Section */}
+                    <div className="px-4">
+                        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
+                            <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-8 py-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                            <div className="flex-shrink-0">
-                                                <div className={`p-2 rounded-lg ${
-                                                    review.rating >= 4 ? 'bg-green-100' : 'bg-red-100'
-                                                }`}>
-                                                    <span className={`text-lg ${
-                                                        review.rating >= 4 ? 'text-green-600' : 'text-red-600'
-                                                    }`}>⭐</span>
+                                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                            <i className="fas fa-star text-white text-xl"></i>
                                                 </div>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-gray-800">Avaliações Recentes</h2>
+                                            <p className="text-gray-600">Últimas avaliações recebidas</p>
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-gray-900 truncate">
-                                                    {review.company}
-                                                </p>
-                                                <p className="text-sm text-gray-500 truncate">
-                                                    WhatsApp: {review.whatsapp}
-                                                </p>
                                             </div>
+                                    <Link 
+                                        to="/reviews"
+                                        className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                                    >
+                                        Ver Todas
+                                    </Link>
+                                </div>
+                            </div>
+                            
+                            <div className="p-8">
+                                <div className="space-y-6">
+                                    {stats.recentReviews.map((review, index) => (
+                                        <div key={review.id} className="group bg-gradient-to-r from-white to-gray-50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200">
+                                            <div className="flex items-center space-x-6">
+                                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg ${
+                                                    review.status === 'positive' 
+                                                        ? 'bg-gradient-to-r from-green-400 to-emerald-500' 
+                                                        : 'bg-gradient-to-r from-red-400 to-pink-500'
+                                                }`}>
+                                                    <i className={`fas fa-star text-white text-xl`}></i>
+                                                </div>
+                                                
+                                                <div className="flex-1">
+                                                    <h4 className="text-xl font-bold text-gray-800 mb-1">{review.company}</h4>
+                                                    <p className="text-gray-600 mb-2">WhatsApp: {review.whatsapp}</p>
                                             <div className="flex items-center space-x-2">
-                                                <div className="flex">
                                                     {[...Array(5)].map((_, i) => (
-                                                        <span
+                                                            <i
                                                             key={i}
-                                                            className={`text-sm ${
+                                                                className={`fas fa-star text-lg ${
                                                                 i < review.rating ? 'text-yellow-400' : 'text-gray-300'
                                                             }`}
-                                                        >
-                                                            ⭐
-                                                        </span>
+                                                            ></i>
                                                     ))}
+                                                        <span className="text-gray-500 ml-2">{review.rating}/5</span>
                                                 </div>
-                                                <span className="text-sm text-gray-500">{review.date}</span>
+                                            </div>
+                                                
+                                                <div className="text-right">
+                                                    <div className={`px-4 py-2 rounded-xl font-semibold ${
+                                                        review.status === 'positive' 
+                                                            ? 'bg-green-100 text-green-700' 
+                                                            : 'bg-red-100 text-red-700'
+                                                    }`}>
+                                                        {review.status === 'positive' ? '✅ Positiva' : '⚠️ Negativa'}
+                                        </div>
+                                                    <p className="text-gray-500 mt-2 font-medium">{review.date}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </li>
                                 ))}
-                            </ul>
                         </div>
-                        <div className="mt-6">
-                            <Link
-                                to="/reviews"
-                                className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                            >
-                                Ver todas as avaliações
-                            </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

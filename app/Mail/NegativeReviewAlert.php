@@ -36,3 +36,6 @@ class NegativeReviewAlert extends Mailable
     }
 }
 
+
+
+

@@ -36,3 +36,4 @@ if ($hasUrlField) {
         echo "❌ Erro ao adicionar campo: " . $e->getMessage() . "\n";
     }
 }
+

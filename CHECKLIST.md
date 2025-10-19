@@ -390,3 +390,6 @@ php artisan migrate:fresh
 **Versão**: 1.0.0  
 **Status**: Em desenvolvimento ativo
 
+
+
+

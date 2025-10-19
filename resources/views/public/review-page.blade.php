@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avalie {{ $reviewPage->company->name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/tailwind.css?v=<?php echo time(); ?>">
     <style>
         .star {
             cursor: pointer;
@@ -281,6 +281,11 @@
         });
     </script>
 
+    <!-- Incluir o arquivo modern-interactions.js -->
+    <script src="/assets/js/modern-interactions.js"></script>
+
 </body>
 </html>
+
+
 

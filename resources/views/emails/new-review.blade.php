@@ -38,3 +38,6 @@ Atenciosamente,
 {{ config('app.name') }}
 @endcomponent
 
+
+
+
