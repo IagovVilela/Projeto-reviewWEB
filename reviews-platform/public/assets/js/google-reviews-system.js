@@ -70,10 +70,38 @@ class GoogleReviewsSystem {
     handleFileUpload(input, type) {
         const file = input.files[0];
         if (file) {
+            // Map type to correct element IDs
+            const elementIds = {
+                'logo': {
+                    preview: 'logoPreview',
+                    placeholder: 'logoPlaceholder', 
+                    previewImg: 'logoPreviewImg'
+                },
+                'background': {
+                    preview: 'bgPreview',
+                    placeholder: 'bgPlaceholder',
+                    previewImg: 'bgPreviewImg'
+                }
+            };
+            
+            const ids = elementIds[type];
+            if (!ids) {
+                console.error('Unknown type:', type);
+                return;
+            }
+            
             // Show preview container
-            const previewContainer = document.getElementById(type + 'Preview');
-            const placeholder = document.getElementById(type + 'Placeholder');
-            const previewImg = document.getElementById(type + 'PreviewImg');
+            const previewContainer = document.getElementById(ids.preview);
+            const placeholder = document.getElementById(ids.placeholder);
+            const previewImg = document.getElementById(ids.previewImg);
+            
+            console.log('Elements found:', {
+                previewContainer: !!previewContainer,
+                placeholder: !!placeholder,
+                previewImg: !!previewImg,
+                type: type,
+                ids: ids
+            });
             
             if (previewContainer && placeholder && previewImg) {
                 // Hide placeholder
@@ -88,6 +116,15 @@ class GoogleReviewsSystem {
                     previewImg.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
+                
+                console.log('Preview updated successfully for:', type);
+            } else {
+                console.error('Missing elements for type:', type, {
+                    previewContainer: !!previewContainer,
+                    placeholder: !!placeholder,
+                    previewImg: !!previewImg,
+                    ids: ids
+                });
             }
         }
     }
