@@ -279,32 +279,6 @@
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Sobre Nós</h2>
             
-            <!-- Visual Grid - Logo e Imagem de Fundo -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <!-- Logo Display -->
-                <div class="text-center">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Logo da Empresa</h3>
-                    <div class="inline-flex items-center justify-center w-32 h-32 bg-gray-50 rounded-xl border-2 border-gray-200">
-                        @if(isset($company->logo) && $company->logo)
-                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-24 h-24 object-contain">
-                        @else
-                            <i class="fas fa-building text-gray-400 text-4xl"></i>
-                        @endif
-                    </div>
-                </div>
-                
-                <!-- Background Image Display -->
-                <div class="text-center">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Imagem de Fundo</h3>
-                    <div class="inline-flex items-center justify-center w-32 h-32 bg-gray-50 rounded-xl border-2 border-gray-200 overflow-hidden">
-                        @if(isset($company->background_image) && $company->background_image)
-                            <img src="{{ asset('storage/' . $company->background_image) }}" alt="Background" class="w-full h-full object-cover">
-                        @else
-                            <i class="fas fa-image text-gray-400 text-4xl"></i>
-                        @endif
-                    </div>
-                </div>
-            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Contact Info -->
