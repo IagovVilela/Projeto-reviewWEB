@@ -22,6 +22,10 @@ if not exist .env (
     echo ✅ Arquivo .env já existe!
 )
 
+echo 🔑 Gerando chave da aplicação...
+php artisan key:generate --force
+echo ✅ Chave gerada com sucesso!
+
 echo.
 echo 🐳 Iniciando containers...
 docker-compose up -d

@@ -40,6 +40,9 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
+# Gerar chave da aplicação
+RUN php artisan key:generate --force
+
 # Expor porta
 EXPOSE 8000
 
