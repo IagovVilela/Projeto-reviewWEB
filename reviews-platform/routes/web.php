@@ -1,64 +1,48 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
+// Public routes
 Route::get('/', function () {
     return view('app');
 });
 
-Route::get('/login', function () {
-    return view('auth.login');
+// Auth routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Create admin user (for initial setup)
+Route::get('/create-admin', [AuthController::class, 'createAdmin']);
+
+// Protected admin routes
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+    
+    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies.index');
+    Route::get('/companies/create', [App\Http\Controllers\CompanyController::class, 'create'])->name('companies.create');
+    Route::post('/companies', [App\Http\Controllers\CompanyController::class, 'store'])->name('companies.store');
+    Route::delete('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'destroy'])->name('companies.destroy');
+
+    // Admin Reviews Routes
+    Route::get('/reviews', function () {
+        return view('admin.reviews.index');
+    })->name('reviews.index');
+    Route::get('/reviews/negative', function () {
+        return view('admin.reviews.negative');
+    })->name('reviews.negative');
 });
 
-Route::post('/login', function () {
-    return redirect('/dashboard');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
-Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies.index');
-Route::get('/companies/create', [App\Http\Controllers\CompanyController::class, 'create'])->name('companies.create');
-Route::post('/companies', [App\Http\Controllers\CompanyController::class, 'store'])->name('companies.store');
-Route::delete('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'destroy'])->name('companies.destroy');
-
-// Rota para páginas públicas de avaliação
+// Public review page (no auth required)
 Route::get('/r/{token}', [App\Http\Controllers\CompanyController::class, 'show'])->name('public.review-page');
 
 // API Routes
-Route::post('/api/reviews', function (Illuminate\Http\Request $request) {
-    // Simular salvamento da avaliação (em produção, salvar no banco)
-    $review = [
-        'id' => uniqid(),
-        'company_token' => $request->company_token,
-        'rating' => $request->rating,
-        'whatsapp' => $request->whatsapp,
-        'comment' => $request->comment,
-        'created_at' => now(),
-        'is_positive' => $request->rating >= 4
-    ];
-    
-    // Simular envio de email (em produção, implementar sistema real)
-    $emailData = [
-        'company_name' => 'Restaurante XYZ', // Buscar do banco
-        'rating' => $request->rating,
-        'whatsapp' => $request->whatsapp,
-        'comment' => $request->comment,
-        'is_positive' => $review['is_positive']
-    ];
-    
-    // Log para debug (em produção, enviar email real)
-    \Log::info('Nova avaliação recebida:', $review);
-    
-    return response()->json([
-        'success' => true,
-        'message' => 'Avaliação enviada com sucesso!',
-        'review' => $review
-    ]);
-});
+Route::post('/api/reviews', [App\Http\Controllers\ReviewController::class, 'store']);
 
-// Rota catch-all para SPA (Single Page Application)
+// Rota catch-all para SPA (Single Page Application) - APENAS para rotas que não começam com 'api'
 Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*');
+})->where('any', '^(?!api).*');

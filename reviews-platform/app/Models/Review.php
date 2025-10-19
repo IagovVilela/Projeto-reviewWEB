@@ -14,6 +14,9 @@ class Review extends Model
         'rating',
         'whatsapp',
         'comment',
+        'private_feedback',
+        'contact_preference',
+        'has_private_feedback',
         'is_positive',
         'is_processed',
         'processed_at'

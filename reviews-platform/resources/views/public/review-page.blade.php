@@ -437,6 +437,8 @@
                     const result = await response.json();
                     
                     if (result.success) {
+                        // Store current review ID for private feedback
+                        window.currentReviewId = result.data.review_id;
                         this.showSuccessState(result);
                     } else {
                         this.showErrorState(result.message);
@@ -456,10 +458,17 @@
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('successState').classList.remove('hidden');
                 
+                console.log('Result from API:', result);
+                
                 // Determine next action based on rating
                 const nextAction = document.getElementById('nextAction');
                 
-                if (this.selectedRating >= this.positiveThreshold) {
+                // Check if result has data property, otherwise use the old logic
+                const isPositive = result.data ? result.data.is_positive : (this.selectedRating >= this.positiveThreshold);
+                const googleUrl = result.data ? result.data.google_business_url : this.companyData.google_business_url;
+                const negativeEmail = result.data ? result.data.negative_email : this.companyData.negative_email;
+                
+                if (isPositive) {
                     // Positive review - redirect to Google
                     nextAction.innerHTML = `
                         <div class="bg-green-50 border border-green-200 rounded-xl p-6">
@@ -474,18 +483,61 @@
                     
                     // Redirect to Google after 3 seconds
                     setTimeout(() => {
-                        window.open(this.companyData.google_business_url, '_blank');
+                        if (googleUrl) {
+                            window.open(googleUrl, '_blank');
+                        }
                     }, 3000);
                 } else {
-                    // Negative review - show feedback form
+                    // Negative review - show private feedback form
                     nextAction.innerHTML = `
                         <div class="bg-red-50 border border-red-200 rounded-xl p-6">
                             <h4 class="text-lg font-semibold text-red-800 mb-2">Obrigado pelo feedback!</h4>
-                            <p class="text-red-600 mb-4">Sua avaliação foi enviada diretamente para nossa equipe. Entraremos em contato em breve.</p>
-                            <div class="flex items-center justify-center space-x-2">
-                                <i class="fas fa-envelope text-red-600"></i>
-                                <span class="text-red-600">Email enviado para: ` + this.companyData.negative_email + `</span>
-                            </div>
+                            <p class="text-red-600 mb-4">Sua avaliação foi registrada. Para nos ajudar a melhorar, você pode nos contar mais detalhes:</p>
+                            
+                            <form id="privateFeedbackForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">O que podemos melhorar?</label>
+                                    <textarea 
+                                        id="privateFeedback" 
+                                        name="feedback" 
+                                        rows="4" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        placeholder="Conte-nos o que aconteceu para que possamos melhorar nosso atendimento..."
+                                    ></textarea>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Como você prefere ser contatado?</label>
+                                    <select 
+                                        id="contactPreference" 
+                                        name="contact_preference"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    >
+                                        <option value="whatsapp">WhatsApp (mesmo número informado)</option>
+                                        <option value="email">E-mail</option>
+                                        <option value="phone">Telefone</option>
+                                        <option value="no_contact">Não desejo ser contatado</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="flex space-x-3">
+                                    <button 
+                                        type="button" 
+                                        onclick="submitPrivateFeedback()" 
+                                        class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
+                                    >
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Enviar Feedback Privado
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        onclick="skipPrivateFeedback()" 
+                                        class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                                    >
+                                        Pular
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     `;
                 }
@@ -535,6 +587,77 @@
                     }, 300);
                 }, 5000);
             }
+        }
+        
+        // Global functions for private feedback
+        async function submitPrivateFeedback() {
+            const feedback = document.getElementById('privateFeedback').value;
+            const contactPreference = document.getElementById('contactPreference').value;
+            
+            if (!feedback.trim()) {
+                alert('Por favor, conte-nos o que podemos melhorar.');
+                return;
+            }
+            
+            try {
+                // Show loading
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enviando...';
+                button.disabled = true;
+                
+                // Send private feedback
+                const response = await fetch('/api/reviews/private-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        review_id: window.currentReviewId,
+                        feedback: feedback,
+                        contact_preference: contactPreference
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    document.getElementById('nextAction').innerHTML = `
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                            <h4 class="text-lg font-semibold text-green-800 mb-2">Feedback enviado!</h4>
+                            <p class="text-green-600 mb-4">Obrigado pelo seu feedback detalhado. Nossa equipe entrará em contato em breve.</p>
+                            <div class="flex items-center justify-center space-x-2">
+                                <i class="fas fa-check-circle text-green-600"></i>
+                                <span class="text-green-600">Feedback privado enviado com sucesso!</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    alert('Erro ao enviar feedback. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro ao enviar feedback:', error);
+                alert('Erro ao enviar feedback. Tente novamente.');
+            } finally {
+                // Restore button
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+        
+        function skipPrivateFeedback() {
+            document.getElementById('nextAction').innerHTML = `
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Obrigado!</h4>
+                    <p class="text-gray-600 mb-4">Sua avaliação foi registrada. Entraremos em contato se necessário.</p>
+                    <div class="flex items-center justify-center space-x-2">
+                        <i class="fas fa-check-circle text-gray-600"></i>
+                        <span class="text-gray-600">Avaliação registrada com sucesso!</span>
+                    </div>
+                </div>
+            `;
         }
         
         // Initialize when DOM is loaded
