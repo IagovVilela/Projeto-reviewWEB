@@ -238,7 +238,7 @@
                     <div class="flex items-center space-x-3">
                         <button type="button" onclick="submitForm()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
                             <i class="fas fa-upload mr-2"></i>
-                            PUBLICAR
+                            ATIVAR
                         </button>
                         <button type="button" onclick="saveForm()" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium">
                             <i class="fas fa-save mr-2"></i>
@@ -595,7 +595,7 @@
             // Mostrar loading
             const submitBtn = document.querySelector('button[onclick="submitForm()"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> PUBLICANDO...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> ATIVANDO...';
             submitBtn.disabled = true;
             
             // Submeter formulário
@@ -604,7 +604,35 @@
         
         // Save form function (para salvar como rascunho)
         function saveForm() {
-            showNotification('Funcionalidade de salvar será implementada em breve!', 'info');
+            console.log('saveForm() chamada');
+            
+            const form = document.getElementById('companyForm');
+            
+            if (!form) {
+                console.error('Formulário não encontrado!');
+                showNotification('Erro: Formulário não encontrado!', 'error');
+                return;
+            }
+            
+            console.log('Formulário encontrado:', form);
+            
+            // Adicionar campo hidden para indicar que é rascunho
+            const draftInput = document.createElement('input');
+            draftInput.type = 'hidden';
+            draftInput.name = 'save_as_draft';
+            draftInput.value = 'true';
+            form.appendChild(draftInput);
+            
+            console.log('Salvando como rascunho...');
+            
+            // Mostrar loading
+            const saveBtn = document.querySelector('button[onclick="saveForm()"]');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> SALVANDO...';
+            saveBtn.disabled = true;
+            
+            // Submeter formulário
+            form.submit();
         }
         
         // Show notification

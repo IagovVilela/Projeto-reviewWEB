@@ -23,7 +23,8 @@ class Company extends Model
         'business_address',
         'google_business_url',
         'positive_score',
-        'is_active'
+        'is_active',
+        'status'
     ];
 
     protected $casts = [

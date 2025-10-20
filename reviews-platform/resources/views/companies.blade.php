@@ -57,7 +57,10 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800">Empresas Cadastradas</h1>
-                        <p class="text-gray-600 mt-1">Gerencie todas as suas empresas</p>
+                        <p class="text-gray-600 mt-1">
+                            {{ $companies->where('status', 'published')->count() }} ativas • 
+                            {{ $companies->where('status', 'draft')->count() }} rascunhos
+                        </p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <a href="/companies/create" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
@@ -85,6 +88,13 @@
                     </div>
                 @endif
 
+                @if(session('error'))
+                    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 @if($companies->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($companies as $company)
@@ -104,8 +114,11 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-2">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $company->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $company->is_active ? 'Ativo' : 'Inativo' }}
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $company->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                            {{ $company->status === 'published' ? 'Ativo' : 'Rascunho' }}
+                                        </span>
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $company->is_active ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $company->is_active ? 'Visível' : 'Oculto' }}
                                         </span>
                                     </div>
                                 </div>
@@ -135,10 +148,17 @@
                                 </div>
 
                                 <div class="flex items-center space-x-2">
-                                    <a href="{{ $company->public_url }}" target="_blank" class="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors text-center">
-                                        <i class="fas fa-external-link-alt mr-1"></i>
-                                        Ver Página
-                                    </a>
+                                    @if($company->status === 'published')
+                                        <a href="{{ $company->public_url }}" target="_blank" class="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors text-center">
+                                            <i class="fas fa-external-link-alt mr-1"></i>
+                                            Ver Página
+                                        </a>
+                                    @else
+                                        <a href="{{ route('companies.edit', $company->id) }}" class="flex-1 bg-purple-50 text-purple-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-purple-100 transition-colors text-center">
+                                            <i class="fas fa-edit mr-1"></i>
+                                            Editar
+                                        </a>
+                                    @endif
                                     <form method="POST" action="{{ route('companies.destroy', $company->id) }}" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir esta empresa?')">
                                         @csrf
                                         @method('DELETE')
