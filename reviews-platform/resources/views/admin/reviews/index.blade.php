@@ -297,7 +297,10 @@
                     <!-- Reviews Over Time Chart -->
                     <div class="bg-white rounded-xl p-6 card-hover">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
+                                <p class="text-sm text-gray-500" id="chartPeriodInfo">Visualização por dias</p>
+                            </div>
                             <div class="flex space-x-2">
                                 <button onclick="updateChartPeriod('7d')" class="chart-period-btn period-tab active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
                                 <button onclick="updateChartPeriod('30d')" class="chart-period-btn period-tab px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
@@ -511,12 +514,16 @@
                 let timeData, labels;
                 
                 if (selectedPeriod === '7') {
+                    // Para 7 dias: mostrar cada dia individualmente
                     const last7Days = this.getLast7Days();
                     timeData = {
                         positive: new Array(7).fill(0),
                         negative: new Array(7).fill(0)
                     };
-                    labels = last7Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
+                    labels = last7Days.map(day => {
+                        const date = new Date(day);
+                        return date.toLocaleDateString('pt-BR', { weekday: 'short' });
+                    });
                     
                     reviews.forEach(review => {
                         const reviewDate = new Date(review.created_at);
@@ -531,45 +538,21 @@
                         }
                     });
                 } else if (selectedPeriod === '30') {
-                    const last30Days = this.getLast30Days();
+                    // Para 30 dias: agrupar por semanas (4 semanas)
+                    const weeklyData = this.groupReviewsByWeeks(reviews, 30);
                     timeData = {
-                        positive: new Array(30).fill(0),
-                        negative: new Array(30).fill(0)
+                        positive: weeklyData.positive,
+                        negative: weeklyData.negative
                     };
-                    labels = last30Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
-                    
-                    reviews.forEach(review => {
-                        const reviewDate = new Date(review.created_at);
-                        const dayIndex = this.getDayIndex(reviewDate, last30Days);
-                        
-                        if (dayIndex >= 0 && dayIndex < 30) {
-                            if (review.is_positive) {
-                                timeData.positive[dayIndex]++;
-                            } else {
-                                timeData.negative[dayIndex]++;
-                            }
-                        }
-                    });
+                    labels = weeklyData.labels;
                 } else if (selectedPeriod === '90') {
-                    const last90Days = this.getLast90Days();
+                    // Para 90 dias: agrupar por semanas (12 semanas)
+                    const weeklyData = this.groupReviewsByWeeks(reviews, 90);
                     timeData = {
-                        positive: new Array(90).fill(0),
-                        negative: new Array(90).fill(0)
+                        positive: weeklyData.positive,
+                        negative: weeklyData.negative
                     };
-                    labels = last90Days.map(day => day.substring(0, 3)); // Seg, Ter, etc.
-                    
-                    reviews.forEach(review => {
-                        const reviewDate = new Date(review.created_at);
-                        const dayIndex = this.getDayIndex(reviewDate, last90Days);
-                        
-                        if (dayIndex >= 0 && dayIndex < 90) {
-                            if (review.is_positive) {
-                                timeData.positive[dayIndex]++;
-                            } else {
-                                timeData.negative[dayIndex]++;
-                            }
-                        }
-                    });
+                    labels = weeklyData.labels;
                 }
                 
                 if (this.charts.reviewsOverTime && timeData && labels) {
@@ -586,13 +569,16 @@
                 
                 if (selectedPeriod === '7') {
                     const last7Days = this.getLast7Days();
-                    labels = last7Days.map(day => day.substring(0, 3));
+                    labels = last7Days.map(day => {
+                        const date = new Date(day);
+                        return date.toLocaleDateString('pt-BR', { weekday: 'short' });
+                    });
                 } else if (selectedPeriod === '30') {
-                    const last30Days = this.getLast30Days();
-                    labels = last30Days.map(day => day.substring(0, 3));
+                    // Para 30 dias: 4 semanas
+                    labels = this.generateWeekLabels(4);
                 } else if (selectedPeriod === '90') {
-                    const last90Days = this.getLast90Days();
-                    labels = last90Days.map(day => day.substring(0, 3));
+                    // Para 90 dias: 12 semanas
+                    labels = this.generateWeekLabels(12);
                 }
                 
                 if (this.charts.reviewsOverTime && labels) {
@@ -601,6 +587,21 @@
                     this.charts.reviewsOverTime.data.datasets[1].data = new Array(labels.length).fill(0);
                     this.charts.reviewsOverTime.update();
                 }
+            }
+            
+            generateWeekLabels(weeksCount) {
+                const labels = [];
+                for (let i = weeksCount - 1; i >= 0; i--) {
+                    const startDate = new Date();
+                    startDate.setDate(startDate.getDate() - (i * 7 + 6));
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() - (i * 7));
+                    
+                    const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    labels.push(`${startStr} - ${endStr}`);
+                }
+                return labels.reverse(); // Mais recente primeiro
             }
             
             getSelectedPeriod() {
@@ -620,7 +621,7 @@
                 for (let i = 29; i >= 0; i--) {
                     const date = new Date();
                     date.setDate(date.getDate() - i);
-                    days.push(date.toLocaleDateString('pt-BR', { weekday: 'long' }));
+                    days.push(date.toISOString().split('T')[0]); // Formato YYYY-MM-DD
                 }
                 return days;
             }
@@ -630,7 +631,7 @@
                 for (let i = 89; i >= 0; i--) {
                     const date = new Date();
                     date.setDate(date.getDate() - i);
-                    days.push(date.toLocaleDateString('pt-BR', { weekday: 'long' }));
+                    days.push(date.toISOString().split('T')[0]); // Formato YYYY-MM-DD
                 }
                 return days;
             }
@@ -648,6 +649,46 @@
             getDayIndex(reviewDate, last7Days) {
                 const reviewDateStr = reviewDate.toISOString().split('T')[0];
                 return last7Days.indexOf(reviewDateStr);
+            }
+            
+            groupReviewsByWeeks(reviews, days) {
+                const weeksCount = Math.ceil(days / 7);
+                const positive = new Array(weeksCount).fill(0);
+                const negative = new Array(weeksCount).fill(0);
+                const labels = [];
+                
+                // Gerar labels das semanas
+                for (let i = weeksCount - 1; i >= 0; i--) {
+                    const startDate = new Date();
+                    startDate.setDate(startDate.getDate() - (i * 7 + 6));
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() - (i * 7));
+                    
+                    const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    labels.push(`${startStr} - ${endStr}`);
+                }
+                
+                // Agrupar avaliações por semana
+                reviews.forEach(review => {
+                    const reviewDate = new Date(review.created_at);
+                    const daysAgo = Math.floor((new Date() - reviewDate) / (1000 * 60 * 60 * 24));
+                    const weekIndex = Math.floor(daysAgo / 7);
+                    
+                    if (weekIndex >= 0 && weekIndex < weeksCount) {
+                        if (review.is_positive) {
+                            positive[weekIndex]++;
+                        } else {
+                            negative[weekIndex]++;
+                        }
+                    }
+                });
+                
+                return {
+                    positive: positive.reverse(), // Mais recente primeiro
+                    negative: negative.reverse(),
+                    labels: labels.reverse()
+                };
             }
             
             initializeCharts() {
@@ -677,12 +718,40 @@
                         plugins: {
                             legend: {
                                 position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    title: function(tooltipItems) {
+                                        const period = document.querySelector('.period-tab.active').textContent.trim();
+                                        if (period.includes('7')) {
+                                            return tooltipItems[0].label;
+                                        } else {
+                                            return `Semana: ${tooltipItems[0].label}`;
+                                        }
+                                    }
+                                }
                             }
                         },
                         scales: {
+                            x: {
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 0,
+                                    maxTicksLimit: 12
+                                }
+                            },
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
                         }
                     }
                 });
@@ -729,6 +798,18 @@
                 event.target.classList.add('active');
                 event.target.classList.remove('bg-gray-200', 'text-gray-600');
                 event.target.classList.add('bg-purple-500', 'text-white');
+                
+                // Update period info text
+                const periodInfo = document.getElementById('chartPeriodInfo');
+                if (periodInfo) {
+                    if (period === '7d') {
+                        periodInfo.textContent = 'Visualização por dias';
+                    } else if (period === '30d') {
+                        periodInfo.textContent = 'Visualização por semanas (4 semanas)';
+                    } else if (period === '90d') {
+                        periodInfo.textContent = 'Visualização por semanas (12 semanas)';
+                    }
+                }
                 
                 // Update chart data based on period
                 this.loadChartData(period);

@@ -11,8 +11,11 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip \
-    nodejs \
-    npm
+    wget
+
+# Instalar Node.js 18 (versão mais recente)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 # Limpar cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -32,19 +35,20 @@ COPY . .
 # Instalar dependências PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Instalar dependências Node.js
-RUN npm install && npm run build
+# Copiar arquivo .env
+COPY .env .env
 
 # Definir permissões
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
-# Gerar chave da aplicação
-RUN php artisan key:generate --force
+# Copiar script de inicialização
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expor porta
 EXPOSE 8000
 
-# Comando padrão
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Comando de inicialização
+CMD ["/usr/local/bin/docker-entrypoint.sh"]

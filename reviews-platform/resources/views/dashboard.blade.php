@@ -47,6 +47,21 @@
         .icon-gradient {
             background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
         }
+        
+        /* Logout button styles */
+        .logout-button {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            outline: inherit;
+        }
+        
+        .logout-button:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
     </style> 
 </head> 
 <body class="bg-gray-50">
@@ -114,10 +129,13 @@
                     <i class="fas fa-question-circle w-5 h-5 mr-3"></i>
                     FAQs
                 </a>
-                <a href="/logout" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
-                    <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                    Sair
-                </a>
+                <form action="/logout" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="logout-button nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 w-full text-left">
+                        <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
+                        Sair
+                    </button>
+                </form>
             </nav>
         </div>
         
@@ -125,7 +143,23 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
             <header class="bg-white border-b border-gray-200 px-6 py-4">
-                <h1 class="text-2xl font-bold text-gray-800">DASHBOARD</h1>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-800">DASHBOARD</h1>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-user mr-2"></i>
+                            Administrador
+                        </div>
+                        <form action="/logout" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="logout-button text-gray-600 hover:text-gray-800 flex items-center">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Sair
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </header>
             
             <!-- Content -->
@@ -306,6 +340,7 @@
                 }
             });
         });
+        
     </script>
-</body> 
-</html> 
+</body>
+</html>

@@ -98,6 +98,34 @@
             to { opacity: 1; transform: translateX(0); }
         }
         
+        /* Logo enhancement styles */
+        .company-logo {
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+            border-radius: 20px;
+        }
+        
+        .company-logo:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.25));
+        }
+        
+        .company-name-large {
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            letter-spacing: -0.02em;
+            font-weight: 800;
+        }
+        
+        /* Map icon clickable styles */
+        .map-icon-clickable {
+            transition: all 0.2s ease;
+        }
+        
+        .map-icon-clickable:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+        }
+        
         .slide-in-right {
             animation: slideInRight 0.8s ease-out;
         }
@@ -105,6 +133,104 @@
         @keyframes slideInRight {
             from { opacity: 0; transform: translateX(50px); }
             to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .hero-gradient {
+                padding: 2rem 1rem;
+            }
+            
+            .company-logo {
+                max-width: 120px;
+                max-height: 120px;
+            }
+            
+            .company-name-large {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .floating-shapes .shape {
+                display: none;
+            }
+            
+            .review-card {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+            
+            .form-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn-mobile {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                min-height: 44px; /* iOS touch target */
+            }
+            
+            .contact-info-mobile {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .contact-info-mobile .flex {
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .company-logo {
+                max-width: 100px;
+                max-height: 100px;
+            }
+            
+            .company-name-large {
+                font-size: 2rem;
+            }
+            
+            .hero-gradient {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .review-card {
+                margin: 0.25rem;
+                padding: 0.75rem;
+            }
+        }
+        
+        /* Touch-friendly styles */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Prevent zoom on input focus (iOS) */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            font-size: 16px;
+        }
+        
+        /* Smooth scrolling for mobile */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Mobile navigation improvements */
+        @media (max-width: 768px) {
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-top: 1px solid #e5e7eb;
+                padding: 0.5rem;
+                z-index: 50;
+            }
         }
         
         .pulse-animation {
@@ -144,26 +270,29 @@
             <div class="shape"></div>
         </div>
         
-        <div class="relative z-10 px-4 py-16 sm:px-6 lg:px-8">
+        <div class="relative z-10 px-4 py-8 sm:py-16 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto text-center">
-                <!-- Company Logo -->
-                <div class="mb-8 fade-in">
-                    <div class="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl mb-6">
-                        @if(isset($company->logo) && $company->logo)
-                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-16 h-16 object-contain">
-                        @else
-                            <i class="fas fa-building text-white text-3xl"></i>
-                        @endif
-                    </div>
+                <!-- Company Logo/Name Section -->
+                <div class="mb-6 sm:mb-8 fade-in">
+                    @if(isset($company->logo) && $company->logo)
+                        <!-- Logo exists - show much larger logo -->
+                        <div class="inline-flex items-center justify-center w-32 h-32 sm:w-48 sm:h-48 bg-white/20 backdrop-blur-sm rounded-3xl mb-4 sm:mb-8 shadow-lg">
+                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-24 h-24 sm:w-40 sm:h-40 object-contain company-logo">
+                        </div>
+                        <!-- Company Name below logo -->
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-8 fade-in company-name-large">
+                            {{ $company->name ?? 'Nossa Empresa' }}
+                        </h1>
+                    @else
+                        <!-- No logo - show only company name, much larger -->
+                        <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold text-white mb-4 sm:mb-8 fade-in company-name-large">
+                            {{ $company->name ?? 'Nossa Empresa' }}
+                        </h1>
+                    @endif
                 </div>
                 
-                <!-- Company Name -->
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 fade-in">
-                    {{ $company->name ?? 'Nossa Empresa' }}
-                </h1>
-                
                 <!-- Subtitle -->
-                <p class="text-xl md:text-2xl text-blue-100 mb-8 fade-in">
+                <p class="text-lg sm:text-xl md:text-2xl text-blue-100 mb-6 sm:mb-8 fade-in px-4">
                     Sua opinião é muito importante para nós!
                 </p>
                 
@@ -188,23 +317,23 @@
     <div class="max-w-4xl mx-auto px-4 py-16">
         <!-- Review Form -->
         <div class="max-w-2xl mx-auto mb-16">
-            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Como foi sua experiência?</h2>
+            <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Como foi sua experiência?</h2>
                 
                 <!-- Rating Stars -->
-                <div class="text-center mb-8">
-                    <div class="flex justify-center space-x-2 mb-4" id="ratingStars">
-                        <i class="fas fa-star text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors" data-rating="1"></i>
-                        <i class="fas fa-star text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors" data-rating="2"></i>
-                        <i class="fas fa-star text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors" data-rating="3"></i>
-                        <i class="fas fa-star text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors" data-rating="4"></i>
-                        <i class="fas fa-star text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors" data-rating="5"></i>
+                <div class="text-center mb-6 sm:mb-8">
+                    <div class="flex justify-center space-x-1 sm:space-x-2 mb-4" id="ratingStars">
+                        <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="1"></i>
+                        <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="2"></i>
+                        <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="3"></i>
+                        <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="4"></i>
+                        <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="5"></i>
                     </div>
-                    <p class="text-gray-600" id="ratingText">Toque nas estrelas para avaliar</p>
+                    <p class="text-sm sm:text-base text-gray-600 px-4" id="ratingText">Toque nas estrelas para avaliar</p>
                 </div>
                 
                 <!-- Review Form -->
-                <form id="reviewForm" class="space-y-6">
+                <form id="reviewForm" class="space-y-4 sm:space-y-6">
                     @csrf
                     <input type="hidden" id="rating" name="rating" value="">
                     <input type="hidden" id="company_token" name="company_token" value="{{ $token }}">
@@ -220,8 +349,10 @@
                             id="whatsapp" 
                             name="whatsapp"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            class="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
                             placeholder="(11) 99999-9999"
+                            maxlength="15"
+                            oninput="formatPhoneNumber(this)"
                         >
                         <p class="text-xs text-gray-500 mt-1">Usado apenas para contato interno, não será divulgado</p>
                     </div>
@@ -235,8 +366,8 @@
                         <textarea 
                             id="comment" 
                             name="comment"
-                            rows="4"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                            rows="3"
+                            class="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input resize-none"
                             placeholder="Conte-nos mais sobre sua experiência..."
                         ></textarea>
                     </div>
@@ -246,7 +377,7 @@
                         type="submit" 
                         id="submitBtn"
                         disabled
-                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 btn-mobile touch-target"
                     >
                         <i class="fas fa-paper-plane mr-2"></i>
                         Enviar Avaliação
@@ -276,26 +407,26 @@
         </div>
         
         <!-- Company Info -->
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Sobre Nós</h2>
+        <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Sobre Nós</h2>
             
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <!-- Contact Info -->
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Informações de Contato</h3>
-                    <div class="space-y-3">
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Informações de Contato</h3>
+                    <div class="space-y-3 contact-info-mobile">
                         @if(isset($company->contact_number) && $company->contact_number)
                         <div class="flex items-center">
                             <i class="fas fa-phone text-blue-500 mr-3"></i>
-                            <span class="text-gray-600">{{ $company->contact_number }}</span>
+                            <span class="text-gray-600 text-sm sm:text-base">{{ $company->contact_number }}</span>
                         </div>
                         @endif
                         
                         @if(isset($company->business_website) && $company->business_website)
                         <div class="flex items-center">
                             <i class="fas fa-globe text-blue-500 mr-3"></i>
-                            <a href="{{ $company->business_website }}" target="_blank" class="text-blue-600 hover:underline">
+                            <a href="{{ $company->business_website }}" target="_blank" class="text-blue-600 hover:underline text-sm sm:text-base break-all">
                                 {{ $company->business_website }}
                             </a>
                         </div>
@@ -303,8 +434,13 @@
                         
                         @if(isset($company->business_address) && $company->business_address)
                         <div class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1"></i>
-                            <span class="text-gray-600">{{ $company->business_address }}</span>
+                            <a href="https://www.google.com/maps/search/{{ urlencode($company->business_address) }}" 
+                               target="_blank" 
+                               class="flex items-start hover:opacity-80 transition-opacity duration-200"
+                               title="Ver no Google Maps">
+                                <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
+                            </a>
+                            <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
                         </div>
                         @endif
                     </div>
@@ -312,20 +448,20 @@
                 
                 <!-- Google Reviews -->
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Nossas Avaliações</h3>
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
-                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-8 h-8 object-contain">
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Nossas Avaliações</h3>
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6">
+                            <div class="flex items-center mb-3 sm:mb-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-sm">
+                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-6 h-6 sm:w-8 sm:h-8 object-contain">
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-800">Google My Business</h4>
-                                    <p class="text-sm text-gray-600">Avaliações verificadas</p>
+                                    <h4 class="font-semibold text-gray-800 text-sm sm:text-base">Google My Business</h4>
+                                    <p class="text-xs sm:text-sm text-gray-600">Avaliações verificadas</p>
                                 </div>
                             </div>
                             <a href="{{ $company->google_business_url ?? '#' }}" 
                                target="_blank"
-                               class="text-blue-600 hover:text-blue-800 font-medium">
+                               class="text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base">
                                 Ver todas as avaliações →
                             </a>
                         </div>
@@ -334,14 +470,40 @@
         </div>
         
         <!-- Footer -->
-        <div class="text-center mt-16 fade-in">
-            <p class="text-gray-500 text-sm">
+        <div class="text-center mt-8 sm:mt-16 fade-in">
+            <p class="text-gray-500 text-xs sm:text-sm">
                 Powered by Reviews Platform
             </p>
         </div>
     </div>
     
     <script>
+        // Phone number formatting function
+        function formatPhoneNumber(input) {
+            // Remove all non-numeric characters
+            let value = input.value.replace(/\D/g, '');
+            
+            // Limit to 11 digits (DDD + 9 digits)
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            // Format based on length
+            if (value.length <= 2) {
+                // Just DDD: (11
+                input.value = value.length > 0 ? `(${value}` : '';
+            } else if (value.length <= 6) {
+                // DDD + first part: (11) 9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+            } else if (value.length <= 10) {
+                // DDD + first part + second part: (11) 9999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
+            } else {
+                // DDD + first part + second part: (11) 99999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+            }
+        }
+        
         // Review System
         class ReviewSystem {
             constructor() {
@@ -361,17 +523,30 @@
                 const stars = document.querySelectorAll('#ratingStars i');
                 
                 stars.forEach((star, index) => {
+                    // Click event
                     star.addEventListener('click', () => {
                         this.selectRating(index + 1);
                     });
                     
+                    // Touch event for mobile
+                    star.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        this.selectRating(index + 1);
+                    });
+                    
+                    // Hover effects (desktop only)
                     star.addEventListener('mouseenter', () => {
-                        this.highlightStars(index + 1);
+                        if (window.innerWidth > 768) {
+                            this.highlightStars(index + 1);
+                        }
                     });
                 });
                 
+                // Reset hover on mouse leave
                 document.getElementById('ratingStars').addEventListener('mouseleave', () => {
-                    this.highlightStars(this.selectedRating);
+                    if (window.innerWidth > 768) {
+                        this.highlightStars(this.selectedRating);
+                    }
                 });
             }
             

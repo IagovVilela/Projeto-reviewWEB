@@ -408,6 +408,8 @@
                                             name="contact_number"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                             placeholder="(11) 99999-9999"
+                                            maxlength="15"
+                                            oninput="formatPhoneNumber(this)"
                                         >
                                     </div>
                                 
@@ -496,7 +498,7 @@
                                             <p class="text-sm text-gray-600 mb-2">Clique para fazer upload do logo</p>
                                             <p class="text-xs text-gray-500">PNG, JPG até 2MB</p>
                                         </div>
-                                        <input type="file" id="logoFile" name="logo" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'logo')">
+                                        <input type="file" id="logoFile" name="logo" accept="image/*" class="hidden">
                                     </div>
                                 </div>
                                 
@@ -517,7 +519,7 @@
                                             <p class="text-sm text-gray-600 mb-2">Clique para fazer upload da imagem</p>
                                             <p class="text-xs text-gray-500">PNG, JPG até 5MB</p>
                                         </div>
-                                        <input type="file" id="bgFile" name="background_image" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'background')">
+                                        <input type="file" id="bgFile" name="background_image" accept="image/*" class="hidden">
                                     </div>
                                 </div>
                             </div>
@@ -534,6 +536,32 @@
         // Update star display
         function updateStarDisplay(value) {
             document.getElementById('starCount').textContent = value;
+        }
+        
+        // Phone number formatting function
+        function formatPhoneNumber(input) {
+            // Remove all non-numeric characters
+            let value = input.value.replace(/\D/g, '');
+            
+            // Limit to 11 digits (DDD + 9 digits)
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            // Format based on length
+            if (value.length <= 2) {
+                // Just DDD: (11
+                input.value = value.length > 0 ? `(${value}` : '';
+            } else if (value.length <= 6) {
+                // DDD + first part: (11) 9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+            } else if (value.length <= 10) {
+                // DDD + first part + second part: (11) 9999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
+            } else {
+                // DDD + first part + second part: (11) 99999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+            }
         }
         
         // Submit form function

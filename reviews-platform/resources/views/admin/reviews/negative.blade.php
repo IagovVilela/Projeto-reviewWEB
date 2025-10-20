@@ -180,6 +180,101 @@
                 </div>
             </div>
             
+            <!-- Filters Section -->
+            <div class="px-6 py-4">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Filtros</h3>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="applyFilters()" class="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors">
+                                <i class="fas fa-filter mr-2"></i>
+                                Aplicar Filtros
+                            </button>
+                            <button onclick="clearFilters()" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition-colors">
+                                <i class="fas fa-times mr-2"></i>
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Company Filter -->
+                        <div>
+                            <label for="companyFilter" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-building mr-2"></i>
+                                Empresa
+                            </label>
+                            <select id="companyFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Todas as empresas</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Status Filter -->
+                        <div>
+                            <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-clock mr-2"></i>
+                                Status
+                            </label>
+                            <select id="statusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Todos os status</option>
+                                <option value="unprocessed">Não Processadas</option>
+                                <option value="processed">Processadas</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Rating Filter -->
+                        <div>
+                            <label for="ratingFilter" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-star mr-2"></i>
+                                Nota
+                            </label>
+                            <select id="ratingFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Todas as notas</option>
+                                <option value="1">1 estrela</option>
+                                <option value="2">2 estrelas</option>
+                                <option value="3">3 estrelas</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Period Filter -->
+                        <div>
+                            <label for="periodFilter" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar mr-2"></i>
+                                Período
+                            </label>
+                            <select id="periodFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Todos os períodos</option>
+                                <option value="today">Hoje</option>
+                                <option value="yesterday">Ontem</option>
+                                <option value="week">Esta semana</option>
+                                <option value="month">Este mês</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Search by WhatsApp -->
+                    <div class="mt-4">
+                        <label for="whatsappSearch" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Buscar por WhatsApp
+                        </label>
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="whatsappSearch" 
+                                placeholder="Digite o número do WhatsApp..."
+                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                maxlength="15"
+                                oninput="formatPhoneNumber(this)"
+                            >
+                            <button onclick="searchByWhatsApp()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Negative Reviews List -->
             <div class="flex-1 overflow-y-auto px-6 pb-6">
                 <div class="bg-white rounded-xl shadow-sm">
@@ -218,18 +313,89 @@
         class NegativeReviewsPanel {
             constructor() {
                 this.currentPage = 1;
+                this.filters = {
+                    company_id: '',
+                    status: '',
+                    rating: '',
+                    period: '',
+                    whatsapp: ''
+                };
+                this.companies = [];
                 this.init();
             }
             
             async init() {
+                await this.loadCompanies();
                 await this.loadNegativeReviews();
+                this.bindFilterEvents();
+            }
+            
+            async loadCompanies() {
+                try {
+                    const response = await fetch('/api/companies');
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.companies = result.data;
+                        this.populateCompanyFilter();
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar empresas:', error);
+                }
+            }
+            
+            populateCompanyFilter() {
+                const select = document.getElementById('companyFilter');
+                select.innerHTML = '<option value="">Todas as empresas</option>';
+                
+                this.companies.forEach(company => {
+                    const option = document.createElement('option');
+                    option.value = company.id;
+                    option.textContent = company.name;
+                    select.appendChild(option);
+                });
+            }
+            
+            bindFilterEvents() {
+                // Auto-apply filters when dropdowns change
+                document.getElementById('companyFilter').addEventListener('change', () => {
+                    this.filters.company_id = document.getElementById('companyFilter').value;
+                    this.loadNegativeReviews();
+                });
+                
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    this.filters.status = document.getElementById('statusFilter').value;
+                    this.loadNegativeReviews();
+                });
+                
+                document.getElementById('ratingFilter').addEventListener('change', () => {
+                    this.filters.rating = document.getElementById('ratingFilter').value;
+                    this.loadNegativeReviews();
+                });
+                
+                document.getElementById('periodFilter').addEventListener('change', () => {
+                    this.filters.period = document.getElementById('periodFilter').value;
+                    this.loadNegativeReviews();
+                });
+                
+                // Enter key for WhatsApp search
+                document.getElementById('whatsappSearch').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.searchByWhatsApp();
+                    }
+                });
             }
             
             async loadNegativeReviews() {
                 try {
                     this.showLoading();
                     
-                    const response = await fetch('/api/reviews/negative');
+                    const params = new URLSearchParams({
+                        page: this.currentPage,
+                        ...this.filters
+                    });
+                    
+                    const response = await fetch(`/api/reviews/negative?${params}`);
                     const result = await response.json();
                     
                     if (result.success) {
@@ -394,6 +560,65 @@
         
         function refreshNegativeReviews() {
             negativeReviewsPanel.loadNegativeReviews();
+        }
+        
+        function applyFilters() {
+            negativeReviewsPanel.filters.company_id = document.getElementById('companyFilter').value;
+            negativeReviewsPanel.filters.status = document.getElementById('statusFilter').value;
+            negativeReviewsPanel.filters.rating = document.getElementById('ratingFilter').value;
+            negativeReviewsPanel.filters.period = document.getElementById('periodFilter').value;
+            negativeReviewsPanel.loadNegativeReviews();
+        }
+        
+        function clearFilters() {
+            document.getElementById('companyFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('ratingFilter').value = '';
+            document.getElementById('periodFilter').value = '';
+            document.getElementById('whatsappSearch').value = '';
+            
+            negativeReviewsPanel.filters = {
+                company_id: '',
+                status: '',
+                rating: '',
+                period: '',
+                whatsapp: ''
+            };
+            
+            negativeReviewsPanel.loadNegativeReviews();
+        }
+        
+        function searchByWhatsApp() {
+            const whatsapp = document.getElementById('whatsappSearch').value;
+            if (whatsapp.trim()) {
+                negativeReviewsPanel.filters.whatsapp = whatsapp;
+                negativeReviewsPanel.loadNegativeReviews();
+            }
+        }
+        
+        function formatPhoneNumber(input) {
+            // Remove all non-numeric characters
+            let value = input.value.replace(/\D/g, '');
+            
+            // Limit to 11 digits (DDD + 9 digits)
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            // Format based on length
+            if (value.length <= 2) {
+                // Just DDD: (11
+                input.value = value.length > 0 ? `(${value}` : '';
+            } else if (value.length <= 6) {
+                // DDD + first part: (11) 9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+            } else if (value.length <= 10) {
+                // DDD + first part + second part: (11) 9999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
+            } else {
+                // DDD + first part + second part: (11) 99999-9999
+                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+            }
         }
         
         function contactWhatsApp(whatsapp) {
