@@ -47,30 +47,46 @@
         
         /* Navigation Items */
         .nav-item {
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
             position: relative;
+            overflow: hidden;
         }
         
-        .nav-item:hover {
-            background-color: rgba(139, 92, 246, 0.1);
-            color: var(--primary-color);
-        }
-        
-        .nav-item.active {
-            background-color: rgba(139, 92, 246, 0.15);
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .nav-item.active::before {
+        .nav-item::before {
             content: '';
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
-            width: 4px;
+            width: 3px;
             background: var(--primary-gradient);
-            border-radius: 0 4px 4px 0;
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(139, 92, 246, 0.08);
+            color: var(--primary-color);
+            transform: translateX(2px);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(139, 92, 246, 0.12);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .nav-item.active::before,
+        .nav-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .nav-item i {
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover i {
+            transform: scale(1.1);
         }
         
         /* Logo */
@@ -81,32 +97,74 @@
         /* Buttons */
         .btn-primary {
             background: var(--primary-gradient);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
         }
         
         .btn-secondary {
             background: #6b7280;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            position: relative;
         }
         
         .btn-secondary:hover {
             background: #4b5563;
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
         }
         
         /* Cards */
         .card-hover {
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+        
+        .card-hover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
         
         .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-hover:hover::after {
+            opacity: 1;
         }
         
         /* Icon Backgrounds */
@@ -116,10 +174,72 @@
         
         /* Animations */
         .fade-in {
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Staggered Animation */
+        .stagger-item {
+            opacity: 0;
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -130,23 +250,113 @@
             }
         }
         
+        .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+        .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+        .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+        .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+        .stagger-item:nth-child(6) { animation-delay: 0.3s; }
+        .stagger-item:nth-child(7) { animation-delay: 0.35s; }
+        .stagger-item:nth-child(8) { animation-delay: 0.4s; }
+        .stagger-item:nth-child(9) { animation-delay: 0.45s; }
+        
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Pulse Animation */
+        .pulse-soft {
+            animation: pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulseSoft {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        /* Shimmer Effect */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: transparent;
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            transition: background 0.3s ease;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Input Styles */
+        input:not([type="checkbox"]):not([type="radio"]),
+        select,
+        textarea {
+            transition: var(--transition-smooth);
+        }
+        
+        input:focus:not([type="checkbox"]):not([type="radio"]),
+        select:focus,
+        textarea:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+        
+        /* Focus Ring */
+        *:focus {
+            outline: none;
+        }
+        
+        *:focus-visible {
+            outline: 2px solid rgba(139, 92, 246, 0.5);
+            outline-offset: 2px;
         }
         
         /* Page Container */
@@ -157,6 +367,38 @@
         /* Content Area */
         .content-area {
             min-height: calc(100vh - 80px);
+        }
+        
+        /* Button Protection - Prevent buttons from disappearing */
+        button,
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger,
+        a[role="button"] {
+            display: inline-flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        
+        button:disabled,
+        .btn-primary:disabled,
+        .btn-secondary:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed;
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure buttons remain visible during animations */
+        button,
+        .btn-primary,
+        .btn-secondary {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease !important;
+        }
+        
+        /* Prevent JS errors from hiding buttons */
+        .hidden:is(button, .btn-primary, .btn-secondary, .btn-danger) {
+            display: none !important;
         }
         
         @yield('styles')
@@ -310,51 +552,144 @@
     
     <!-- Scripts -->
     <script>
-        // Notification System
-        function showNotification(message, type = 'info') {
+        // Enhanced Notification System
+        function showNotification(message, type = 'info', duration = 3000) {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg fade-in ${
-                type === 'success' ? 'bg-green-500' :
-                type === 'error' ? 'bg-red-500' :
-                type === 'warning' ? 'bg-yellow-500' :
-                'bg-blue-500'
-            } text-white`;
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                warning: 'exclamation-triangle',
+                info: 'info-circle'
+            };
+            
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl ${colors[type]} text-white transform translate-x-full transition-all duration-500 ease-out backdrop-blur-sm`;
+            notification.style.cssText = 'backdrop-filter: blur(10px); max-width: 400px;';
             
             notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-${
-                        type === 'success' ? 'check-circle' :
-                        type === 'error' ? 'exclamation-circle' :
-                        type === 'warning' ? 'exclamation-triangle' :
-                        'info-circle'
-                    } mr-3"></i>
-                    <span>${message}</span>
+                <div class="flex items-center gap-3">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-${icons[type]} text-2xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-white bg-opacity-30 rounded-b-xl overflow-hidden">
+                    <div class="progress-bar h-full bg-white bg-opacity-50" style="width: 100%; animation: progress ${duration}ms linear;"></div>
                 </div>
             `;
             
             document.body.appendChild(notification);
             
+            // Slide in
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+            });
+            
+            // Auto remove
             setTimeout(() => {
+                notification.style.transform = 'translateX(calc(100% + 1rem))';
                 notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
                 setTimeout(() => {
                     if (document.body.contains(notification)) {
                         document.body.removeChild(notification);
                     }
-                }, 300);
-            }, 3000);
+                }, 500);
+            }, duration);
         }
         
-        // Auto-hide success/error messages
+        // Progress bar animation
+        const progressStyle = document.createElement('style');
+        progressStyle.textContent = `
+            @keyframes progress {
+                from { width: 100%; }
+                to { width: 0%; }
+            }
+        `;
+        document.head.appendChild(progressStyle);
+        
+        // Auto-hide success/error messages with fade - only target notification messages
         setTimeout(() => {
-            document.querySelectorAll('.bg-green-50, .bg-red-50').forEach(el => {
-                if (el.textContent.includes('{{ session('success') }}') || el.textContent.includes('{{ session('error') }}')) {
-                    el.style.transition = 'opacity 0.3s';
+            // Only target notification divs in main content area with proper structure
+            document.querySelectorAll('main > .bg-green-50, main > .bg-red-50, main > .bg-blue-50').forEach(el => {
+                // Check if this is actually a notification (has border and specific classes)
+                if (el.classList.contains('border') && (
+                    el.classList.contains('border-green-200') || 
+                    el.classList.contains('border-red-200') || 
+                    el.classList.contains('border-blue-200')
+                )) {
+                    el.style.transition = 'all 0.5s ease-out';
                     el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 300);
+                    el.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        if (el.parentElement && document.body.contains(el)) {
+                            el.remove();
+                        }
+                    }, 500);
                 }
             });
         }, 5000);
+        
+        // Add loading overlay function
+        function showLoading(message = 'Carregando...') {
+            const overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center backdrop-blur-sm';
+            overlay.style.cssText = 'backdrop-filter: blur(8px);';
+            
+            overlay.innerHTML = `
+                <div class="bg-white rounded-2xl p-8 shadow-2xl scale-in">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="relative">
+                            <div class="w-16 h-16 border-4 border-purple-200 rounded-full"></div>
+                            <div class="w-16 h-16 border-4 border-purple-600 rounded-full border-t-transparent absolute top-0 left-0" style="animation: spin 1s linear infinite;"></div>
+                        </div>
+                        <p class="text-gray-700 font-medium">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            return overlay;
+        }
+        
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 300);
+            }
+        }
+        
+        // Spin animation
+        const spinStyle = document.createElement('style');
+        spinStyle.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinStyle);
+        
+        // Add smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fade in body
+            document.body.style.opacity = '0';
+            requestAnimationFrame(() => {
+                document.body.style.transition = 'opacity 0.3s ease-out';
+                document.body.style.opacity = '1';
+            });
+        });
     </script>
     
     @yield('scripts')

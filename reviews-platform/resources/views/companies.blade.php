@@ -31,7 +31,7 @@
     @if($companies->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($companies as $company)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover stagger-item">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center space-x-3">
                             @if($company->logo)
@@ -120,11 +120,60 @@
 
 @section('scripts')
     <script>
-        // Add smooth animations to cards
-        document.querySelectorAll('.card-hover').forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('fade-in');
-            }, index * 50);
+        // Enhanced animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add ripple effect to buttons
+            document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        top: ${y}px;
+                        left: ${x}px;
+                        background: rgba(255, 255, 255, 0.5);
+                        border-radius: 50%;
+                        transform: scale(0);
+                        animation: ripple 0.6s ease-out;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+            
+            // Add hover parallax effect to cards (disabled to prevent button issues)
+            // Parallax effect can interfere with button clicks and hover states
+            document.querySelectorAll('.card-hover').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    // Simple hover effect without transforms
+                    this.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    // Ensure transition remains
+                    this.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
+                });
+            });
         });
+        
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 @endsection

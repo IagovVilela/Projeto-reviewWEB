@@ -1,235 +1,229 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliações Negativas - Reviews Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@extends('layouts.admin')
+
+@section('title', 'Avaliações Negativas - Reviews Platform')
+
+@section('page-title', '🚨 Avaliações Negativas')
+@section('page-description', 'Avaliações que requerem atenção imediata')
+
+@section('header-actions')
+    <div class="urgent-badge text-white px-4 py-2 rounded-lg font-bold pulse-soft">
+        <i class="fas fa-exclamation-triangle mr-2"></i>
+        AÇÃO NECESSÁRIA
+    </div>
+    <button onclick="refreshNegativeReviews()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors">
+        <i class="fas fa-sync-alt mr-2"></i>
+        Atualizar
+    </button>
+@endsection
+
+@section('styles')
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .sidebar-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
         .alert-card {
             background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border: 2px solid #fecaca;
+            transition: var(--transition-smooth);
+        }
+        
+        .alert-card:hover {
+            border-color: #fca5a5;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.15);
         }
         
         .urgent-badge {
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .urgent-badge::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .urgent-badge:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .stars-negative {
             color: #dc2626;
         }
+        
+        .priority-high {
+            animation: pulseRed 2s infinite;
+        }
+        
+        @keyframes pulseRed {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+        }
+        
+        .review-action-btn {
+            transition: var(--transition-smooth);
+        }
+        
+        .review-action-btn:hover {
+            transform: translateY(-2px);
+        }
     </style>
-</head>
-<body class="bg-gray-50">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 sidebar-gradient text-white">
-            <div class="p-6">
-                <div class="flex items-center mb-8">
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-star text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold">Reviews Platform</h1>
-                        <p class="text-blue-100 text-sm">Painel Administrativo</p>
-                    </div>
+@endsection
+
+@section('content')
+    <!-- Alert Banner -->
+    <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg mb-6 fade-in">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-red-700">
+                    <strong>Atenção:</strong> Estas avaliações negativas podem impactar a reputação da empresa. 
+                    Recomendamos entrar em contato com os clientes o mais rápido possível.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Total Negative Reviews -->
+        <div class="bg-white rounded-xl p-6 card-hover stagger-item">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
                 </div>
-                
-                <nav class="space-y-2">
-                    <a href="/dashboard" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-100 hover:bg-white/20 transition-colors">
-                        <i class="fas fa-tachometer-alt w-5 h-5 mr-3"></i>
-                        Dashboard
-                    </a>
-                    <a href="/companies" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-100 hover:bg-white/20 transition-colors">
-                        <i class="fas fa-building w-5 h-5 mr-3"></i>
-                        Empresas
-                    </a>
-                    <a href="/reviews" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-100 hover:bg-white/20 transition-colors">
-                        <i class="fas fa-star w-5 h-5 mr-3"></i>
-                        Avaliações
-                    </a>
-                    <a href="/reviews/negative" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-white bg-white/20">
-                        <i class="fas fa-exclamation-triangle w-5 h-5 mr-3"></i>
-                        Avaliações Negativas
-                    </a>
-                    <a href="/reports" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-100 hover:bg-white/20 transition-colors">
-                        <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                        Relatórios
-                    </a>
-                    <a href="/settings" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-100 hover:bg-white/20 transition-colors">
-                        <i class="fas fa-cog w-5 h-5 mr-3"></i>
-                        Configurações
-                    </a>
-                </nav>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total de Negativas</p>
+                    <p class="text-2xl font-bold text-red-600" id="totalNegative">0</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        <i class="fas fa-arrow-down trend-down"></i> Últimas 24h
+                    </p>
+                </div>
             </div>
         </div>
         
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-white border-b border-gray-200 px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-red-600">🚨 Avaliações Negativas</h1>
-                        <p class="text-gray-600">Avaliações que requerem atenção imediata</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="urgent-badge text-white px-4 py-2 rounded-lg font-bold">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            AÇÃO NECESSÁRIA
-                        </div>
-                        <button onclick="refreshNegativeReviews()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors">
-                            <i class="fas fa-sync-alt mr-2"></i>
-                            Atualizar
-                        </button>
-                    </div>
+        <!-- Unprocessed Reviews -->
+        <div class="bg-white rounded-xl p-6 card-hover stagger-item priority-high">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 pulse-soft">
+                    <i class="fas fa-clock text-orange-600 text-xl"></i>
                 </div>
-            </header>
-            
-            <!-- Alert Banner -->
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 mx-6 mt-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-exclamation-triangle text-red-400"></i>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700">
-                            <strong>Atenção:</strong> Estas avaliações negativas podem impactar a reputação da empresa. 
-                            Recomendamos entrar em contato com os clientes o mais rápido possível.
-                        </p>
-                    </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Não Processadas</p>
+                    <p class="text-2xl font-bold text-orange-600" id="unprocessedNegative">0</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        <i class="fas fa-exclamation-circle"></i> Requer ação
+                    </p>
                 </div>
             </div>
-            
-            <!-- Stats Cards -->
-            <div class="px-6 py-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <!-- Total Negative Reviews -->
-                    <div class="bg-white rounded-xl p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Total de Negativas</p>
-                                <p class="text-2xl font-bold text-red-600" id="totalNegative">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Unprocessed Reviews -->
-                    <div class="bg-white rounded-xl p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-clock text-orange-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Não Processadas</p>
-                                <p class="text-2xl font-bold text-orange-600" id="unprocessedNegative">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Today's Negatives -->
-                    <div class="bg-white rounded-xl p-6 card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-calendar-day text-purple-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Hoje</p>
-                                <p class="text-2xl font-bold text-purple-600" id="todayNegative">0</p>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+        
+        <!-- Today's Negatives -->
+        <div class="bg-white rounded-xl p-6 card-hover stagger-item">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4 shimmer">
+                    <i class="fas fa-calendar-day text-purple-600 text-xl"></i>
                 </div>
-            </div>
-            
-            <!-- Negative Reviews List -->
-            <div class="flex-1 overflow-y-auto px-6 pb-6">
-                <div class="bg-white rounded-xl shadow-sm">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Lista de Avaliações Negativas</h2>
-                        <p class="text-gray-600 text-sm">Avaliações que requerem atenção imediata</p>
-                    </div>
-                    
-                    <!-- Loading State -->
-                    <div id="loadingState" class="p-8 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-                            <i class="fas fa-spinner fa-spin text-red-600 text-2xl"></i>
-                        </div>
-                        <p class="text-gray-600">Carregando avaliações negativas...</p>
-                    </div>
-                    
-                    <!-- Reviews Container -->
-                    <div id="reviewsContainer" class="hidden">
-                        <!-- Reviews will be loaded here -->
-                    </div>
-                    
-                    <!-- Empty State -->
-                    <div id="emptyState" class="hidden p-8 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Nenhuma avaliação negativa!</h3>
-                        <p class="text-gray-600">Parabéns! Todas as avaliações estão positivas.</p>
-                    </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Hoje</p>
+                    <p class="text-2xl font-bold text-purple-600" id="todayNegative">0</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        <i class="fas fa-clock"></i> Últimas 24h
+                    </p>
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- Negative Reviews List -->
+    <div class="bg-white rounded-xl shadow-sm">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">Lista de Avaliações Negativas</h2>
+                    <p class="text-gray-600 text-sm">Avaliações que requerem atenção imediata</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <select id="sortFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500">
+                        <option value="recent">Mais recentes</option>
+                        <option value="oldest">Mais antigas</option>
+                        <option value="lowest">Menor nota</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loadingState" class="p-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                <i class="fas fa-spinner fa-spin text-red-600 text-2xl"></i>
+            </div>
+            <p class="text-gray-600">Carregando avaliações negativas...</p>
+        </div>
+        
+        <!-- Reviews Container -->
+        <div id="reviewsContainer" class="hidden">
+            <!-- Reviews will be loaded here -->
+        </div>
+        
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden p-12 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6 scale-in">
+                <i class="fas fa-check-circle text-green-600 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Nenhuma avaliação negativa!</h3>
+            <p class="text-gray-600 mb-4">Parabéns! Todas as avaliações estão positivas.</p>
+            <div class="inline-flex items-center text-green-600 text-sm font-medium">
+                <i class="fas fa-trophy mr-2"></i>
+                Excelente trabalho mantendo alta qualidade!
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
     <script>
         class NegativeReviewsPanel {
             constructor() {
                 this.currentPage = 1;
+                this.sortBy = 'recent';
                 this.init();
             }
             
             async init() {
                 await this.loadNegativeReviews();
+                this.bindEvents();
+            }
+            
+            bindEvents() {
+                document.getElementById('sortFilter').addEventListener('change', (e) => {
+                    this.sortBy = e.target.value;
+                    this.loadNegativeReviews();
+                });
             }
             
             async loadNegativeReviews() {
                 try {
                     this.showLoading();
                     
-                    const response = await fetch('/api/reviews/negative');
+                    const params = new URLSearchParams({
+                        sort: this.sortBy,
+                        page: this.currentPage
+                    });
+                    
+                    const response = await fetch(`/api/reviews/negative?${params}`);
                     const result = await response.json();
                     
                     if (result.success) {
@@ -251,7 +245,9 @@
                 
                 loadingState.classList.add('hidden');
                 
-                if (data.data.length === 0) {
+                const reviews = data.data || data;
+                
+                if (reviews.length === 0) {
                     emptyState.classList.remove('hidden');
                     container.classList.add('hidden');
                     return;
@@ -260,62 +256,81 @@
                 emptyState.classList.add('hidden');
                 container.classList.remove('hidden');
                 
-                container.innerHTML = data.data.map(review => this.createNegativeReviewCard(review)).join('');
+                container.innerHTML = reviews.map((review, index) => 
+                    this.createNegativeReviewCard(review, index)
+                ).join('');
             }
             
-            createNegativeReviewCard(review) {
+            createNegativeReviewCard(review, index) {
                 const today = new Date().toDateString();
                 const reviewDate = new Date(review.created_at).toDateString();
                 const isToday = today === reviewDate;
                 
                 return `
-                    <div class="p-6 border-b border-gray-200 hover:bg-red-50 transition-colors fade-in">
-                        <div class="alert-card rounded-lg p-4 mb-4">
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center mr-3">
-                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                    <div class="p-6 border-b border-gray-200 hover:bg-red-50 transition-all stagger-item" style="animation-delay: ${index * 0.05}s">
+                        <div class="alert-card rounded-xl p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center flex-1">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-4 shadow-lg shimmer">
+                                        <i class="fas fa-exclamation-triangle text-white text-lg"></i>
                                     </div>
-                                    <div>
-                                        <h3 class="font-bold text-red-800">${review.company.name}</h3>
-                                        <p class="text-sm text-red-600">
-                                            ${isToday ? '🚨 HOJE' : review.created_at}
-                                        </p>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-red-800 text-lg">${review.company.name}</h3>
+                                        <div class="flex items-center mt-1 space-x-2">
+                                            <span class="text-sm text-red-600">
+                                                ${isToday ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">🚨 HOJE</span>' : `<i class="far fa-clock mr-1"></i>${review.created_at}`}
+                                            </span>
+                                            ${!review.is_processed ? '<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">Não Processada</span>' : ''}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-2xl font-bold text-red-600">${review.rating}/5</div>
-                                    <div class="stars-negative text-lg">
+                                    <div class="text-3xl font-bold text-red-600">${review.rating}/5</div>
+                                    <div class="stars-negative text-xl mt-1">
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="flex items-center mb-3">
-                                <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mr-3">
-                                    <i class="fab fa-whatsapp mr-1"></i>
+                            <div class="flex items-center mb-4 space-x-3">
+                                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium">
+                                    <i class="fab fa-whatsapp mr-2"></i>
                                     ${review.whatsapp}
                                 </div>
-                                <button onclick="contactWhatsApp('${review.whatsapp}')" class="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors">
-                                    <i class="fab fa-whatsapp mr-1"></i>
+                                <button onclick="contactWhatsApp('${review.whatsapp}')" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium review-action-btn">
+                                    <i class="fab fa-whatsapp mr-2"></i>
                                     Contatar Agora
                                 </button>
                             </div>
                             
                             ${review.comment ? `
-                                <div class="bg-white p-3 rounded-lg border border-red-200">
-                                    <p class="text-gray-700 italic">"${review.comment}"</p>
+                                <div class="bg-white p-4 rounded-lg border-2 border-red-200 mb-4">
+                                    <p class="text-sm text-gray-500 mb-1">Comentário do cliente:</p>
+                                    <p class="text-gray-800 italic">"${review.comment}"</p>
                                 </div>
                             ` : ''}
                             
-                            <div class="flex justify-end space-x-2 mt-4">
-                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors">
-                                    <i class="fas fa-check mr-1"></i>
+                            ${review.private_feedback ? `
+                                <div class="bg-orange-50 p-4 rounded-lg border-2 border-orange-200 mb-4">
+                                    <p class="text-sm text-orange-700 font-medium mb-1">
+                                        <i class="fas fa-lock mr-1"></i> Feedback Privado:
+                                    </p>
+                                    <p class="text-gray-700">${review.private_feedback}</p>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all review-action-btn">
+                                    <i class="fas fa-check mr-2"></i>
                                     Marcar como Processada
                                 </button>
-                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors">
-                                    <i class="fas fa-envelope mr-1"></i>
+                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-600 transition-all review-action-btn">
+                                    <i class="fas fa-envelope mr-2"></i>
                                     Enviar Follow-up
+                                </button>
+                                <button onclick="addNote(${review.id})" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-600 transition-all review-action-btn">
+                                    <i class="fas fa-sticky-note mr-2"></i>
+                                    Adicionar Nota
                                 </button>
                             </div>
                         </div>
@@ -324,9 +339,10 @@
             }
             
             updateStats(data) {
-                const total = data.total;
-                const unprocessed = data.data.filter(r => !r.is_processed).length;
-                const today = data.data.filter(r => {
+                const reviews = data.data || data;
+                const total = data.total || reviews.length;
+                const unprocessed = reviews.filter(r => !r.is_processed).length;
+                const today = reviews.filter(r => {
                     const today = new Date().toDateString();
                     const reviewDate = new Date(r.created_at).toDateString();
                     return today === reviewDate;
@@ -335,6 +351,11 @@
                 document.getElementById('totalNegative').textContent = total;
                 document.getElementById('unprocessedNegative').textContent = unprocessed;
                 document.getElementById('todayNegative').textContent = today;
+                
+                // Update page title with count
+                if (unprocessed > 0) {
+                    document.title = `(${unprocessed}) Avaliações Negativas - Reviews Platform`;
+                }
             }
             
             showLoading() {
@@ -345,47 +366,7 @@
             
             showError(message) {
                 document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('reviewsContainer').classList.add('hidden');
-                document.getElementById('emptyState').classList.add('hidden');
-                
-                this.showNotification(message, 'error');
-            }
-            
-            showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `notification notification-${type}`;
-                notification.textContent = message;
-                
-                Object.assign(notification.style, {
-                    position: 'fixed',
-                    top: '20px',
-                    right: '20px',
-                    padding: '1rem 1.5rem',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontWeight: '500',
-                    zIndex: '1000',
-                    transform: 'translateX(100%)',
-                    transition: 'transform 0.3s ease',
-                    background: type === 'error' ? '#ef4444' : '#10b981',
-                    maxWidth: '400px',
-                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
-                });
-                
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(0)';
-                }, 100);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(100%)';
-                    setTimeout(() => {
-                        if (document.body.contains(notification)) {
-                            document.body.removeChild(notification);
-                        }
-                    }, 300);
-                }, 5000);
+                showNotification(message, 'error');
             }
         }
         
@@ -394,24 +375,69 @@
         
         function refreshNegativeReviews() {
             negativeReviewsPanel.loadNegativeReviews();
+            showNotification('Atualizando avaliações...', 'info');
         }
         
         function contactWhatsApp(whatsapp) {
             const cleanNumber = whatsapp.replace(/[^0-9]/g, '');
             window.open(`https://wa.me/${cleanNumber}`, '_blank');
+            showNotification('Abrindo WhatsApp...', 'success');
         }
         
-        function markAsProcessed(reviewId) {
+        async function markAsProcessed(reviewId) {
             if (confirm('Tem certeza que deseja marcar esta avaliação como processada?')) {
-                // Implementar marcação como processada
-                negativeReviewsPanel.showNotification('Avaliação marcada como processada!', 'success');
-                negativeReviewsPanel.loadNegativeReviews();
+                try {
+                    const loader = showLoading('Processando...');
+                    
+                    // Simular API call
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    hideLoading();
+                    showNotification('Avaliação marcada como processada!', 'success');
+                    negativeReviewsPanel.loadNegativeReviews();
+                } catch (error) {
+                    hideLoading();
+                    showNotification('Erro ao processar avaliação', 'error');
+                }
             }
         }
         
-        function sendFollowUp(reviewId) {
-            // Implementar envio de follow-up
-            negativeReviewsPanel.showNotification('Follow-up enviado!', 'success');
+        async function sendFollowUp(reviewId) {
+            const message = prompt('Digite a mensagem de follow-up (opcional):');
+            
+            if (message !== null) {
+                try {
+                    const loader = showLoading('Enviando follow-up...');
+                    
+                    // Simular API call
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    hideLoading();
+                    showNotification('Follow-up enviado com sucesso!', 'success');
+                } catch (error) {
+                    hideLoading();
+                    showNotification('Erro ao enviar follow-up', 'error');
+                }
+            }
+        }
+        
+        async function addNote(reviewId) {
+            const note = prompt('Adicionar nota interna:');
+            
+            if (note && note.trim()) {
+                try {
+                    const loader = showLoading('Salvando nota...');
+                    
+                    // Simular API call
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    hideLoading();
+                    showNotification('Nota adicionada com sucesso!', 'success');
+                } catch (error) {
+                    hideLoading();
+                    showNotification('Erro ao salvar nota', 'error');
+                }
+            }
         }
         
         // Initialize when DOM is loaded
@@ -419,5 +445,4 @@
             negativeReviewsPanel = new NegativeReviewsPanel();
         });
     </script>
-</body>
-</html>
+@endsection

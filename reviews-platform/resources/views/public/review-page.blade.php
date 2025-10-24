@@ -523,7 +523,7 @@
                                 <div class="flex space-x-3">
                                     <button 
                                         type="button" 
-                                        onclick="submitPrivateFeedback()" 
+                                        onclick="submitPrivateFeedback(event)" 
                                         class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
                                     >
                                         <i class="fas fa-paper-plane mr-2"></i>
@@ -590,7 +590,7 @@
         }
         
         // Global functions for private feedback
-        async function submitPrivateFeedback() {
+        async function submitPrivateFeedback(event) {
             const feedback = document.getElementById('privateFeedback').value;
             const contactPreference = document.getElementById('contactPreference').value;
             
@@ -600,8 +600,10 @@
             }
             
             try {
-                // Show loading
-                const button = event.target;
+                // Show loading - safely get button
+                const button = event && event.target ? event.target : document.querySelector('#privateFeedbackForm button[type="button"]');
+                if (!button) return;
+                
                 const originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enviando...';
                 button.disabled = true;
@@ -641,9 +643,11 @@
                 console.error('Erro ao enviar feedback:', error);
                 alert('Erro ao enviar feedback. Tente novamente.');
             } finally {
-                // Restore button
-                button.innerHTML = originalText;
-                button.disabled = false;
+                // Restore button safely
+                if (button && originalText) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
             }
         }
         

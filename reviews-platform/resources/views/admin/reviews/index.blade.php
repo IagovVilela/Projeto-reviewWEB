@@ -39,6 +39,31 @@
         .chart-container {
             position: relative;
             height: 300px;
+            opacity: 0;
+            animation: chartFadeIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes chartFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-container canvas {
+            animation: chartScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.2s;
+            transform: scale(0.95);
+        }
+        
+        @keyframes chartScale {
+            to {
+                transform: scale(1);
+            }
         }
         
         .table-container {
@@ -46,9 +71,19 @@
             overflow-y: auto;
         }
         
+        .chart-period-btn {
+            transition: var(--transition-smooth);
+        }
+        
         .chart-period-btn.active {
             background: var(--primary-gradient);
             color: white;
+            transform: scale(1.05);
+        }
+        
+        .chart-period-btn:hover:not(.active) {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
         }
         
         .trend-up {
@@ -192,12 +227,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <!-- Reviews Over Time Chart -->
         <div class="bg-white rounded-xl p-6 card-hover">
-            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
                 <div class="flex space-x-2">
-                    <button onclick="updateChartPeriod('7d')" class="chart-period-btn active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
-                    <button onclick="updateChartPeriod('30d')" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
-                    <button onclick="updateChartPeriod('90d')" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
+                    <button onclick="updateChartPeriod('7d', this)" class="chart-period-btn active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
+                    <button onclick="updateChartPeriod('30d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
+                    <button onclick="updateChartPeriod('90d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
                 </div>
             </div>
             <div class="chart-container">
@@ -301,6 +336,8 @@
                 };
                 this.companies = [];
                 this.charts = {};
+                this.chartPeriod = 7; // Default to 7 days
+                this.allReviews = []; // Store all reviews for chart updates
                 this.init();
             }
             
@@ -350,10 +387,13 @@
                     const result = await response.json();
                     
                     if (result.success) {
+                        // Store all reviews for chart updates
+                        this.allReviews = result.data.data || result.data;
+                        
                         this.displayReviews(result.data);
                         this.updateStats(result.data);
                         this.updateCompanyPerformanceTable(result.data);
-                        this.updateChartsWithRealData(result.data.data || result.data);
+                        this.updateChartsWithRealData(this.allReviews);
                     } else {
                         this.showError('Erro ao carregar avaliações');
                     }
@@ -364,7 +404,7 @@
             }
             
             initializeCharts() {
-                // Reviews Over Time Chart
+                // Reviews Over Time Chart with sample data
                 const reviewsOverTimeCtx = document.getElementById('reviewsOverTimeChart').getContext('2d');
                 this.charts.reviewsOverTime = new Chart(reviewsOverTimeCtx, {
                     type: 'line',
@@ -372,42 +412,95 @@
                         labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
                         datasets: [{
                             label: 'Positivas',
-                            data: [0, 0, 0, 0, 0, 0, 0],
+                            data: [12, 19, 15, 21, 18, 25, 22], // Sample data
                             borderColor: '#10b981',
                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            tension: 0.4
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
                         }, {
                             label: 'Negativas',
-                            data: [0, 0, 0, 0, 0, 0, 0],
+                            data: [3, 5, 2, 4, 3, 6, 4], // Sample data
                             borderColor: '#ef4444',
                             backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            tension: 0.4
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#ef4444',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeInOutQuart',
+                            delay: (context) => {
+                                let delay = 0;
+                                if (context.type === 'data' && context.mode === 'default') {
+                                    delay = context.dataIndex * 100;
+                                }
+                                return delay;
+                            }
+                        },
                         plugins: {
                             legend: {
                                 position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: {
+                                        size: 13
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                cornerRadius: 8
                             }
                         },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    precision: 0
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
                             }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
                         }
                     }
                 });
                 
-                // Rating Distribution Chart
+                // Rating Distribution Chart with sample data
                 const ratingDistributionCtx = document.getElementById('ratingDistributionChart').getContext('2d');
                 this.charts.ratingDistribution = new Chart(ratingDistributionCtx, {
                     type: 'doughnut',
                     data: {
                         labels: ['5★', '4★', '3★', '2★', '1★'],
                         datasets: [{
-                            data: [0, 0, 0, 0, 0],
+                            data: [45, 30, 15, 7, 3], // Sample data
                             backgroundColor: [
                                 '#10b981',
                                 '#34d399',
@@ -415,8 +508,9 @@
                                 '#f59e0b',
                                 '#ef4444'
                             ],
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverOffset: 8
                         }]
                     },
                     options: {
@@ -425,6 +519,28 @@
                         plugins: {
                             legend: {
                                 position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 13
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += context.parsed + ' avaliações';
+                                        return label;
+                                    }
+                                }
                             }
                         }
                     }
@@ -434,7 +550,7 @@
             updateChartsWithRealData(reviews) {
                 if (!reviews || reviews.length === 0) return;
                 
-                // Update rating distribution
+                // Update rating distribution chart
                 const ratingCounts = [0, 0, 0, 0, 0];
                 reviews.forEach(review => {
                     if (review.rating >= 1 && review.rating <= 5) {
@@ -446,6 +562,102 @@
                     this.charts.ratingDistribution.data.datasets[0].data = ratingCounts;
                     this.charts.ratingDistribution.update();
                 }
+                
+                // Update reviews over time chart
+                this.updateReviewsOverTimeChart(reviews);
+            }
+            
+            updateReviewsOverTimeChart(reviews) {
+                if (!reviews || reviews.length === 0 || !this.charts.reviewsOverTime) return;
+                
+                const today = new Date();
+                const dateRanges = [];
+                const labels = [];
+                const positiveData = [];
+                const negativeData = [];
+                
+                // Create array of dates based on period
+                const period = this.chartPeriod;
+                
+                if (period === 7) {
+                    // Last 7 days - show day names
+                    for (let i = period - 1; i >= 0; i--) {
+                        const date = new Date(today);
+                        date.setDate(date.getDate() - i);
+                        date.setHours(0, 0, 0, 0);
+                        dateRanges.push(date);
+                        
+                        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                        labels.push(dayNames[date.getDay()]);
+                    }
+                } else if (period === 30) {
+                    // Last 30 days - show every 5 days
+                    for (let i = period - 1; i >= 0; i -= 5) {
+                        const date = new Date(today);
+                        date.setDate(date.getDate() - i);
+                        date.setHours(0, 0, 0, 0);
+                        dateRanges.push(date);
+                        
+                        labels.push(`${date.getDate()}/${date.getMonth() + 1}`);
+                    }
+                } else if (period === 90) {
+                    // Last 90 days - show every 15 days
+                    for (let i = period - 1; i >= 0; i -= 15) {
+                        const date = new Date(today);
+                        date.setDate(date.getDate() - i);
+                        date.setHours(0, 0, 0, 0);
+                        dateRanges.push(date);
+                        
+                        labels.push(`${date.getDate()}/${date.getMonth() + 1}`);
+                    }
+                }
+                
+                // Count reviews for each date range
+                dateRanges.forEach((date, index) => {
+                    let positiveCount = 0;
+                    let negativeCount = 0;
+                    
+                    // Get the range for this data point
+                    const nextDate = dateRanges[index + 1] || new Date(today.getTime() + 86400000);
+                    
+                    reviews.forEach(review => {
+                        const reviewDate = new Date(review.created_at);
+                        reviewDate.setHours(0, 0, 0, 0);
+                        
+                        // For 7 days, match exact day. For others, match range
+                        if (period === 7) {
+                            if (reviewDate.getTime() === date.getTime()) {
+                                if (review.is_positive) {
+                                    positiveCount++;
+                                } else {
+                                    negativeCount++;
+                                }
+                            }
+                        } else {
+                            if (reviewDate >= date && reviewDate < nextDate) {
+                                if (review.is_positive) {
+                                    positiveCount++;
+                                } else {
+                                    negativeCount++;
+                                }
+                            }
+                        }
+                    });
+                    
+                    positiveData.push(positiveCount);
+                    negativeData.push(negativeCount);
+                });
+                
+                // Update chart
+                this.charts.reviewsOverTime.data.labels = labels;
+                this.charts.reviewsOverTime.data.datasets[0].data = positiveData;
+                this.charts.reviewsOverTime.data.datasets[1].data = negativeData;
+                this.charts.reviewsOverTime.update('active');
+            }
+            
+            changeChartPeriod(period) {
+                this.chartPeriod = period;
+                this.updateReviewsOverTimeChart(this.allReviews);
             }
             
             displayReviews(data) {
@@ -705,6 +917,8 @@
         }
         
         async function exportContacts(button) {
+            if (!button) return;
+            
             const companyId = document.getElementById('companyFilter').value;
             if (!companyId) {
                 showNotification('Selecione uma empresa para exportar os contatos', 'warning');
@@ -745,8 +959,11 @@
                 console.error('Erro:', error);
                 showNotification('Erro ao exportar contatos', 'error');
             } finally {
-                button.innerHTML = originalText;
-                button.disabled = false;
+                // Safely restore button state
+                if (button && originalText) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
             }
         }
         
@@ -770,15 +987,23 @@
             showNotification(`Mostrando avaliações de ${companyName}`, 'success');
         }
         
-        function updateChartPeriod(period) {
+        function updateChartPeriod(periodStr, element) {
+            if (!element || !reviewsPanel) return;
+            
+            // Parse period string (e.g., '7d' -> 7)
+            const period = parseInt(periodStr);
+            
+            // Update button styles
             document.querySelectorAll('.chart-period-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-purple-500', 'text-white');
                 btn.classList.add('bg-gray-200', 'text-gray-600');
             });
             
-            event.target.classList.add('active');
-            event.target.classList.remove('bg-gray-200', 'text-gray-600');
-            event.target.classList.add('bg-purple-500', 'text-white');
+            element.classList.add('active', 'bg-purple-500', 'text-white');
+            element.classList.remove('bg-gray-200', 'text-gray-600');
+            
+            // Update chart with real data
+            reviewsPanel.changeChartPeriod(period);
         }
         
         // Initialize when DOM is loaded

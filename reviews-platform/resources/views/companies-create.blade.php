@@ -435,11 +435,15 @@
             });
         });
         
-        // Form submission
+        // Form submission - prevent double submit
         document.getElementById('companyForm').addEventListener('submit', function(e) {
-            const button = document.querySelector('button[type="submit"]');
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Salvando...';
-            button.disabled = true;
+            const submitButtons = document.querySelectorAll('button[type="submit"], button[onclick*="submit"]');
+            submitButtons.forEach(button => {
+                if (!button.disabled) {
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Salvando...';
+                    button.disabled = true;
+                }
+            });
         });
     </script>
 @endsection
