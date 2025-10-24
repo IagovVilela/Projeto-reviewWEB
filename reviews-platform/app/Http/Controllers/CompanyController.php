@@ -13,7 +13,7 @@ class CompanyController extends Controller
     {
         $companies = Company::withCount(['reviews', 'reviewPages'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(12); // 12 empresas por página
             
         return view('companies', compact('companies'));
     }
