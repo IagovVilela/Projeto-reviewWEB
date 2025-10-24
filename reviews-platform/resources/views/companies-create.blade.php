@@ -86,12 +86,12 @@
 @section('content')
     <div class="max-w-4xl mx-auto">
         <!-- Progress Indicator -->
-        <div class="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-600">Progresso do cadastro</span>
-                <span class="text-sm text-gray-500" id="progressText">0/7 campos preenchidos</span>
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Progresso do cadastro</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400" id="progressText">0/7 campos preenchidos</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div id="progressBar" class="h-2 rounded-full transition-all duration-300" style="width: 0%; background: var(--primary-gradient);"></div>
             </div>
         </div>
@@ -100,21 +100,21 @@
             @csrf
             
             <!-- Informações Básicas -->
-            <div class="form-section p-6">
+            <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
                     <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-building text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800">Informações Básicas</h2>
-                        <p class="text-sm text-gray-600">Dados principais da empresa</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Informações Básicas</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Dados principais da empresa</p>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Nome da Empresa -->
                     <div class="lg:col-span-2">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Nome da Empresa *
                         </label>
                         <input 
@@ -122,18 +122,18 @@
                             id="name" 
                             name="name"
                             required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="Digite o nome da empresa"
                         >
                     </div>
                     
                     <!-- URL -->
                     <div>
-                        <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             URL Personalizada *
                         </label>
                         <div class="flex">
-                            <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg">
+                            <span class="inline-flex items-center px-3 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 border border-r-0 border-gray-300 dark:border-gray-600 rounded-l-lg">
                                 rateus.io/
                             </span>
                             <input 
@@ -141,11 +141,11 @@
                                 id="url" 
                                 name="url"
                                 required
-                                class="flex-1 px-4 py-2 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                class="flex-1 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-r-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 placeholder="sua-empresa"
                             >
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
                             Somente letras minúsculas, números e hífens
                         </p>
@@ -153,7 +153,7 @@
                     
                     <!-- Email para Feedback Negativo -->
                     <div>
-                        <label for="negative_email" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="negative_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Email para Feedback Negativo *
                         </label>
                         <input 
@@ -161,10 +161,10 @@
                             id="negative_email" 
                             name="negative_email"
                             required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="contato@empresa.com"
                         >
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
                             Avaliações negativas serão enviadas para este email
                         </p>
@@ -172,7 +172,7 @@
                     
                     <!-- Pontuação Positiva -->
                     <div class="lg:col-span-2">
-                        <label for="positive_score" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="positive_score" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Limite de Avaliação Positiva
                         </label>
                         <div class="flex items-center space-x-4">
@@ -187,7 +187,7 @@
                                 oninput="updateStarDisplay(this.value)"
                             >
                             <div class="flex items-center space-x-2 min-w-[120px]">
-                                <span id="starCount" class="text-2xl font-bold text-purple-600">4</span>
+                                <span id="starCount" class="text-2xl font-bold text-purple-600 dark:text-purple-400">4</span>
                                 <div class="flex text-yellow-400" id="starIcons">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -196,7 +196,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
                             Avaliações com esta nota ou superior serão direcionadas para o Google
                         </p>
@@ -205,56 +205,56 @@
             </div>
             
             <!-- Detalhes da Empresa -->
-            <div class="form-section p-6">
+            <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
                     <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-info-circle text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800">Detalhes da Empresa</h2>
-                        <p class="text-sm text-gray-600">Informações de contato e localização</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Detalhes da Empresa</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Informações de contato e localização</p>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Website -->
                     <div>
-                        <label for="business_website" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="business_website" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Site da Empresa
                         </label>
                         <input 
                             type="url" 
                             id="business_website" 
                             name="business_website"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="https://www.suaempresa.com"
                         >
                     </div>
                     
                     <!-- Telefone -->
                     <div>
-                        <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="contact_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Telefone de Contato
                         </label>
                         <input 
                             type="tel" 
                             id="contact_number" 
                             name="contact_number"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="(11) 99999-9999"
                         >
                     </div>
                     
                     <!-- Endereço -->
                     <div class="lg:col-span-2">
-                        <label for="business_address" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="business_address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Endereço Completo
                         </label>
                         <textarea 
                             id="business_address" 
                             name="business_address"
                             rows="3"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                            class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                             placeholder="Rua, número, bairro, cidade, estado, CEP"
                         ></textarea>
                     </div>
@@ -262,29 +262,29 @@
             </div>
             
             <!-- Google My Business -->
-            <div class="form-section p-6">
+            <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
                     <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
                         <i class="fab fa-google text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800">Google My Business</h2>
-                        <p class="text-sm text-gray-600">Integração com avaliações do Google</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Google My Business</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Integração com avaliações do Google</p>
                     </div>
                 </div>
                 
                 <div>
-                    <label for="google_business_url" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="google_business_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         URL do Google My Business
                     </label>
                     <input 
                         type="url" 
                         id="google_business_url" 
                         name="google_business_url"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="https://g.page/sua-empresa"
                     >
-                    <p class="text-xs text-gray-500 mt-1">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <i class="fas fa-info-circle mr-1"></i>
                         Avaliações positivas serão redirecionadas para este link
                     </p>
@@ -292,31 +292,31 @@
             </div>
             
             <!-- Personalização Visual -->
-            <div class="form-section p-6">
+            <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
                     <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-palette text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800">Personalização Visual</h2>
-                        <p class="text-sm text-gray-600">Logo e imagem de fundo (opcional)</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Personalização Visual</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Logo e imagem de fundo (opcional)</p>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Logo Upload -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Logo da Empresa
                         </label>
-                        <div class="upload-area rounded-lg p-8 text-center cursor-pointer" onclick="document.getElementById('logo').click()">
+                        <div class="upload-area rounded-lg p-8 text-center cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600" onclick="document.getElementById('logo').click()">
                             <div id="logoPreview" class="hidden mb-4">
-                                <img id="logoPreviewImg" src="" alt="Preview" class="w-20 h-20 object-contain mx-auto rounded-lg border-2 border-gray-200">
+                                <img id="logoPreviewImg" src="" alt="Preview" class="w-20 h-20 object-contain mx-auto rounded-lg border-2 border-gray-200 dark:border-gray-600">
                             </div>
                             <div id="logoPlaceholder">
-                                <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
-                                <p class="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
-                                <p class="text-xs text-gray-500">PNG, JPG até 2MB</p>
+                                <i class="fas fa-image text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Clique para fazer upload</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG até 2MB</p>
                             </div>
                             <input type="file" id="logo" name="logo" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'logo')">
                         </div>
@@ -324,17 +324,17 @@
                     
                     <!-- Background Image Upload -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Imagem de Fundo
                         </label>
-                        <div class="upload-area rounded-lg p-8 text-center cursor-pointer" onclick="document.getElementById('background_image').click()">
+                        <div class="upload-area rounded-lg p-8 text-center cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600" onclick="document.getElementById('background_image').click()">
                             <div id="bgPreview" class="hidden mb-4">
-                                <img id="bgPreviewImg" src="" alt="Preview" class="w-20 h-20 object-cover mx-auto rounded-lg border-2 border-gray-200">
+                                <img id="bgPreviewImg" src="" alt="Preview" class="w-20 h-20 object-cover mx-auto rounded-lg border-2 border-gray-200 dark:border-gray-600">
                             </div>
                             <div id="bgPlaceholder">
-                                <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
-                                <p class="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
-                                <p class="text-xs text-gray-500">PNG, JPG até 5MB</p>
+                                <i class="fas fa-image text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Clique para fazer upload</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG até 5MB</p>
                             </div>
                             <input type="file" id="background_image" name="background_image" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'background')">
                         </div>

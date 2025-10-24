@@ -98,21 +98,21 @@
 
 @section('content')
     <!-- Filters -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Filtros</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Filtros</h3>
         <div class="flex flex-wrap items-center gap-4">
             <!-- Company Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
-                <select id="companyFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Empresa</label>
+                <select id="companyFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="">Todas as empresas</option>
                 </select>
             </div>
             
             <!-- Type Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-                <select id="typeFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                <select id="typeFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="">Todas</option>
                     <option value="positive">Positivas (4-5★)</option>
                     <option value="negative">Negativas (1-3★)</option>
@@ -121,8 +121,8 @@
             
             <!-- Rating Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nota</label>
-                <select id="ratingFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nota</label>
+                <select id="ratingFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="">Todas as notas</option>
                     <option value="5">5 estrelas</option>
                     <option value="4">4 estrelas</option>
@@ -134,8 +134,8 @@
             
             <!-- Date Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                <select id="dateFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Período</label>
+                <select id="dateFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="">Todos os períodos</option>
                     <option value="today">Hoje</option>
                     <option value="week">Esta semana</option>
@@ -159,15 +159,15 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <!-- Total Reviews -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-star text-blue-600 text-xl"></i>
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-star text-blue-600 dark:text-blue-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Total de Avaliações</p>
-                    <p class="text-2xl font-bold text-gray-800" id="totalReviews">0</p>
-                    <p class="text-xs text-gray-500">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total de Avaliações</p>
+                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="totalReviews">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +12% vs mês anterior
                     </p>
                 </div>
@@ -175,15 +175,15 @@
         </div>
         
         <!-- Positive Reviews -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-thumbs-up text-green-600 text-xl"></i>
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-thumbs-up text-green-600 dark:text-green-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Positivas</p>
-                    <p class="text-2xl font-bold text-green-600" id="positiveReviews">0</p>
-                    <p class="text-xs text-gray-500">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Positivas</p>
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="positiveReviews">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +8% vs mês anterior
                     </p>
                 </div>
@@ -191,15 +191,15 @@
         </div>
         
         <!-- Negative Reviews -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4 pulse-alert">
-                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 pulse-alert">
+                    <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Negativas</p>
-                    <p class="text-2xl font-bold text-red-600" id="negativeReviews">0</p>
-                    <p class="text-xs text-gray-500">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Negativas</p>
+                    <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="negativeReviews">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-down trend-down"></i> -5% vs mês anterior
                     </p>
                 </div>
@@ -207,15 +207,15 @@
         </div>
         
         <!-- Average Rating -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-chart-line text-yellow-600 text-xl"></i>
+                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-chart-line text-yellow-600 dark:text-yellow-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Média Geral</p>
-                    <p class="text-2xl font-bold text-yellow-600" id="averageRating">0.0</p>
-                    <p class="text-xs text-gray-500">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Média Geral</p>
+                    <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400" id="averageRating">0.0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +0.3 vs mês anterior
                     </p>
                 </div>
@@ -226,13 +226,13 @@
     <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <!-- Reviews Over Time Chart -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
                 <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Avaliações ao Longo do Tempo</h3>
                 <div class="flex space-x-2">
                     <button onclick="updateChartPeriod('7d', this)" class="chart-period-btn active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
-                    <button onclick="updateChartPeriod('30d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
-                    <button onclick="updateChartPeriod('90d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
+                    <button onclick="updateChartPeriod('30d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">30 dias</button>
+                    <button onclick="updateChartPeriod('90d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">90 dias</button>
                 </div>
             </div>
             <div class="chart-container">
@@ -241,14 +241,14 @@
         </div>
         
         <!-- Rating Distribution Chart -->
-        <div class="bg-white rounded-xl p-6 card-hover">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">Distribuição de Notas</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Distribuição de Notas</h3>
                 <div class="flex items-center space-x-2">
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span class="text-sm text-gray-600">Positivas</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Positivas</span>
                     <div class="w-3 h-3 bg-red-500 rounded-full ml-4"></div>
-                    <span class="text-sm text-gray-600">Negativas</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Negativas</span>
                 </div>
             </div>
             <div class="chart-container">
@@ -258,9 +258,9 @@
     </div>
     
     <!-- Company Performance Table -->
-    <div class="bg-white rounded-xl p-6 card-hover mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover mb-6">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-800">Performance por Empresa</h3>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Performance por Empresa</h3>
             <button onclick="exportCompanyData()" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-colors">
                 <i class="fas fa-download mr-2"></i>
                 Exportar Dados
@@ -268,15 +268,15 @@
         </div>
         <div class="table-container">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 sticky top-0">
+                <thead class="bg-gray-50 dark:bg-gray-900 sticky top-0">
                     <tr>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Empresa</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Total</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Positivas</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Negativas</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Média</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Última</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Empresa</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Total</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Positivas</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Negativas</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Média</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Última</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="companyPerformanceTable">
@@ -287,18 +287,18 @@
     </div>
     
     <!-- Reviews List -->
-    <div class="bg-white rounded-xl shadow-sm">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Lista de Avaliações</h2>
-            <p class="text-gray-600 text-sm">Últimas avaliações recebidas</p>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Lista de Avaliações</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Últimas avaliações recebidas</p>
         </div>
         
         <!-- Loading State -->
         <div id="loadingState" class="p-8 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
+                <i class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-400 text-2xl"></i>
             </div>
-            <p class="text-gray-600">Carregando avaliações...</p>
+            <p class="text-gray-600 dark:text-gray-400">Carregando avaliações...</p>
         </div>
         
         <!-- Reviews Container -->
@@ -308,15 +308,15 @@
         
         <!-- Empty State -->
         <div id="emptyState" class="hidden p-8 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                <i class="fas fa-star text-gray-400 text-2xl"></i>
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+                <i class="fas fa-star text-gray-400 dark:text-gray-500 text-2xl"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Nenhuma avaliação encontrada</h3>
-            <p class="text-gray-600">Tente ajustar os filtros ou aguarde novas avaliações.</p>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Nenhuma avaliação encontrada</h3>
+            <p class="text-gray-600 dark:text-gray-400">Tente ajustar os filtros ou aguarde novas avaliações.</p>
         </div>
         
         <!-- Pagination -->
-        <div id="paginationContainer" class="hidden p-6 border-t border-gray-200">
+        <div id="paginationContainer" class="hidden p-6 border-t border-gray-200 dark:border-gray-700">
             <!-- Pagination will be loaded here -->
         </div>
     </div>
@@ -691,7 +691,7 @@
                 const typeIcon = isPositive ? 'fa-thumbs-up' : 'fa-exclamation-triangle';
                 
                 return `
-                    <div class="p-6 border-b border-gray-200 hover:bg-gray-50 transition-colors fade-in">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors fade-in">
                         <div class="flex items-start justify-between">
                             <div class="flex-1">
                                 <div class="flex items-center mb-3">
@@ -699,8 +699,8 @@
                                         <i class="fas ${typeIcon} text-white text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">${review.company.name}</h3>
-                                        <p class="text-sm text-gray-600">${typeText} • ${review.created_at}</p>
+                                        <h3 class="font-semibold text-gray-800 dark:text-gray-100">${review.company.name}</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">${typeText} • ${review.created_at}</p>
                                     </div>
                                 </div>
                                 
@@ -708,11 +708,11 @@
                                     <div class="flex text-yellow-400 mr-3">
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </div>
-                                    <span class="text-lg font-semibold text-gray-800">${review.rating}/5</span>
+                                    <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">${review.rating}/5</span>
                                 </div>
                                 
                                 <div class="flex items-center mb-3">
-                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mr-3">
+                                    <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium mr-3">
                                         <i class="fab fa-whatsapp mr-1"></i>
                                         ${review.whatsapp}
                                     </div>
@@ -723,8 +723,8 @@
                                 </div>
                                 
                                 ${review.comment ? `
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <p class="text-gray-700 italic">"${review.comment}"</p>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                                        <p class="text-gray-700 dark:text-gray-300 italic">"${review.comment}"</p>
                                     </div>
                                 ` : ''}
                             </div>
@@ -795,15 +795,15 @@
                         (company.ratings.reduce((sum, rating) => sum + rating, 0) / company.ratings.length).toFixed(1) : '0.0';
                     
                     return `
-                        <tr class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="px-4 py-3 font-medium text-gray-800">${company.name}</td>
-                            <td class="px-4 py-3 text-gray-600">${company.total}</td>
-                            <td class="px-4 py-3 text-green-600 font-medium">${company.positive}</td>
-                            <td class="px-4 py-3 text-red-600 font-medium">${company.negative}</td>
-                            <td class="px-4 py-3 text-gray-600">${average}</td>
-                            <td class="px-4 py-3 text-gray-500 text-sm">${company.lastReview ? new Date(company.lastReview).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">${company.name}</td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-gray-400">${company.total}</td>
+                            <td class="px-4 py-3 text-green-600 dark:text-green-400 font-medium">${company.positive}</td>
+                            <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">${company.negative}</td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-gray-400">${average}</td>
+                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">${company.lastReview ? new Date(company.lastReview).toLocaleDateString('pt-BR') : 'N/A'}</td>
                             <td class="px-4 py-3">
-                                <button onclick="viewCompanyDetails('${company.name}', ${companyId})" class="text-blue-600 hover:text-blue-800 text-sm">
+                                <button onclick="viewCompanyDetails('${company.name}', ${companyId})" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm">
                                     <i class="fas fa-eye mr-1"></i>Ver
                                 </button>
                             </td>

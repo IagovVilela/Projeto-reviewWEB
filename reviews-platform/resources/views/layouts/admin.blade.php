@@ -5,7 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Reviews Platform')</title>
+    
+    <!-- Prevent Dark Mode Flash -->
+    <script>
+        (function() {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedMode === 'true' || (savedMode === null && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#111827',
+                            card: '#1f2937',
+                            border: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -30,14 +58,104 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* Light Mode Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #6b7280;
+            --border-color: #e5e7eb;
+            --border-color-light: #f3f4f6;
+            --card-bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --header-bg: #ffffff;
+        }
+        
+        /* Dark Mode Colors */
+        .dark {
+            --sidebar-gradient: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+            
+            /* Dark Mode Colors */
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --border-color: #374151;
+            --border-color-light: #4b5563;
+            --card-bg: #1f2937;
+            --sidebar-bg: #1f2937;
+            --header-bg: #1f2937;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
         
         html {
             scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         body {
-            transition: background-color 0.3s ease;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Apply dark mode to Tailwind classes */
+        .dark .bg-white {
+            background-color: var(--card-bg) !important;
+        }
+        
+        .dark .bg-gray-50 {
+            background-color: var(--bg-secondary) !important;
+        }
+        
+        .dark .bg-gray-100 {
+            background-color: var(--bg-tertiary) !important;
+        }
+        
+        .dark .text-gray-800 {
+            color: var(--text-primary) !important;
+        }
+        
+        .dark .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .dark .text-gray-600 {
+            color: var(--text-tertiary) !important;
+        }
+        
+        .dark .text-gray-500 {
+            color: #9ca3af !important;
+        }
+        
+        .dark .border-gray-200 {
+            border-color: var(--border-color) !important;
+        }
+        
+        .dark .border-gray-300 {
+            border-color: var(--border-color-light) !important;
+        }
+        
+        .dark input:not([type="checkbox"]):not([type="radio"]),
+        .dark select,
+        .dark textarea {
+            background-color: var(--bg-tertiary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .dark input:focus:not([type="checkbox"]):not([type="radio"]),
+        .dark select:focus,
+        .dark textarea:focus {
+            background-color: var(--bg-tertiary);
+            border-color: var(--primary-color);
         }
         
         /* Sidebar */
@@ -145,6 +263,7 @@
         .card-hover {
             transition: var(--transition-smooth);
             position: relative;
+            background-color: var(--card-bg);
         }
         
         .card-hover::after {
@@ -161,6 +280,10 @@
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
         }
         
         .card-hover:hover::after {
@@ -335,6 +458,51 @@
             background: rgba(139, 92, 246, 0.4);
         }
         
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.4);
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+        
+        /* Notifications - Dark Mode Support */
+        .dark .bg-green-50 {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+        
+        .dark .bg-red-50 {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            border-color: rgba(239, 68, 68, 0.3) !important;
+        }
+        
+        .dark .bg-blue-50 {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+        }
+        
+        .dark .bg-yellow-50 {
+            background-color: rgba(251, 191, 36, 0.1) !important;
+            border-color: rgba(251, 191, 36, 0.3) !important;
+        }
+        
+        .dark .text-green-800 {
+            color: rgb(134, 239, 172) !important;
+        }
+        
+        .dark .text-red-800 {
+            color: rgb(252, 165, 165) !important;
+        }
+        
+        .dark .text-blue-800 {
+            color: rgb(147, 197, 253) !important;
+        }
+        
+        .dark .text-yellow-800 {
+            color: rgb(253, 224, 71) !important;
+        }
+        
         /* Input Styles */
         input:not([type="checkbox"]):not([type="radio"]),
         select,
@@ -502,6 +670,15 @@
                         <p class="text-gray-600 text-sm">@yield('page-description', 'Bem-vindo ao sistema')</p>
                     </div>
                     <div class="flex items-center space-x-3">
+                        <!-- Dark Mode Toggle -->
+                        <button 
+                            id="darkModeToggle"
+                            onclick="toggleDarkMode()"
+                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            aria-label="Toggle dark mode"
+                        >
+                            <i id="darkModeIcon" class="fas fa-moon text-gray-600 dark:text-gray-300 text-lg"></i>
+                        </button>
                         @yield('header-actions')
                     </div>
                 </div>
@@ -552,6 +729,54 @@
     
     <!-- Scripts -->
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            const icon = document.getElementById('darkModeIcon');
+            
+            // Update icon
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+            
+            // Save preference
+            localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+            
+            // Show feedback
+            showNotification(
+                isDark ? 'Modo escuro ativado' : 'Modo claro ativado',
+                'info',
+                2000
+            );
+        }
+        
+        // Initialize dark mode from saved preference
+        function initDarkMode() {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const icon = document.getElementById('darkModeIcon');
+            
+            // Use saved preference, or system preference if no saved preference
+            if (savedMode === 'true' || (savedMode === null && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                if (icon) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            }
+        }
+        
+        // Initialize immediately to prevent flash
+        initDarkMode();
+        
+        // Reinitialize after DOM is ready (in case icon wasn't loaded yet)
+        document.addEventListener('DOMContentLoaded', initDarkMode);
+        
         // Enhanced Notification System
         function showNotification(message, type = 'info', duration = 3000) {
             const notification = document.createElement('div');

@@ -24,9 +24,19 @@
             transition: var(--transition-smooth);
         }
         
+        .dark .alert-card {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            border: 2px solid #b91c1c;
+        }
+        
         .alert-card:hover {
             border-color: #fca5a5;
             box-shadow: 0 8px 16px rgba(239, 68, 68, 0.15);
+        }
+        
+        .dark .alert-card:hover {
+            border-color: #dc2626;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.25);
         }
         
         .urgent-badge {
@@ -82,13 +92,13 @@
 
 @section('content')
     <!-- Alert Banner -->
-    <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg mb-6 fade-in">
+    <div class="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-lg mb-6 fade-in">
         <div class="flex">
             <div class="flex-shrink-0">
-                <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+                <i class="fas fa-exclamation-triangle text-red-400 dark:text-red-500 text-xl"></i>
             </div>
             <div class="ml-3">
-                <p class="text-sm text-red-700">
+                <p class="text-sm text-red-700 dark:text-red-300">
                     <strong>Atenção:</strong> Estas avaliações negativas podem impactar a reputação da empresa. 
                     Recomendamos entrar em contato com os clientes o mais rápido possível.
                 </p>
@@ -99,15 +109,15 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <!-- Total Negative Reviews -->
-        <div class="bg-white rounded-xl p-6 card-hover stagger-item">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Total de Negativas</p>
-                    <p class="text-2xl font-bold text-red-600" id="totalNegative">0</p>
-                    <p class="text-xs text-gray-500 mt-1">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total de Negativas</p>
+                    <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="totalNegative">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <i class="fas fa-arrow-down trend-down"></i> Últimas 24h
                     </p>
                 </div>
@@ -115,15 +125,15 @@
         </div>
         
         <!-- Unprocessed Reviews -->
-        <div class="bg-white rounded-xl p-6 card-hover stagger-item priority-high">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item priority-high border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 pulse-soft">
-                    <i class="fas fa-clock text-orange-600 text-xl"></i>
+                <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 pulse-soft">
+                    <i class="fas fa-clock text-orange-600 dark:text-orange-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Não Processadas</p>
-                    <p class="text-2xl font-bold text-orange-600" id="unprocessedNegative">0</p>
-                    <p class="text-xs text-gray-500 mt-1">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Não Processadas</p>
+                    <p class="text-2xl font-bold text-orange-600 dark:text-orange-400" id="unprocessedNegative">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <i class="fas fa-exclamation-circle"></i> Requer ação
                     </p>
                 </div>
@@ -131,15 +141,15 @@
         </div>
         
         <!-- Today's Negatives -->
-        <div class="bg-white rounded-xl p-6 card-hover stagger-item">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4 shimmer">
-                    <i class="fas fa-calendar-day text-purple-600 text-xl"></i>
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mr-4 shimmer">
+                    <i class="fas fa-calendar-day text-purple-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Hoje</p>
-                    <p class="text-2xl font-bold text-purple-600" id="todayNegative">0</p>
-                    <p class="text-xs text-gray-500 mt-1">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Hoje</p>
+                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-400" id="todayNegative">0</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <i class="fas fa-clock"></i> Últimas 24h
                     </p>
                 </div>
@@ -148,15 +158,15 @@
     </div>
     
     <!-- Negative Reviews List -->
-    <div class="bg-white rounded-xl shadow-sm">
-        <div class="p-6 border-b border-gray-200">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-800">Lista de Avaliações Negativas</h2>
-                    <p class="text-gray-600 text-sm">Avaliações que requerem atenção imediata</p>
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Lista de Avaliações Negativas</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Avaliações que requerem atenção imediata</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <select id="sortFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500">
+                    <select id="sortFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500">
                         <option value="recent">Mais recentes</option>
                         <option value="oldest">Mais antigas</option>
                         <option value="lowest">Menor nota</option>
@@ -167,10 +177,10 @@
         
         <!-- Loading State -->
         <div id="loadingState" class="p-8 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-                <i class="fas fa-spinner fa-spin text-red-600 text-2xl"></i>
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full mb-4">
+                <i class="fas fa-spinner fa-spin text-red-600 dark:text-red-400 text-2xl"></i>
             </div>
-            <p class="text-gray-600">Carregando avaliações negativas...</p>
+            <p class="text-gray-600 dark:text-gray-400">Carregando avaliações negativas...</p>
         </div>
         
         <!-- Reviews Container -->
@@ -180,12 +190,12 @@
         
         <!-- Empty State -->
         <div id="emptyState" class="hidden p-12 text-center">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6 scale-in">
-                <i class="fas fa-check-circle text-green-600 text-3xl"></i>
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full mb-6 scale-in">
+                <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-3xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Nenhuma avaliação negativa!</h3>
-            <p class="text-gray-600 mb-4">Parabéns! Todas as avaliações estão positivas.</p>
-            <div class="inline-flex items-center text-green-600 text-sm font-medium">
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Nenhuma avaliação negativa!</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">Parabéns! Todas as avaliações estão positivas.</p>
+            <div class="inline-flex items-center text-green-600 dark:text-green-400 text-sm font-medium">
                 <i class="fas fa-trophy mr-2"></i>
                 Excelente trabalho mantendo alta qualidade!
             </div>
@@ -267,7 +277,7 @@
                 const isToday = today === reviewDate;
                 
                 return `
-                    <div class="p-6 border-b border-gray-200 hover:bg-red-50 transition-all stagger-item" style="animation-delay: ${index * 0.05}s">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-gray-700/50 transition-all stagger-item" style="animation-delay: ${index * 0.05}s">
                         <div class="alert-card rounded-xl p-6">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center flex-1">
@@ -275,17 +285,17 @@
                                         <i class="fas fa-exclamation-triangle text-white text-lg"></i>
                                     </div>
                                     <div class="flex-1">
-                                        <h3 class="font-bold text-red-800 text-lg">${review.company.name}</h3>
+                                        <h3 class="font-bold text-red-800 dark:text-red-300 text-lg">${review.company.name}</h3>
                                         <div class="flex items-center mt-1 space-x-2">
-                                            <span class="text-sm text-red-600">
+                                            <span class="text-sm text-red-600 dark:text-red-400">
                                                 ${isToday ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">🚨 HOJE</span>' : `<i class="far fa-clock mr-1"></i>${review.created_at}`}
                                             </span>
-                                            ${!review.is_processed ? '<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">Não Processada</span>' : ''}
+                                            ${!review.is_processed ? '<span class="bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full text-xs font-medium">Não Processada</span>' : ''}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-3xl font-bold text-red-600">${review.rating}/5</div>
+                                    <div class="text-3xl font-bold text-red-600 dark:text-red-400">${review.rating}/5</div>
                                     <div class="stars-negative text-xl mt-1">
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </div>
@@ -293,7 +303,7 @@
                             </div>
                             
                             <div class="flex items-center mb-4 space-x-3">
-                                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium">
+                                <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium">
                                     <i class="fab fa-whatsapp mr-2"></i>
                                     ${review.whatsapp}
                                 </div>
@@ -304,31 +314,31 @@
                             </div>
                             
                             ${review.comment ? `
-                                <div class="bg-white p-4 rounded-lg border-2 border-red-200 mb-4">
-                                    <p class="text-sm text-gray-500 mb-1">Comentário do cliente:</p>
-                                    <p class="text-gray-800 italic">"${review.comment}"</p>
+                                <div class="bg-white dark:bg-gray-900/50 p-4 rounded-lg border-2 border-red-200 dark:border-red-800 mb-4">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Comentário do cliente:</p>
+                                    <p class="text-gray-800 dark:text-gray-200 italic">"${review.comment}"</p>
                                 </div>
                             ` : ''}
                             
                             ${review.private_feedback ? `
-                                <div class="bg-orange-50 p-4 rounded-lg border-2 border-orange-200 mb-4">
-                                    <p class="text-sm text-orange-700 font-medium mb-1">
+                                <div class="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-lg border-2 border-orange-200 dark:border-orange-700 mb-4">
+                                    <p class="text-sm text-orange-700 dark:text-orange-400 font-medium mb-1">
                                         <i class="fas fa-lock mr-1"></i> Feedback Privado:
                                     </p>
-                                    <p class="text-gray-700">${review.private_feedback}</p>
+                                    <p class="text-gray-700 dark:text-gray-300">${review.private_feedback}</p>
                                 </div>
                             ` : ''}
                             
                             <div class="flex flex-wrap gap-2">
-                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all review-action-btn">
+                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
                                     <i class="fas fa-check mr-2"></i>
                                     Marcar como Processada
                                 </button>
-                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-600 transition-all review-action-btn">
+                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
                                     <i class="fas fa-envelope mr-2"></i>
                                     Enviar Follow-up
                                 </button>
-                                <button onclick="addNote(${review.id})" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-600 transition-all review-action-btn">
+                                <button onclick="addNote(${review.id})" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
                                     <i class="fas fa-sticky-note mr-2"></i>
                                     Adicionar Nota
                                 </button>
