@@ -244,22 +244,34 @@ class ReviewController extends Controller
             $request->validate([
                 'review_id' => 'required|exists:reviews,id',
                 'feedback' => 'required|string|max:1000',
-                'contact_preference' => 'required|in:whatsapp,email,phone,no_contact'
+                'contact_preference' => 'required|in:whatsapp,email,phone,no_contact',
+                'contact_detail' => 'nullable|string|max:255'
             ]);
 
             $review = Review::findOrFail($request->review_id);
             
-            // Update review with private feedback
-            $review->update([
+            // Prepare data to update
+            $updateData = [
                 'private_feedback' => $request->feedback,
                 'contact_preference' => $request->contact_preference,
                 'has_private_feedback' => true
-            ]);
+            ];
+            
+            // Add contact detail if provided
+            if ($request->contact_preference === 'email' || $request->contact_preference === 'phone') {
+                if ($request->contact_detail) {
+                    $updateData['contact_detail'] = $request->contact_detail;
+                }
+            }
+            
+            // Update review with private feedback
+            $review->update($updateData);
 
             Log::info('Feedback privado enviado', [
                 'review_id' => $review->id,
                 'company_id' => $review->company_id,
-                'contact_preference' => $request->contact_preference
+                'contact_preference' => $request->contact_preference,
+                'has_contact_detail' => !empty($request->contact_detail)
             ]);
 
             return response()->json([

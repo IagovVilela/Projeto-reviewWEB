@@ -691,8 +691,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold text-gray-800">Reviews Platform</h1>
-                        <p class="text-xs text-gray-500">Sistema de Avaliações</p>
+                        <h1 class="text-lg font-bold text-gray-800">{{ __('app.name') }}</h1>
+                        <p class="text-xs text-gray-500">{{ __('app.subtitle') }}</p>
                     </div>
                 </div>
             </div>
@@ -701,46 +701,50 @@
             <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
                 <a href="/dashboard" class="nav-item {{ request()->is('dashboard') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-home w-5 h-5 mr-3"></i>
-                    Dashboard
+                    {{ __('app.dashboard') }}
                 </a>
                 <a href="/companies" class="nav-item {{ request()->is('companies*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-building w-5 h-5 mr-3"></i>
-                    Empresas
+                    {{ __('app.companies') }}
                 </a>
                 <a href="/reviews" class="nav-item {{ request()->is('reviews*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-star w-5 h-5 mr-3"></i>
-                    Avaliações
+                    {{ __('app.reviews') }}
                 </a>
                 <a href="/reviews/negative" class="nav-item {{ request()->is('reviews/negative') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-exclamation-triangle w-5 h-5 mr-3"></i>
-                    Avaliações Negativas
+                    {{ __('app.negative_reviews') }}
                 </a>
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
-                    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Configurações</p>
+                    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.settings') }}</p>
+                    <a href="{{ route('users.index') }}" class="nav-item {{ request()->is('users*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                        <i class="fas fa-users w-5 h-5 mr-3"></i>
+                        Usuários
+                    </a>
                     <a href="/subscription" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-crown w-5 h-5 mr-3"></i>
-                        Assinatura
+                        {{ __('app.subscription') }}
                     </a>
                     <a href="/billing" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-credit-card w-5 h-5 mr-3"></i>
-                        Cobrança
+                        {{ __('app.billing') }}
                     </a>
                     <a href="/profile" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-user w-5 h-5 mr-3"></i>
-                        Perfil
+                        {{ __('app.profile') }}
                     </a>
                 </div>
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
-                    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Suporte</p>
+                    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.support') }}</p>
                     <a href="/support" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-life-ring w-5 h-5 mr-3"></i>
-                        Central de Ajuda
+                        {{ __('app.help_center') }}
                     </a>
                     <a href="/faqs" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-question-circle w-5 h-5 mr-3"></i>
-                        FAQs
+                        {{ __('app.faqs') }}
                     </a>
                 </div>
             </nav>
@@ -752,7 +756,7 @@
                         <i class="fas fa-user text-gray-600"></i>
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name ?? 'Usuário' }}</p>
+                        <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name ?? __('app.user') }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>
                     </div>
                 </div>
@@ -760,7 +764,7 @@
                     @csrf
                     <button type="submit" class="w-full nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                        Sair
+                        {{ __('app.logout') }}
                     </button>
                 </form>
             </div>
@@ -776,6 +780,9 @@
                         <p class="text-gray-600 text-sm">@yield('page-description', 'Bem-vindo ao sistema')</p>
                     </div>
                     <div class="flex items-center space-x-3">
+                        <!-- Language Selector -->
+                        <x-language-selector />
+                        
                         <!-- Dark Mode Toggle -->
                         <button 
                             id="darkModeToggle"

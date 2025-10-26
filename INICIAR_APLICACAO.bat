@@ -8,7 +8,7 @@ echo    INICIAR APLICACAO - Reviews Platform
 echo ========================================
 echo.
 
-cd /d "C:\Users\Mpbit\Documents\Projeto\Projeto-reviewWEB\reviews-platform"
+cd /d "%~dp0reviews-platform"
 
 echo [1/3] Verificando estrutura do projeto...
 

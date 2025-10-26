@@ -114,7 +114,7 @@
     <div class="container">
         <div class="header">
             @if($company->logo)
-                <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="logo">
+                <img src="{{ $company->full_logo_url }}" alt="{{ $company->name }}" class="logo">
             @endif
             <div class="company-name">{{ $company->name }}</div>
             
