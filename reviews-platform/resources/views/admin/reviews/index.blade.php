@@ -1,18 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', 'Avaliações - Reviews Platform')
+@section('title', __('reviews.title') . ' - Reviews Platform')
 
-@section('page-title', 'Painel de Avaliações')
-@section('page-description', 'Gerencie todas as avaliações recebidas')
+@section('page-title', __('reviews.dashboard_title'))
+@section('page-description', __('reviews.dashboard_description'))
 
 @section('header-actions')
     <button onclick="exportContacts(this)" class="bg-green-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
         <i class="fas fa-download mr-2"></i>
-        Exportar Contatos
+        {{ __('reviews.export_contacts') }}
     </button>
     <button onclick="refreshReviews()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
         <i class="fas fa-sync-alt mr-2"></i>
-        Atualizar
+        {{ __('reviews.update') }}
     </button>
 @endsection
 
@@ -99,58 +99,58 @@
 @section('content')
     <!-- Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Filtros</h3>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{{ __('reviews.filters') }}</h3>
         <div class="flex flex-wrap items-center gap-4">
             <!-- Company Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Empresa</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.company') }}</label>
                 <select id="companyFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="">Todas as empresas</option>
+                    <option value="">{{ __('reviews.all_companies') }}</option>
                 </select>
             </div>
             
             <!-- Type Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.type') }}</label>
                 <select id="typeFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="">Todas</option>
-                    <option value="positive">Positivas (4-5★)</option>
-                    <option value="negative">Negativas (1-3★)</option>
+                    <option value="">{{ __('reviews.all_types') }}</option>
+                    <option value="positive">{{ __('reviews.positive_ratings') }}</option>
+                    <option value="negative">{{ __('reviews.negative_ratings') }}</option>
                 </select>
             </div>
             
             <!-- Rating Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nota</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.rating') }}</label>
                 <select id="ratingFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="">Todas as notas</option>
-                    <option value="5">5 estrelas</option>
-                    <option value="4">4 estrelas</option>
-                    <option value="3">3 estrelas</option>
-                    <option value="2">2 estrelas</option>
-                    <option value="1">1 estrela</option>
+                    <option value="">{{ __('reviews.all_ratings') }}</option>
+                    <option value="5">5 {{ __('reviews.rating_label') }}</option>
+                    <option value="4">4 {{ __('reviews.rating_label') }}</option>
+                    <option value="3">3 {{ __('reviews.rating_label') }}</option>
+                    <option value="2">2 {{ __('reviews.rating_label') }}</option>
+                    <option value="1">1 {{ __('reviews.rating_label_singular') }}</option>
                 </select>
             </div>
             
             <!-- Date Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Período</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.period') }}</label>
                 <select id="dateFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="">Todos os períodos</option>
-                    <option value="today">Hoje</option>
-                    <option value="week">Esta semana</option>
-                    <option value="month">Este mês</option>
+                    <option value="">{{ __('reviews.all_periods') }}</option>
+                    <option value="today">{{ __('reviews.today') }}</option>
+                    <option value="week">{{ __('reviews.this_week') }}</option>
+                    <option value="month">{{ __('reviews.this_month') }}</option>
                 </select>
             </div>
             
             <div class="flex items-end space-x-2">
                 <button onclick="applyFilters()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
                     <i class="fas fa-filter mr-2"></i>
-                    Aplicar
+                    {{ __('reviews.apply') }}
                 </button>
                 <button onclick="clearFilters()" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium">
                     <i class="fas fa-times mr-2"></i>
-                    Limpar
+                    {{ __('reviews.clear') }}
                 </button>
             </div>
         </div>
@@ -165,7 +165,7 @@
                     <i class="fas fa-star text-blue-600 dark:text-blue-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total de Avaliações</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.total_reviews') }}</p>
                     <p class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="totalReviews">0</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +12% vs mês anterior
@@ -181,7 +181,7 @@
                     <i class="fas fa-thumbs-up text-green-600 dark:text-green-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Positivas</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.positive') }}</p>
                     <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="positiveReviews">0</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +8% vs mês anterior
@@ -197,7 +197,7 @@
                     <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Negativas</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.negative') }}</p>
                     <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="negativeReviews">0</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-down trend-down"></i> -5% vs mês anterior
@@ -213,7 +213,7 @@
                     <i class="fas fa-chart-line text-yellow-600 dark:text-yellow-400 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Média Geral</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.average') }}</p>
                     <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400" id="averageRating">0.0</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-arrow-up trend-up"></i> +0.3 vs mês anterior
@@ -228,11 +228,11 @@
         <!-- Reviews Over Time Chart -->
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
                 <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Avaliações ao Longo do Tempo</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ __('reviews.reviews_over_time') }}</h3>
                 <div class="flex space-x-2">
-                    <button onclick="updateChartPeriod('7d', this)" class="chart-period-btn active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
-                    <button onclick="updateChartPeriod('30d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">30 dias</button>
-                    <button onclick="updateChartPeriod('90d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">90 dias</button>
+                    <button onclick="updateChartPeriod('7d', this)" class="chart-period-btn active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">{{ __('reviews.days_7') }}</button>
+                    <button onclick="updateChartPeriod('30d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{{ __('reviews.days_30') }}</button>
+                    <button onclick="updateChartPeriod('90d', this)" class="chart-period-btn px-3 py-1 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{{ __('reviews.days_90') }}</button>
                 </div>
             </div>
             <div class="chart-container">
@@ -243,12 +243,12 @@
         <!-- Rating Distribution Chart -->
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Distribuição de Notas</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ __('reviews.rating_distribution') }}</h3>
                 <div class="flex items-center space-x-2">
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Positivas</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('reviews.positivas') }}</span>
                     <div class="w-3 h-3 bg-red-500 rounded-full ml-4"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Negativas</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('reviews.negativas') }}</span>
                 </div>
             </div>
             <div class="chart-container">
@@ -260,23 +260,23 @@
     <!-- Company Performance Table -->
     <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover mb-6">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Performance por Empresa</h3>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ __('reviews.company_performance') }}</h3>
             <button onclick="exportCompanyData()" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-colors">
                 <i class="fas fa-download mr-2"></i>
-                Exportar Dados
+                {{ __('reviews.export_data') }}
             </button>
         </div>
         <div class="table-container">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 dark:bg-gray-900 sticky top-0">
                     <tr>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Empresa</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Total</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Positivas</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Negativas</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Média</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Última</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.empresa') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.total') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.positivas') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.negativas') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.media') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.ultima') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.acoes') }}</th>
                     </tr>
                 </thead>
                 <tbody id="companyPerformanceTable">
@@ -289,8 +289,8 @@
     <!-- Reviews List -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Lista de Avaliações</h2>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Últimas avaliações recebidas</p>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ __('reviews.reviews_list') }}</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('reviews.last_reviews') }}</p>
         </div>
         
         <!-- Loading State -->
@@ -298,7 +298,7 @@
             <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
                 <i class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-400 text-2xl"></i>
             </div>
-            <p class="text-gray-600 dark:text-gray-400">Carregando avaliações...</p>
+            <p class="text-gray-600 dark:text-gray-400">{{ __('reviews.loading') }}</p>
         </div>
         
         <!-- Reviews Container -->
@@ -311,8 +311,8 @@
             <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
                 <i class="fas fa-star text-gray-400 dark:text-gray-500 text-2xl"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Nenhuma avaliação encontrada</h3>
-            <p class="text-gray-600 dark:text-gray-400">Tente ajustar os filtros ou aguarde novas avaliações.</p>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{{ __('reviews.no_reviews') }}</h3>
+            <p class="text-gray-600 dark:text-gray-400">{{ __('reviews.no_reviews_desc') }}</p>
         </div>
         
         <!-- Pagination -->
@@ -325,6 +325,39 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Translations for JavaScript
+        const translations = {
+            pt_BR: {
+                monday: 'Seg', tuesday: 'Ter', wednesday: 'Qua', thursday: 'Qui', 
+                friday: 'Sex', saturday: 'Sáb', sunday: 'Dom',
+                positivas: 'Positivas', negativas: 'Negativas'
+            },
+            en_US: {
+                monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu',
+                friday: 'Fri', saturday: 'Sat', sunday: 'Sun',
+                positivas: 'Positive', negativas: 'Negative'
+            }
+        };
+        
+        const currentLang = '{{ app()->getLocale() }}';
+        const t = translations[currentLang] || translations.pt_BR;
+        
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+        
         class ReviewsPanel {
             constructor() {
                 this.currentPage = 1;
@@ -387,13 +420,14 @@
                     const result = await response.json();
                     
                     if (result.success) {
-                        // Store all reviews for chart updates
-                        this.allReviews = result.data.data || result.data;
+                        // Store all reviews for chart updates - result.data is paginated, result.data.data has the reviews
+                        const reviews = result.data.data || result.data;
+                        this.allReviews = reviews;
                         
                         this.displayReviews(result.data);
                         this.updateStats(result.data);
                         this.updateCompanyPerformanceTable(result.data);
-                        this.updateChartsWithRealData(this.allReviews);
+                        this.updateChartsWithRealData(reviews);
                     } else {
                         this.showError('Erro ao carregar avaliações');
                     }
@@ -548,7 +582,11 @@
             }
             
             updateChartsWithRealData(reviews) {
-                if (!reviews || reviews.length === 0) return;
+                console.log('updateChartsWithRealData chamado', reviews);
+                if (!reviews || reviews.length === 0) {
+                    console.log('Sem reviews para atualizar gráficos');
+                    return;
+                }
                 
                 // Update rating distribution chart
                 const ratingCounts = [0, 0, 0, 0, 0];
@@ -557,6 +595,8 @@
                         ratingCounts[5 - review.rating]++;
                     }
                 });
+                
+                console.log('Rating counts:', ratingCounts);
                 
                 if (this.charts.ratingDistribution) {
                     this.charts.ratingDistribution.data.datasets[0].data = ratingCounts;
@@ -587,7 +627,9 @@
                         date.setHours(0, 0, 0, 0);
                         dateRanges.push(date);
                         
-                        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                        const dayNames = [
+                            t.sunday, t.monday, t.tuesday, t.wednesday, t.thursday, t.friday, t.saturday
+                        ];
                         labels.push(dayNames[date.getDay()]);
                     }
                 } else if (period === 30) {
@@ -621,26 +663,38 @@
                     const nextDate = dateRanges[index + 1] || new Date(today.getTime() + 86400000);
                     
                     reviews.forEach(review => {
-                        const reviewDate = new Date(review.created_at);
-                        reviewDate.setHours(0, 0, 0, 0);
-                        
-                        // For 7 days, match exact day. For others, match range
-                        if (period === 7) {
-                            if (reviewDate.getTime() === date.getTime()) {
-                                if (review.is_positive) {
-                                    positiveCount++;
-                                } else {
-                                    negativeCount++;
+                        try {
+                            const reviewDate = new Date(review.created_at);
+                            if (isNaN(reviewDate.getTime())) {
+                                console.error('Data inválida:', review.created_at);
+                                return;
+                            }
+                            reviewDate.setHours(0, 0, 0, 0);
+                            
+                            // For 7 days, match exact day. For others, match range
+                            if (period === 7) {
+                                // Compare by date string to avoid timezone issues
+                                const reviewDateStr = reviewDate.toISOString().split('T')[0];
+                                const rangeDateStr = date.toISOString().split('T')[0];
+                                
+                                if (reviewDateStr === rangeDateStr) {
+                                    if (review.is_positive) {
+                                        positiveCount++;
+                                    } else {
+                                        negativeCount++;
+                                    }
+                                }
+                            } else {
+                                if (reviewDate >= date && reviewDate < nextDate) {
+                                    if (review.is_positive) {
+                                        positiveCount++;
+                                    } else {
+                                        negativeCount++;
+                                    }
                                 }
                             }
-                        } else {
-                            if (reviewDate >= date && reviewDate < nextDate) {
-                                if (review.is_positive) {
-                                    positiveCount++;
-                                } else {
-                                    negativeCount++;
-                                }
-                            }
+                        } catch (error) {
+                            console.error('Erro ao processar review:', error, review);
                         }
                     });
                     
@@ -687,7 +741,7 @@
             createReviewCard(review) {
                 const isPositive = review.is_positive;
                 const ratingClass = isPositive ? 'rating-positive' : 'rating-negative';
-                const typeText = isPositive ? 'Positiva' : 'Negativa';
+                const typeText = isPositive ? '{{ __('reviews.positive') }}' : '{{ __('reviews.negative') }}';
                 const typeIcon = isPositive ? 'fa-thumbs-up' : 'fa-exclamation-triangle';
                 
                 return `
@@ -700,7 +754,7 @@
                                     </div>
                                     <div>
                                         <h3 class="font-semibold text-gray-800 dark:text-gray-100">${review.company.name}</h3>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">${typeText} • ${review.created_at}</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">${typeText} • ${formatDate(review.created_at)}</p>
                                     </div>
                                 </div>
                                 
@@ -718,7 +772,7 @@
                                     </div>
                                     <button onclick="contactWhatsApp('${review.whatsapp}')" class="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors">
                                         <i class="fab fa-whatsapp mr-1"></i>
-                                        Contatar
+                                        {{ __('reviews.contact') }}
                                     </button>
                                 </div>
                                 
@@ -732,11 +786,11 @@
                             <div class="flex flex-col space-y-2 ml-4">
                                 <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
                                     <i class="fas fa-check mr-1"></i>
-                                    Processar
+                                    {{ __('reviews.process') }}
                                 </button>
                                 <button onclick="deleteReview(${review.id})" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
                                     <i class="fas fa-trash mr-1"></i>
-                                    Excluir
+                                    {{ __('reviews.delete') }}
                                 </button>
                             </div>
                         </div>
@@ -801,10 +855,10 @@
                             <td class="px-4 py-3 text-green-600 dark:text-green-400 font-medium">${company.positive}</td>
                             <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">${company.negative}</td>
                             <td class="px-4 py-3 text-gray-600 dark:text-gray-400">${average}</td>
-                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">${company.lastReview ? new Date(company.lastReview).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">${company.lastReview ? formatDate(company.lastReview) : 'N/A'}</td>
                             <td class="px-4 py-3">
                                 <button onclick="viewCompanyDetails('${company.name}', ${companyId})" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm">
-                                    <i class="fas fa-eye mr-1"></i>Ver
+                                    <i class="fas fa-eye mr-1"></i>{{ __('reviews.view') }}
                                 </button>
                             </td>
                         </tr>
@@ -937,7 +991,7 @@
                     const csvContent = [
                         'WhatsApp,Nota,Comentário,Data',
                         ...result.data.contacts.map(contact => 
-                            `"${contact.whatsapp}","${contact.rating}","${contact.comment || ''}","${contact.created_at}"`
+                            `"${contact.whatsapp}","${contact.rating}","${contact.comment || ''}","${formatDate(contact.created_at)}"`
                         )
                     ].join('\n');
                     

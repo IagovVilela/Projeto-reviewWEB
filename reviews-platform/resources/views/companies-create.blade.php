@@ -1,18 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', 'Criar Empresa - Reviews Platform')
+@section('title', __('companies.create') . ' - Reviews Platform')
 
-@section('page-title', 'Criar Nova Empresa')
-@section('page-description', 'Preencha os dados para criar uma nova empresa')
+@section('page-title', __('companies.create_company'))
+@section('page-description', __('companies.create_company_desc'))
 
 @section('header-actions')
     <a href="/companies" class="text-gray-600 hover:text-gray-800 transition-colors mr-4">
         <i class="fas fa-arrow-left mr-2"></i>
-        Voltar
+        {{ __('companies.back') }}
     </a>
     <button type="button" onclick="document.getElementById('companyForm').submit()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
         <i class="fas fa-save mr-2"></i>
-        Salvar Empresa
+        {{ __('companies.save_company') }}
     </button>
 @endsection
 
@@ -88,8 +88,8 @@
         <!-- Progress Indicator -->
         <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Progresso do cadastro</span>
-                <span class="text-sm text-gray-500 dark:text-gray-400" id="progressText">0/7 campos preenchidos</span>
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('companies.progress') }}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400" id="progressText" data-fields-text="{{ __('companies.fields_completed') }}">0/7 {{ __('companies.fields_completed') }}</span>
             </div>
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div id="progressBar" class="h-2 rounded-full transition-all duration-300" style="width: 0%; background: var(--primary-gradient);"></div>
@@ -106,8 +106,8 @@
                         <i class="fas fa-building text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Informações Básicas</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Dados principais da empresa</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ __('companies.basic_info') }}</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('companies.basic_info_desc') }}</p>
                     </div>
                 </div>
                 
@@ -115,7 +115,7 @@
                     <!-- Nome da Empresa -->
                     <div class="lg:col-span-2">
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Nome da Empresa *
+                            {{ __('companies.name') }} *
                         </label>
                         <input 
                             type="text" 
@@ -123,14 +123,14 @@
                             name="name"
                             required
                             class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            placeholder="Digite o nome da empresa"
+                            placeholder="{{ __('companies.name_placeholder') }}"
                         >
                     </div>
                     
                     <!-- URL -->
                     <div>
                         <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            URL Personalizada *
+                            {{ __('companies.url') }} *
                         </label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 border border-r-0 border-gray-300 dark:border-gray-600 rounded-l-lg">
@@ -142,19 +142,19 @@
                                 name="url"
                                 required
                                 class="flex-1 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-r-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                placeholder="sua-empresa"
+                                placeholder="{{ __('companies.url_placeholder') }}"
                             >
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Somente letras minúsculas, números e hífens
+                            {{ __('companies.url_hint') }}
                         </p>
                     </div>
                     
                     <!-- Email para Feedback Negativo -->
                     <div>
                         <label for="negative_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Email para Feedback Negativo *
+                            {{ __('companies.email') }} *
                         </label>
                         <input 
                             type="email" 
@@ -162,18 +162,18 @@
                             name="negative_email"
                             required
                             class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            placeholder="contato@empresa.com"
+                            placeholder="{{ __('companies.email_required') }}"
                         >
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Avaliações negativas serão enviadas para este email
+                            {{ __('companies.negative_email_desc') }}
                         </p>
                     </div>
                     
                     <!-- Pontuação Positiva -->
                     <div class="lg:col-span-2">
                         <label for="positive_score" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Limite de Avaliação Positiva
+                            {{ __('companies.positive_score_label') }}
                         </label>
                         <div class="flex items-center space-x-4">
                             <input 
@@ -198,7 +198,7 @@
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Avaliações com esta nota ou superior serão direcionadas para o Google
+                            {{ __('companies.positive_score_desc') }}
                         </p>
                     </div>
                 </div>
@@ -211,8 +211,8 @@
                         <i class="fas fa-info-circle text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Detalhes da Empresa</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Informações de contato e localização</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ __('companies.company_details') }}</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('companies.company_details_desc') }}</p>
                     </div>
                 </div>
                 
@@ -220,42 +220,42 @@
                     <!-- Website -->
                     <div>
                         <label for="business_website" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Site da Empresa
+                            {{ __('companies.website') }}
                         </label>
                         <input 
                             type="url" 
                             id="business_website" 
                             name="business_website"
                             class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            placeholder="https://www.suaempresa.com"
+                            placeholder="{{ __('companies.website_placeholder') }}"
                         >
                     </div>
                     
                     <!-- Telefone -->
                     <div>
                         <label for="contact_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Telefone de Contato
+                            {{ __('companies.phone') }}
                         </label>
                         <input 
                             type="tel" 
                             id="contact_number" 
                             name="contact_number"
                             class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            placeholder="(11) 99999-9999"
+                            placeholder="{{ __('companies.phone_placeholder') }}"
                         >
                     </div>
                     
                     <!-- Endereço -->
                     <div class="lg:col-span-2">
                         <label for="business_address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Endereço Completo
+                            {{ __('companies.address') }}
                         </label>
                         <textarea 
                             id="business_address" 
                             name="business_address"
                             rows="3"
                             class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                            placeholder="Rua, número, bairro, cidade, estado, CEP"
+                            placeholder="{{ __('companies.address_placeholder') }}"
                         ></textarea>
                     </div>
                 </div>
@@ -268,25 +268,25 @@
                         <i class="fab fa-google text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Google My Business</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Integração com avaliações do Google</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ __('companies.google_business') }}</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('companies.google_business_desc') }}</p>
                     </div>
                 </div>
                 
                 <div>
                     <label for="google_business_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL do Google My Business
+                        {{ __('companies.google_business_url') }}
                     </label>
                     <input 
                         type="url" 
                         id="google_business_url" 
                         name="google_business_url"
                         class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="https://g.page/sua-empresa"
+                        placeholder="{{ __('companies.google_business_url_placeholder') }}"
                     >
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Avaliações positivas serão redirecionadas para este link
+                        {{ __('companies.google_business_url_desc') }}
                     </p>
                 </div>
             </div>
@@ -298,8 +298,8 @@
                         <i class="fas fa-palette text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Personalização Visual</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Logo e imagem de fundo (opcional)</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ __('companies.visual_customization') }}</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('companies.visual_customization_desc') }}</p>
                     </div>
                 </div>
                 
@@ -307,7 +307,7 @@
                     <!-- Logo Upload -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Logo da Empresa
+                            {{ __('companies.logo') }}
                         </label>
                         <div class="upload-area rounded-lg p-8 text-center cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600" onclick="document.getElementById('logo').click()">
                             <div id="logoPreview" class="hidden mb-4">
@@ -315,8 +315,8 @@
                             </div>
                             <div id="logoPlaceholder">
                                 <i class="fas fa-image text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Clique para fazer upload</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG até 2MB</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ __('companies.upload_click') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('companies.upload_png_jpg') }}</p>
                             </div>
                             <input type="file" id="logo" name="logo" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'logo')">
                         </div>
@@ -325,7 +325,7 @@
                     <!-- Background Image Upload -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Imagem de Fundo
+                            {{ __('companies.background_image') }}
                         </label>
                         <div class="upload-area rounded-lg p-8 text-center cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600" onclick="document.getElementById('background_image').click()">
                             <div id="bgPreview" class="hidden mb-4">
@@ -333,8 +333,8 @@
                             </div>
                             <div id="bgPlaceholder">
                                 <i class="fas fa-image text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Clique para fazer upload</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG até 5MB</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ __('companies.upload_click') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('companies.upload_bg_png_jpg') }}</p>
                             </div>
                             <input type="file" id="background_image" name="background_image" accept="image/*" class="hidden" onchange="handleFileUpload(this, 'background')">
                         </div>
@@ -347,6 +347,34 @@
 
 @section('scripts')
     <script>
+        // Formatação de Telefone
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('contact_number');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+                    if (value.length > 11) {
+                        value = value.substring(0, 11); // Limita a 11 dígitos
+                    }
+                    
+                    // Aplica a máscara
+                    if (value.length > 10) {
+                        // Telefone com 11 dígitos (celular): (XX) XXXXX-XXXX
+                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 7) + '-' + value.substring(7);
+                    } else if (value.length > 6) {
+                        // Telefone com 10 dígitos (fixo): (XX) XXXX-XXXX
+                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 6) + '-' + value.substring(6);
+                    } else if (value.length > 2) {
+                        // Começou a digitar: (XX) XXX
+                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2);
+                    } else if (value.length > 0) {
+                        // Apenas DDD: (XX
+                        e.target.value = '(' + value;
+                    }
+                });
+            }
+        });
+        
         // Star Rating Display
         function updateStarDisplay(value) {
             document.getElementById('starCount').textContent = value;
@@ -401,7 +429,8 @@
             
             const progress = (completed / fields.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = `${completed}/${fields.length} campos preenchidos`;
+            const fieldsText = document.getElementById('progressText').dataset.fieldsText || 'campos preenchidos';
+            document.getElementById('progressText').textContent = `${completed}/${fields.length} ${fieldsText}`;
         }
         
         // Add event listeners to form fields
@@ -440,7 +469,8 @@
             const submitButtons = document.querySelectorAll('button[type="submit"], button[onclick*="submit"]');
             submitButtons.forEach(button => {
                 if (!button.disabled) {
-                    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Salvando...';
+                    const savingText = 'Salvando...';
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + savingText;
                     button.disabled = true;
                 }
             });
