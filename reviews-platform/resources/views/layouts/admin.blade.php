@@ -730,7 +730,7 @@
                         <i class="fas fa-credit-card w-5 h-5 mr-3"></i>
                         {{ __('app.billing') }}
                     </a>
-                    <a href="/profile" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                    <a href="/profile" class="nav-item {{ request()->is('profile') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-user w-5 h-5 mr-3"></i>
                         {{ __('app.profile') }}
                     </a>
@@ -752,9 +752,17 @@
             <!-- User Section -->
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user text-gray-600"></i>
-                    </div>
+                    @if(Auth::user()->photo)
+                        <img src="{{ asset('storage/' . Auth::user()->photo) }}" 
+                             alt="{{ Auth::user()->name }}" 
+                             class="w-10 h-10 rounded-full object-cover border-2 border-purple-200">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold text-xs">
+                                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 2)) }}
+                            </span>
+                        </div>
+                    @endif
                     <div class="flex-1">
                         <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name ?? __('app.user') }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>

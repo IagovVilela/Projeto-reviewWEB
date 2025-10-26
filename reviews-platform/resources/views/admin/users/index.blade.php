@@ -131,11 +131,17 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4 flex-1">
                     <!-- Avatar -->
-                    <div class="flex-shrink-0 h-14 w-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                        <span class="text-white font-bold text-lg">
-                            {{ strtoupper(substr($user->name, 0, 2)) }}
-                        </span>
-                    </div>
+                    @if($user->photo)
+                        <img src="{{ asset('storage/' . $user->photo) }}" 
+                             alt="{{ $user->name }}" 
+                             class="flex-shrink-0 h-14 w-14 rounded-xl object-cover shadow-md border-2 border-purple-200">
+                    @else
+                        <div class="flex-shrink-0 h-14 w-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                            <span class="text-white font-bold text-lg">
+                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                            </span>
+                        </div>
+                    @endif
                     
                     <!-- User Info -->
                     <div class="flex-1 min-w-0">
