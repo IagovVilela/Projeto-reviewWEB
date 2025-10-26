@@ -19,13 +19,13 @@
 @section('styles')
     <style>
         .alert-card {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            background: #fef2f2;
             border: 2px solid #fecaca;
             transition: var(--transition-smooth);
         }
         
         .dark .alert-card {
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            background: #7f1d1d;
             border: 2px solid #b91c1c;
         }
         
@@ -40,7 +40,7 @@
         }
         
         .urgent-badge {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            background: #dc2626;
             position: relative;
             overflow: hidden;
         }
@@ -175,12 +175,43 @@
             </div>
         </div>
         
-        <!-- Loading State -->
-        <div id="loadingState" class="p-8 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full mb-4">
-                <i class="fas fa-spinner fa-spin text-red-600 dark:text-red-400 text-2xl"></i>
+        <!-- Loading State - Skeleton Screens -->
+        <div id="loadingState" class="space-y-4 p-6">
+            <!-- Skeleton Negative Review Card 1 -->
+            <div class="skeleton-card bg-red-50/50 dark:bg-red-900/10">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="skeleton-avatar bg-red-200 dark:bg-red-900/30"></div>
+                        <div class="flex-1">
+                            <div class="skeleton-line w-1-2 bg-red-200 dark:bg-red-900/30"></div>
+                            <div class="skeleton-line w-1-4 bg-red-200 dark:bg-red-900/30"></div>
+                        </div>
+                    </div>
+                    <div class="w-20">
+                        <div class="skeleton-line w-full bg-red-200 dark:bg-red-900/30"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-full bg-red-200 dark:bg-red-900/30"></div>
+                <div class="skeleton-line w-3-4 bg-red-200 dark:bg-red-900/30"></div>
             </div>
-            <p class="text-gray-600 dark:text-gray-400">Carregando avaliações negativas...</p>
+            
+            <!-- Skeleton Negative Review Card 2 -->
+            <div class="skeleton-card bg-red-50/50 dark:bg-red-900/10">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="skeleton-avatar bg-red-200 dark:bg-red-900/30"></div>
+                        <div class="flex-1">
+                            <div class="skeleton-line w-1-2 bg-red-200 dark:bg-red-900/30"></div>
+                            <div class="skeleton-line w-1-4 bg-red-200 dark:bg-red-900/30"></div>
+                        </div>
+                    </div>
+                    <div class="w-20">
+                        <div class="skeleton-line w-full bg-red-200 dark:bg-red-900/30"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-full bg-red-200 dark:bg-red-900/30"></div>
+                <div class="skeleton-line w-1-2 bg-red-200 dark:bg-red-900/30"></div>
+            </div>
         </div>
         
         <!-- Reviews Container -->
@@ -281,7 +312,7 @@
                         <div class="alert-card rounded-xl p-6">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center flex-1">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-4 shadow-lg shimmer">
+                                    <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mr-4 shadow-lg">
                                         <i class="fas fa-exclamation-triangle text-white text-lg"></i>
                                     </div>
                                     <div class="flex-1">

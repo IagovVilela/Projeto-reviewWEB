@@ -35,9 +35,16 @@
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center space-x-3">
                             @if($company->logo)
-                                <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-12 h-12 rounded-lg object-cover">
+                                <div class="image-placeholder w-12 h-12">
+                                    <img src="{{ asset('storage/' . $company->logo) }}" 
+                                         alt="{{ $company->name }}" 
+                                         loading="lazy"
+                                         class="w-12 h-12 rounded-lg object-cover"
+                                         onload="this.parentElement.classList.add('loaded')">
+                                    <div class="placeholder-shimmer"></div>
+                                </div>
                             @else
-                                <div class="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center">
+                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                                     <i class="fas fa-building text-purple-600"></i>
                                 </div>
                             @endif
@@ -105,7 +112,7 @@
         </div>
     @else
         <div class="text-center py-12">
-            <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-6">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-purple-100 rounded-full mb-6">
                 <i class="fas fa-building text-purple-600 text-3xl"></i>
             </div>
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Nenhuma empresa cadastrada</h3>

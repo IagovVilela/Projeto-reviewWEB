@@ -14,7 +14,7 @@
         }
         
         .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
         }
         
         .floating-shapes {
@@ -71,11 +71,12 @@
         }
         
         .google-button {
-            background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+            background: #4285F4;
             transition: all 0.3s ease;
         }
         
         .google-button:hover {
+            background: #3367d6;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(66, 133, 244, 0.3);
         }
@@ -150,7 +151,14 @@
                 <div class="mb-8 fade-in">
                     <div class="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl mb-6">
                         @if(isset($company->logo) && $company->logo)
-                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-16 h-16 object-contain">
+                            <div class="image-placeholder w-16 h-16 bg-transparent">
+                                <img src="{{ asset('storage/' . $company->logo) }}" 
+                                     alt="{{ $company->name }}" 
+                                     loading="lazy"
+                                     class="w-16 h-16 object-contain"
+                                     onload="this.parentElement.classList.add('loaded')">
+                                <div class="placeholder-shimmer"></div>
+                            </div>
                         @else
                             <i class="fas fa-building text-white text-3xl"></i>
                         @endif
@@ -246,7 +254,7 @@
                         type="submit" 
                         id="submitBtn"
                         disabled
-                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                     >
                         <i class="fas fa-paper-plane mr-2"></i>
                         Enviar Avaliação
@@ -313,10 +321,17 @@
                 <!-- Google Reviews -->
                 <div>
                     <h3 class="text-lg font-semibold text-gray-700 mb-4">Nossas Avaliações</h3>
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                        <div class="bg-blue-50 rounded-xl p-6">
                             <div class="flex items-center mb-4">
                                 <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
-                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-8 h-8 object-contain">
+                                    <div class="image-placeholder w-8 h-8 bg-transparent">
+                                        <img src="/assets/images/platforms/google.png" 
+                                             alt="Google" 
+                                             loading="lazy"
+                                             class="w-8 h-8 object-contain"
+                                             onload="this.parentElement.classList.add('loaded')">
+                                        <div class="placeholder-shimmer"></div>
+                                    </div>
                                 </div>
                                 <div>
                                     <h4 class="font-semibold text-gray-800">Google My Business</h4>
@@ -664,9 +679,33 @@
             `;
         }
         
+        // Lazy Load Background Image
+        function lazyLoadBackgroundImage() {
+            const heroSection = document.querySelector('.hero-gradient');
+            if (!heroSection) return;
+            
+            const bgImage = heroSection.getAttribute('style');
+            if (bgImage && bgImage.includes('background-image')) {
+                // Extract URL from style
+                const urlMatch = bgImage.match(/url\(['"]?([^'")]+)['"]?\)/);
+                if (urlMatch && urlMatch[1]) {
+                    const imageUrl = urlMatch[1];
+                    
+                    // Create a temporary image to preload
+                    const img = new Image();
+                    img.onload = function() {
+                        heroSection.style.backgroundImage = `url('${imageUrl}')`;
+                        heroSection.style.transition = 'background-image 0.3s ease';
+                    };
+                    img.src = imageUrl;
+                }
+            }
+        }
+        
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             new ReviewSystem();
+            lazyLoadBackgroundImage();
         });
     </script>
 </body>
