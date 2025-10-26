@@ -1031,8 +1031,58 @@
             }
         }
         
-        function exportCompanyData() {
-            showNotification('Exportando dados das empresas...', 'info');
+        async function exportCompanyData() {
+            try {
+                // Obter dados da tabela de performance
+                const table = document.querySelector('.table-container table');
+                if (!table) {
+                    showNotification('Nenhum dado disponível para exportar', 'warning');
+                    return;
+                }
+                
+                // Extrair dados da tabela
+                const rows = Array.from(table.querySelectorAll('tbody tr'));
+                if (rows.length === 0) {
+                    showNotification('Nenhum dado disponível para exportar', 'warning');
+                    return;
+                }
+                
+                // Cabeçalho do CSV
+                const csvContent = [
+                    'Empresa,Total,Positivas,Negativas,Média,Última Avaliação',
+                    ...rows.map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return [
+                            `"${cells[0].textContent.trim()}"`,
+                            cells[1].textContent.trim(),
+                            cells[2].textContent.trim(),
+                            cells[3].textContent.trim(),
+                            cells[4].textContent.trim(),
+                            `"${cells[5].textContent.trim()}"`
+                        ].join(',');
+                    })
+                ].join('\n');
+                
+                // Criar e baixar arquivo
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // Gerar nome do arquivo com data
+                const now = new Date();
+                const dateStr = now.toISOString().split('T')[0];
+                a.download = `performance_empresas_${dateStr}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showNotification('Dados exportados com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao exportar dados:', error);
+                showNotification('Erro ao exportar dados', 'error');
+            }
         }
         
         function viewCompanyDetails(companyName, companyId) {
