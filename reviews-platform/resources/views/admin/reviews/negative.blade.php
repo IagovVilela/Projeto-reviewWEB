@@ -264,7 +264,13 @@
                         page: this.currentPage
                     });
                     
-                    const response = await fetch(`/api/reviews/negative?${params}`);
+                    const response = await fetch(`/api/reviews/negative?${params}`, {
+                        credentials: 'include',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     const result = await response.json();
                     
                     if (result.success) {

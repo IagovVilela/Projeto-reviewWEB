@@ -435,7 +435,13 @@
             
             async loadCompanies() {
                 try {
-                    const response = await fetch('/api/companies');
+                    const response = await fetch('/api/companies', {
+                        credentials: 'include',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     const result = await response.json();
                     
                     if (result.success) {
@@ -468,7 +474,13 @@
                         ...this.filters
                     });
                     
-                    const response = await fetch(`/api/reviews?${params}`);
+                    const response = await fetch(`/api/reviews?${params}`, {
+                        credentials: 'include',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     const result = await response.json();
                     
                     if (result.success) {
