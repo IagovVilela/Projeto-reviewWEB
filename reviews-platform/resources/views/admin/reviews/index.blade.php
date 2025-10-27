@@ -19,11 +19,11 @@
 @section('styles')
     <style>
         .rating-positive {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
         }
         
         .rating-negative {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #ef4444;
         }
         
         .pulse-alert {
@@ -76,7 +76,7 @@
         }
         
         .chart-period-btn.active {
-            background: var(--primary-gradient);
+            background: var(--primary-color);
             color: white;
             transform: scale(1.05);
         }
@@ -293,10 +293,61 @@
             <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('reviews.last_reviews') }}</p>
         </div>
         
-        <!-- Loading State -->
-        <div id="loadingState" class="p-8 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
-                <i class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-400 text-2xl"></i>
+        <!-- Loading State - Skeleton Screens -->
+        <div id="loadingState" class="space-y-4">
+            <!-- Skeleton Review Card 1 -->
+            <div class="skeleton-card">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="skeleton-avatar"></div>
+                        <div class="flex-1">
+                            <div class="skeleton-line w-1-2"></div>
+                            <div class="skeleton-line w-1-4"></div>
+                        </div>
+                    </div>
+                    <div class="w-24">
+                        <div class="skeleton-line w-full"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-full"></div>
+                <div class="skeleton-line w-3-4"></div>
+            </div>
+            
+            <!-- Skeleton Review Card 2 -->
+            <div class="skeleton-card">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="skeleton-avatar"></div>
+                        <div class="flex-1">
+                            <div class="skeleton-line w-1-2"></div>
+                            <div class="skeleton-line w-1-4"></div>
+                        </div>
+                    </div>
+                    <div class="w-24">
+                        <div class="skeleton-line w-full"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-full"></div>
+                <div class="skeleton-line w-1-2"></div>
+            </div>
+            
+            <!-- Skeleton Review Card 3 -->
+            <div class="skeleton-card">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="skeleton-avatar"></div>
+                        <div class="flex-1">
+                            <div class="skeleton-line w-1-2"></div>
+                            <div class="skeleton-line w-1-4"></div>
+                        </div>
+                    </div>
+                    <div class="w-24">
+                        <div class="skeleton-line w-full"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-full"></div>
+                <div class="skeleton-line w-3-4"></div>
+                <div class="skeleton-line w-1-2"></div>
             </div>
             <p class="text-gray-600 dark:text-gray-400">{{ __('reviews.loading') }}</p>
         </div>
@@ -324,6 +375,7 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // Translations for JavaScript
         const translations = {
@@ -1033,6 +1085,7 @@
         
         async function exportCompanyData() {
             try {
+<<<<<<< HEAD
                 // Obter dados da tabela de performance
                 const table = document.querySelector('.table-container table');
                 if (!table) {

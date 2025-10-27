@@ -47,7 +47,7 @@
             appearance: none;
             width: 20px;
             height: 20px;
-            background: var(--primary-gradient);
+            background: var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
@@ -62,7 +62,7 @@
         .slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: var(--primary-gradient);
+            background: var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
             border: none;
@@ -92,7 +92,7 @@
                 <span class="text-sm text-gray-500 dark:text-gray-400" id="progressText" data-fields-text="{{ __('companies.fields_completed') }}">0/7 {{ __('companies.fields_completed') }}</span>
             </div>
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div id="progressBar" class="h-2 rounded-full transition-all duration-300" style="width: 0%; background: var(--primary-gradient);"></div>
+                <div id="progressBar" class="h-2 rounded-full transition-all duration-300 bg-purple-600" style="width: 0%;"></div>
             </div>
         </div>
 
@@ -102,7 +102,7 @@
             <!-- Informações Básicas -->
             <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
+                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-building text-white"></i>
                     </div>
                     <div>
@@ -207,7 +207,7 @@
             <!-- Detalhes da Empresa -->
             <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
+                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-info-circle text-white"></i>
                     </div>
                     <div>
@@ -264,7 +264,7 @@
             <!-- Google My Business -->
             <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                         <i class="fab fa-google text-white"></i>
                     </div>
                     <div>
@@ -294,7 +294,7 @@
             <!-- Personalização Visual -->
             <div class="form-section p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-6">
-                    <div class="w-10 h-10 icon-gradient rounded-lg flex items-center justify-center mr-3">
+                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-palette text-white"></i>
                     </div>
                     <div>

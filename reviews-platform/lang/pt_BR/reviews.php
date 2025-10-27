@@ -79,4 +79,7 @@ return [
     'friday' => 'Sex',
     'saturday' => 'Sáb',
     'sunday' => 'Dom',
+    'export_preparing' => 'Preparando exportação...',
+    'export_success' => 'Dados exportados com sucesso!',
+    'export_error' => 'Erro ao exportar dados. Tente novamente.',
 ];

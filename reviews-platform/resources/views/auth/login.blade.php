@@ -121,7 +121,7 @@
         .btn-login {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             border: none;
             border-radius: 12px;
@@ -129,11 +129,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
         
         .btn-login:hover {
+            background: #5568d3;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
@@ -218,7 +217,7 @@
         }
         
         .success-message {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
             color: white;
             padding: 1rem;
             border-radius: 12px;
@@ -232,7 +231,7 @@
         }
         
         .error-message {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #ef4444;
             color: white;
             padding: 1rem;
             border-radius: 12px;
@@ -265,7 +264,7 @@
     <div class="login-container rounded-2xl p-8 w-full max-w-md relative z-10 fade-in">
         <!-- Logo and Title -->
         <div class="text-center mb-8 logo-container">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 pulse-animation">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-600 rounded-full mb-4 pulse-animation">
                 <i class="fas fa-shield-alt text-white text-2xl"></i>
             </div>
             <h1 class="text-3xl font-bold text-gray-800 mb-2">Bem-vindo de volta!</h1>

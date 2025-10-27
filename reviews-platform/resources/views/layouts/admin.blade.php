@@ -46,13 +46,19 @@
         
         /* Paleta de Cores Unificada */
         :root {
-            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            --sidebar-gradient: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
-            --icon-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
             --primary-color: #8b5cf6;
             --primary-dark: #7c3aed;
-            --secondary-color: #ec4899;
-            --secondary-dark: #db2777;
+            --primary-light: #a78bfa;
+            --secondary-color: #3b82f6;
+            --secondary-dark: #2563eb;
+            --success-color: #10b981;
+            --success-dark: #059669;
+            --error-color: #ef4444;
+            --error-dark: #dc2626;
+            --warning-color: #f59e0b;
+            --warning-dark: #d97706;
+            --neutral-color: #6b7280;
+            --neutral-dark: #4b5563;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -75,7 +81,8 @@
         
         /* Dark Mode Colors */
         .dark {
-            --sidebar-gradient: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+            --primary-color: #a78bfa;
+            --primary-dark: #8b5cf6;
             
             /* Dark Mode Colors */
             --bg-primary: #111827;
@@ -160,7 +167,7 @@
         
         /* Sidebar */
         .sidebar-gradient {
-            background: var(--sidebar-gradient);
+            background: var(--sidebar-bg);
         }
         
         /* Navigation Items */
@@ -177,7 +184,7 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background: var(--primary-gradient);
+            background: var(--primary-color);
             transform: scaleY(0);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -209,36 +216,17 @@
         
         /* Logo */
         .logo-gradient {
-            background: var(--icon-gradient);
+            background: var(--primary-color);
         }
         
         /* Buttons */
         .btn-primary {
-            background: var(--primary-gradient);
+            background: var(--primary-color);
             transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn-primary:hover::before {
-            width: 300px;
-            height: 300px;
         }
         
         .btn-primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
         }
@@ -248,13 +236,12 @@
         }
         
         .btn-secondary {
-            background: #6b7280;
+            background: var(--neutral-color);
             transition: var(--transition-smooth);
-            position: relative;
         }
         
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--neutral-dark);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
         }
@@ -271,7 +258,7 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+            background: rgba(139, 92, 246, 0.03);
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
@@ -292,7 +279,7 @@
         
         /* Icon Backgrounds */
         .icon-gradient {
-            background: var(--icon-gradient);
+            background: var(--primary-color);
         }
         
         /* Animations */
@@ -503,6 +490,125 @@
             color: rgb(253, 224, 71) !important;
         }
         
+        /* Skeleton Loading Styles */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            border-radius: 4px;
+        }
+        
+        .dark .skeleton {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .skeleton-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .dark .skeleton-card {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .dark .skeleton-avatar {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+        }
+        
+        .skeleton-line {
+            height: 12px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dark .skeleton-line {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+        }
+        
+        .skeleton-line.w-full { width: 100%; }
+        .skeleton-line.w-3-4 { width: 75%; }
+        .skeleton-line.w-1-2 { width: 50%; }
+        .skeleton-line.w-1-4 { width: 25%; }
+        
+        .skeleton-circle {
+            border-radius: 50%;
+        }
+        
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-title {
+            height: 24px;
+            margin-bottom: 12px;
+        }
+        
+        /* Image Lazy Loading */
+        .image-placeholder {
+            position: relative;
+            background: #f0f0f0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .dark .image-placeholder {
+            background: #374151;
+        }
+        
+        .image-placeholder img {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .image-placeholder.loaded img {
+            opacity: 1;
+        }
+        
+        .image-placeholder.loaded .placeholder-shimmer {
+            display: none;
+        }
+        
+        .placeholder-shimmer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: shimmer-move 1.5s infinite;
+        }
+        
+        .dark .placeholder-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        
+        @keyframes shimmer-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
         /* Input Styles */
         input:not([type="checkbox"]):not([type="radio"]),
         select,
@@ -612,6 +718,10 @@
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
                     <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.settings') }}</p>
+                    <a href="{{ route('users.index') }}" class="nav-item {{ request()->is('users*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                        <i class="fas fa-users w-5 h-5 mr-3"></i>
+                        Usuários
+                    </a>
                     <a href="/subscription" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-crown w-5 h-5 mr-3"></i>
                         {{ __('app.subscription') }}
@@ -620,7 +730,7 @@
                         <i class="fas fa-credit-card w-5 h-5 mr-3"></i>
                         {{ __('app.billing') }}
                     </a>
-                    <a href="/profile" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                    <a href="/profile" class="nav-item {{ request()->is('profile') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-user w-5 h-5 mr-3"></i>
                         {{ __('app.profile') }}
                     </a>
@@ -642,9 +752,17 @@
             <!-- User Section -->
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user text-gray-600"></i>
-                    </div>
+                    @if(Auth::user()->photo)
+                        <img src="{{ asset('storage/' . Auth::user()->photo) }}" 
+                             alt="{{ Auth::user()->name }}" 
+                             class="w-10 h-10 rounded-full object-cover border-2 border-purple-200">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold text-xs">
+                                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 2)) }}
+                            </span>
+                        </div>
+                    @endif
                     <div class="flex-1">
                         <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name ?? __('app.user') }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>
