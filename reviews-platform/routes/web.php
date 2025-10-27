@@ -29,27 +29,50 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Create admin user (for initial setup)
 Route::get('/create-admin', [AuthController::class, 'createAdmin']);
 
-// Protected admin routes
-Route::middleware(['auth', 'admin'])->group(function () {
+// Dashboard route - accessible to all authenticated users
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        // Contar avaliações negativas não processadas
-        $negativeCount = \App\Models\Review::where('is_positive', false)
-            ->where(function($query) {
-                $query->where('is_processed', false)
-                      ->orWhereNull('is_processed');
-            })
-            ->count();
+        $user = auth()->user();
         
-        return view('dashboard', compact('negativeCount'));
-    });
-    
+        if ($user->role === 'admin') {
+            // Dashboard de administrador
+            $negativeCount = \App\Models\Review::where('is_positive', false)
+                ->where(function($query) {
+                    $query->where('is_processed', false)
+                          ->orWhereNull('is_processed');
+                })
+                ->count();
+            
+            return view('dashboard', compact('negativeCount'));
+        } else {
+            // Dashboard de usuário comum
+            $company = $user->companies()->first();
+            $hasCompany = $company !== null;
+            
+            $stats = [
+                'total_reviews' => $hasCompany ? $company->reviews()->count() : 0,
+                'positive_reviews' => $hasCompany ? $company->reviews()->where('is_positive', true)->count() : 0,
+                'negative_reviews' => $hasCompany ? $company->reviews()->where('is_positive', false)->count() : 0,
+                'average_rating' => $hasCompany ? round($company->reviews()->avg('rating'), 1) : 0,
+            ];
+            
+            return view('dashboard-user', compact('company', 'hasCompany', 'stats'));
+        }
+    })->name('dashboard');
+});
+
+// Companies routes - accessible to all authenticated users (with controller-level restrictions)
+Route::middleware(['auth'])->group(function () {
     Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies.index');
     Route::get('/companies/create', [App\Http\Controllers\CompanyController::class, 'create'])->name('companies.create');
     Route::post('/companies', [App\Http\Controllers\CompanyController::class, 'store'])->name('companies.store');
     Route::get('/companies/{id}/edit', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companies.edit');
     Route::put('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'update'])->name('companies.update');
     Route::delete('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'destroy'])->name('companies.destroy');
+});
 
+// Protected admin routes
+Route::middleware(['auth', 'admin'])->group(function () {
     // Admin Reviews Routes
     Route::get('/reviews', function () {
         return view('admin.reviews.index');
