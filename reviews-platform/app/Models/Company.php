@@ -11,6 +11,7 @@ class Company extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
         'url',
         'slug',
@@ -44,6 +45,11 @@ class Company extends Model
                 $company->token = 'review_' . Str::random(20);
             }
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function reviews()

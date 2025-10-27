@@ -705,9 +705,11 @@
                 </a>
                 <a href="/companies" class="nav-item {{ request()->is('companies*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-building w-5 h-5 mr-3"></i>
-                    {{ __('app.companies') }}
+                    {{ Auth::user()->role === 'admin' ? __('app.companies') : 'Minha Empresa' }}
                 </a>
-                <a href="/reviews" class="nav-item {{ request()->is('reviews*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                
+                @if(Auth::user()->role === 'admin')
+                <a href="/reviews" class="nav-item {{ request()->is('reviews*') && !request()->is('reviews/negative') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-star w-5 h-5 mr-3"></i>
                     {{ __('app.reviews') }}
                 </a>
@@ -715,13 +717,18 @@
                     <i class="fas fa-exclamation-triangle w-5 h-5 mr-3"></i>
                     {{ __('app.negative_reviews') }}
                 </a>
+                @endif
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
                     <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.settings') }}</p>
+                    
+                    @if(Auth::user()->role === 'admin')
                     <a href="{{ route('users.index') }}" class="nav-item {{ request()->is('users*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-users w-5 h-5 mr-3"></i>
                         Usuários
                     </a>
+                    @endif
+                    
                     <a href="/subscription" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-crown w-5 h-5 mr-3"></i>
                         {{ __('app.subscription') }}
