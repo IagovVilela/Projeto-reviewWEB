@@ -81,6 +81,28 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return view('admin.reviews.negative');
     })->name('reviews.negative');
 
+    // API Routes for Admin Panel (with auth and session)
+    Route::prefix('api')->group(function () {
+        Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index']);
+        Route::get('/reviews/negative', [App\Http\Controllers\ReviewController::class, 'negativeReviews']);
+        Route::get('/companies/{companyId}/contacts', [App\Http\Controllers\ReviewController::class, 'exportContacts']);
+        
+        Route::get('/companies', function () {
+            try {
+                $companies = \App\Models\Company::select('id', 'name', 'token')->get();
+                return response()->json([
+                    'success' => true,
+                    'data' => $companies
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erro ao carregar empresas'
+                ], 500);
+            }
+        });
+    });
+
     // User Management Routes (Admin Only)
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users.create');
