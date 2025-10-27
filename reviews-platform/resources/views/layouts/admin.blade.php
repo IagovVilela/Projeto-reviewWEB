@@ -708,7 +708,6 @@
                     {{ Auth::user()->role === 'admin' ? __('app.companies') : 'Minha Empresa' }}
                 </a>
                 
-                @if(Auth::user()->role === 'admin')
                 <a href="/reviews" class="nav-item {{ request()->is('reviews*') && !request()->is('reviews/negative') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-star w-5 h-5 mr-3"></i>
                     {{ __('app.reviews') }}
@@ -717,7 +716,6 @@
                     <i class="fas fa-exclamation-triangle w-5 h-5 mr-3"></i>
                     {{ __('app.negative_reviews') }}
                 </a>
-                @endif
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
                     <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.settings') }}</p>

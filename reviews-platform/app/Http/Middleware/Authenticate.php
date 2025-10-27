@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Closure;
 
 class Authenticate extends Middleware
 {
@@ -17,5 +18,19 @@ class Authenticate extends Middleware
         if (! $request->expectsJson()) {
             return route('login');
         }
+        
+        // Para requisições JSON (API), retornar resposta JSON
+        return null;
+    }
+    
+    public function handle($request, Closure $next, ...$guards)
+    {
+        if ($request->expectsJson() && !$this->authenticate($request, $guards)) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+        
+        return parent::handle($request, $next, ...$guards);
     }
 }

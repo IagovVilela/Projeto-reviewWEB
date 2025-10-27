@@ -167,8 +167,8 @@
                 <div>
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.total_reviews') }}</p>
                     <p class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="totalReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-arrow-up trend-up"></i> +12% vs mês anterior
+                    <p class="text-xs text-gray-500 dark:text-gray-400" id="totalTrend">
+                        <!-- Trend data will be loaded dynamically -->
                     </p>
                 </div>
             </div>
@@ -183,8 +183,8 @@
                 <div>
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.positive') }}</p>
                     <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="positiveReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-arrow-up trend-up"></i> +8% vs mês anterior
+                    <p class="text-xs text-gray-500 dark:text-gray-400" id="positiveTrend">
+                        <!-- Trend data will be loaded dynamically -->
                     </p>
                 </div>
             </div>
@@ -199,8 +199,8 @@
                 <div>
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.negative') }}</p>
                     <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="negativeReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-arrow-down trend-down"></i> -5% vs mês anterior
+                    <p class="text-xs text-gray-500 dark:text-gray-400" id="negativeTrend">
+                        <!-- Trend data will be loaded dynamically -->
                     </p>
                 </div>
             </div>
@@ -215,8 +215,8 @@
                 <div>
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.average') }}</p>
                     <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400" id="averageRating">0.0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-arrow-up trend-up"></i> +0.3 vs mês anterior
+                    <p class="text-xs text-gray-500 dark:text-gray-400" id="averageTrend">
+                        <!-- Trend data will be loaded dynamically -->
                     </p>
                 </div>
             </div>
@@ -875,6 +875,12 @@
                 document.getElementById('positiveReviews').textContent = positive;
                 document.getElementById('negativeReviews').textContent = negative;
                 document.getElementById('averageRating').textContent = average;
+                
+                // Limpar tendências - serão preenchidas com dados reais quando disponíveis
+                document.getElementById('totalTrend').innerHTML = '';
+                document.getElementById('positiveTrend').innerHTML = '';
+                document.getElementById('negativeTrend').innerHTML = '';
+                document.getElementById('averageTrend').innerHTML = '';
             }
             
             updateCompanyPerformanceTable(data) {
