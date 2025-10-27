@@ -1097,7 +1097,6 @@
         
         async function exportCompanyData() {
             try {
-<<<<<<< HEAD
                 // Obter dados da tabela de performance
                 const table = document.querySelector('.table-container table');
                 if (!table) {
