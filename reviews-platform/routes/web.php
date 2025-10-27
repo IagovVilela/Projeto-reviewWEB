@@ -69,27 +69,38 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/companies/{id}/edit', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companies.edit');
     Route::put('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'update'])->name('companies.update');
     Route::delete('/companies/{id}', [App\Http\Controllers\CompanyController::class, 'destroy'])->name('companies.destroy');
-});
 
-// Protected admin routes
-Route::middleware(['auth', 'admin'])->group(function () {
-    // Admin Reviews Routes
+    // Reviews routes for ALL authenticated users (not just admin)
     Route::get('/reviews', function () {
         return view('admin.reviews.index');
     })->name('reviews.index');
+    
     Route::get('/reviews/negative', function () {
         return view('admin.reviews.negative');
     })->name('reviews.negative');
 
-    // API Routes for Admin Panel (with auth and session)
+    // API Routes for Reviews (accessible to all authenticated users)
     Route::prefix('api')->group(function () {
+        // Get reviews (filtered by user's companies if not admin)
         Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index']);
         Route::get('/reviews/negative', [App\Http\Controllers\ReviewController::class, 'negativeReviews']);
         Route::get('/companies/{companyId}/contacts', [App\Http\Controllers\ReviewController::class, 'exportContacts']);
         
+        // Get companies (only user's companies if not admin)
         Route::get('/companies', function () {
             try {
-                $companies = \App\Models\Company::select('id', 'name', 'token')->get();
+                $user = auth()->user();
+                
+                if ($user->role === 'admin') {
+                    // Admin sees all companies
+                    $companies = \App\Models\Company::select('id', 'name', 'token')->get();
+                } else {
+                    // Regular users see only their companies
+                    $companies = \App\Models\Company::select('id', 'name', 'token')
+                        ->where('user_id', $user->id)
+                        ->get();
+                }
+                
                 return response()->json([
                     'success' => true,
                     'data' => $companies
@@ -102,7 +113,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
             }
         });
     });
+});
 
+// Protected admin routes
+Route::middleware(['auth', 'admin'])->group(function () {
     // User Management Routes (Admin Only)
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users.create');

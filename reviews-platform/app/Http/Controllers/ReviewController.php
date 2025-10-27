@@ -156,7 +156,14 @@ class ReviewController extends Controller
         try {
             Log::info('ReviewController@index chamado', ['request' => $request->all()]);
             
+            $user = auth()->user();
             $query = Review::with('company');
+
+            // If user is not admin, filter by user's companies only
+            if ($user->role !== 'admin') {
+                $userCompanyIds = \App\Models\Company::where('user_id', $user->id)->pluck('id');
+                $query->whereIn('company_id', $userCompanyIds);
+            }
 
             // Filter by company
             if ($request->has('company_id') && $request->company_id) {
@@ -208,7 +215,14 @@ class ReviewController extends Controller
         try {
             Log::info('ReviewController@negativeReviews chamado');
             
+            $user = auth()->user();
             $query = Review::with('company')->where('is_positive', false);
+
+            // If user is not admin, filter by user's companies only
+            if ($user->role !== 'admin') {
+                $userCompanyIds = \App\Models\Company::where('user_id', $user->id)->pluck('id');
+                $query->whereIn('company_id', $userCompanyIds);
+            }
 
             // Filter by company
             if ($request->has('company_id') && $request->company_id) {
