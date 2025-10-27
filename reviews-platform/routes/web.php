@@ -80,16 +80,32 @@ Route::middleware(['auth'])->group(function () {
     })->name('reviews.negative');
 
     // API Routes for Reviews (accessible to all authenticated users)
+    // These routes use the 'web' middleware from the parent group which includes session support
     Route::prefix('api')->group(function () {
         // Get reviews (filtered by user's companies if not admin)
-        Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index']);
-        Route::get('/reviews/negative', [App\Http\Controllers\ReviewController::class, 'negativeReviews']);
-        Route::get('/companies/{companyId}/contacts', [App\Http\Controllers\ReviewController::class, 'exportContacts']);
+        Route::get('/reviews', function (\Illuminate\Http\Request $request) {
+            return (new \App\Http\Controllers\ReviewController)->index($request);
+        });
+        
+        Route::get('/reviews/negative', function (\Illuminate\Http\Request $request) {
+            return (new \App\Http\Controllers\ReviewController)->negativeReviews($request);
+        });
+        
+        Route::get('/companies/{companyId}/contacts', function ($companyId) {
+            return (new \App\Http\Controllers\ReviewController)->exportContacts(request(), $companyId);
+        });
         
         // Get companies (only user's companies if not admin)
         Route::get('/companies', function () {
             try {
                 $user = auth()->user();
+                
+                if (!$user) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Não autenticado'
+                    ], 401);
+                }
                 
                 if ($user->role === 'admin') {
                     // Admin sees all companies
@@ -108,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erro ao carregar empresas'
+                    'message' => 'Erro ao carregar empresas: ' . $e->getMessage()
                 ], 500);
             }
         });
