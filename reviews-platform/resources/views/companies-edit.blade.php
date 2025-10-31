@@ -39,23 +39,56 @@
         outline: none;
         border-radius: 8px;
         height: 8px;
+        width: 100%;
     }
+    
     .slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         width: 20px;
         height: 20px;
-        background: var(--primary-gradient);
+        background: #8b5cf6;
         border-radius: 50%;
         cursor: pointer;
+        box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+        transition: all 0.3s ease;
+        border: 2px solid #ffffff;
     }
+    
+    .slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+    
     .slider::-moz-range-thumb {
         width: 20px;
         height: 20px;
-        background: var(--primary-gradient);
+        background: #8b5cf6;
         border-radius: 50%;
         cursor: pointer;
-        border: none;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .slider::-moz-range-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+    
+    /* Dark mode support */
+    .dark .slider {
+        background: #374151;
+    }
+    
+    .dark .slider::-webkit-slider-thumb {
+        background: #8b5cf6;
+        border-color: #1f2937;
+    }
+    
+    .dark .slider::-moz-range-thumb {
+        background: #8b5cf6;
+        border-color: #1f2937;
     }
 </style>
 @endsection
@@ -150,19 +183,45 @@
         </div>
 
         <!-- Configurações -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Configurações de Avaliação</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">{{ __('companies.positive_score') }}</h2>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Nota mínima para considerar positivo *
-                    <span class="text-purple-600 ml-2" id="positiveScoreValue">{{ old('positive_score', $company->positive_score) }}</span>
+                <label for="positive_score" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ __('companies.positive_score_label') }} *
                 </label>
-                <input type="range" name="positive_score" min="1" max="5" value="{{ old('positive_score', $company->positive_score) }}" class="slider w-full" id="positiveScoreSlider" required>
-                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>Muito Restritivo (1)</span>
-                    <span>Muito Permissivo (5)</span>
+                <div class="flex items-center space-x-4">
+                    <input 
+                        type="range" 
+                        name="positive_score" 
+                        id="positiveScoreSlider"
+                        min="1" 
+                        max="5" 
+                        value="{{ old('positive_score', $company->positive_score ?? 4) }}" 
+                        class="flex-1 slider" 
+                        required
+                    >
+                    <div class="flex items-center space-x-2 min-w-[120px]">
+                        <span id="positiveScoreValue" class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ old('positive_score', $company->positive_score ?? 4) }}</span>
+                        <div class="flex text-yellow-400" id="positiveScoreStars">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= (old('positive_score', $company->positive_score ?? 4)))
+                                    <i class="fas fa-star"></i>
+                                @else
+                                    <i class="far fa-star"></i>
+                                @endif
+                            @endfor
+                        </div>
+                    </div>
                 </div>
+                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <span>{{ __('companies.very_restrictive') }} (1)</span>
+                    <span>{{ __('companies.very_permissive') }} (5)</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    {{ __('companies.positive_score_desc') }}
+                </p>
             </div>
         </div>
     </form>
@@ -174,10 +233,27 @@
 document.addEventListener('DOMContentLoaded', function() {
     const slider = document.getElementById('positiveScoreSlider');
     const valueDisplay = document.getElementById('positiveScoreValue');
+    const starsContainer = document.getElementById('positiveScoreStars');
     
-    slider.addEventListener('input', function() {
-        valueDisplay.textContent = this.value;
-    });
+    if (slider && valueDisplay && starsContainer) {
+        function updateStarDisplay(value) {
+            valueDisplay.textContent = value;
+            starsContainer.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('i');
+                star.className = i <= value ? 'fas fa-star' : 'far fa-star';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Update on input
+        slider.addEventListener('input', function() {
+            updateStarDisplay(this.value);
+        });
+        
+        // Initial update
+        updateStarDisplay(slider.value);
+    }
     
     // Formatação de telefone
     const phoneInput = document.getElementById('contact_number');

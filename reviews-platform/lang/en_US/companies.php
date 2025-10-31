@@ -90,5 +90,10 @@ return [
     'save_company' => 'Save Company',
     'back' => 'Back',
     'saving' => 'Saving...',
+    'very_restrictive' => 'Very Restrictive',
+    'very_permissive' => 'Very Permissive',
+    'edit' => 'Edit',
+    'view' => 'View',
+    'delete' => 'Delete',
 ];
 

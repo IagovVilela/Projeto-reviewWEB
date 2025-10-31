@@ -90,5 +90,10 @@ return [
     'save_company' => 'Salvar Empresa',
     'back' => 'Voltar',
     'saving' => 'Salvando...',
+    'very_restrictive' => 'Muito Restritivo',
+    'very_permissive' => 'Muito Permissivo',
+    'edit' => 'Editar',
+    'view' => 'Ver',
+    'delete' => 'Excluir',
 ];
 
