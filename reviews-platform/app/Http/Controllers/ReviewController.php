@@ -159,8 +159,8 @@ class ReviewController extends Controller
             $user = auth()->user();
             $query = Review::with('company');
 
-            // If user is not admin, filter by user's companies only
-            if ($user->role !== 'admin') {
+            // If user is not admin or owner, filter by user's companies only
+            if (!in_array($user->role, ['admin', 'proprietario'])) {
                 $userCompanyIds = \App\Models\Company::where('user_id', $user->id)->pluck('id');
                 $query->whereIn('company_id', $userCompanyIds);
             }
@@ -168,6 +168,17 @@ class ReviewController extends Controller
             // Filter by company
             if ($request->has('company_id') && $request->company_id) {
                 $query->where('company_id', $request->company_id);
+            }
+
+            // Filter by user (company owner) - only for admin and owner
+            if ($request->has('user_id') && $request->user_id && in_array($user->role, ['admin', 'proprietario'])) {
+                $companyIds = \App\Models\Company::where('user_id', $request->user_id)->pluck('id');
+                if ($companyIds->isNotEmpty()) {
+                    $query->whereIn('company_id', $companyIds);
+                } else {
+                    // No companies for this user, return empty result
+                    $query->whereRaw('1 = 0');
+                }
             }
 
             // Filter by rating type
@@ -213,23 +224,100 @@ class ReviewController extends Controller
     public function negativeReviews(Request $request)
     {
         try {
-            Log::info('ReviewController@negativeReviews chamado');
+            Log::info('ReviewController@negativeReviews chamado', ['filters' => $request->all()]);
             
             $user = auth()->user();
             $query = Review::with('company')->where('is_positive', false);
 
-            // If user is not admin, filter by user's companies only
-            if ($user->role !== 'admin') {
+            // If user is not admin or owner, filter by user's companies only
+            if (!in_array($user->role, ['admin', 'proprietario'])) {
                 $userCompanyIds = \App\Models\Company::where('user_id', $user->id)->pluck('id');
                 $query->whereIn('company_id', $userCompanyIds);
             }
 
             // Filter by company
-            if ($request->has('company_id') && $request->company_id) {
+            if ($request->has('company_id') && $request->company_id && $request->company_id !== 'all') {
                 $query->where('company_id', $request->company_id);
             }
 
-            $reviews = $query->orderBy('created_at', 'desc')->paginate(20);
+            // Filter by user (company owner) - only for admin and owner
+            if ($request->has('user_id') && $request->user_id && $request->user_id !== 'all' && in_array($user->role, ['admin', 'proprietario'])) {
+                $companyIds = \App\Models\Company::where('user_id', $request->user_id)->pluck('id');
+                if ($companyIds->isNotEmpty()) {
+                    $query->whereIn('company_id', $companyIds);
+                } else {
+                    // No companies for this user, return empty result
+                    $query->whereRaw('1 = 0');
+                }
+            }
+
+            // Filter by status (processed/unprocessed)
+            if ($request->has('status') && $request->status && $request->status !== 'all') {
+                if ($request->status === 'processed') {
+                    $query->where('is_processed', true);
+                } elseif ($request->status === 'unprocessed') {
+                    $query->where('is_processed', false);
+                }
+            }
+
+            // Filter by rating
+            if ($request->has('rating') && $request->rating && $request->rating !== 'all') {
+                $query->where('rating', $request->rating);
+            }
+
+            // Filter by date period
+            if ($request->has('period') && $request->period && $request->period !== 'all') {
+                $now = now();
+                switch ($request->period) {
+                    case 'today':
+                        $query->whereDate('created_at', $now->toDateString());
+                        break;
+                    case 'week':
+                        $query->where('created_at', '>=', $now->copy()->subWeek());
+                        break;
+                    case 'month':
+                        $query->where('created_at', '>=', $now->copy()->subMonth());
+                        break;
+                }
+            }
+
+            // Filter by date range
+            if ($request->has('date_from') && $request->date_from) {
+                $query->whereDate('created_at', '>=', $request->date_from);
+            }
+            if ($request->has('date_to') && $request->date_to) {
+                $query->whereDate('created_at', '<=', $request->date_to);
+            }
+
+            // Search filter (comment, private_feedback, whatsapp)
+            if ($request->has('search') && $request->search) {
+                $searchTerm = '%' . $request->search . '%';
+                $query->where(function($q) use ($searchTerm) {
+                    $q->where('comment', 'LIKE', $searchTerm)
+                      ->orWhere('private_feedback', 'LIKE', $searchTerm)
+                      ->orWhere('whatsapp', 'LIKE', $searchTerm);
+                });
+            }
+
+            // Sort
+            $sortBy = $request->get('sort', 'recent');
+            switch ($sortBy) {
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'lowest':
+                    $query->orderBy('rating', 'asc')->orderBy('created_at', 'desc');
+                    break;
+                case 'highest':
+                    $query->orderBy('rating', 'desc')->orderBy('created_at', 'desc');
+                    break;
+                case 'recent':
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
+
+            $reviews = $query->paginate(20);
 
             Log::info('Avaliações negativas carregadas', ['total' => $reviews->total()]);
 

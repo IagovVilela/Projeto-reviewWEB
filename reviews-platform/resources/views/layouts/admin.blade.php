@@ -705,7 +705,7 @@
                 </a>
                 <a href="/companies" class="nav-item {{ request()->is('companies*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                     <i class="fas fa-building w-5 h-5 mr-3"></i>
-                    {{ Auth::user()->role === 'admin' ? __('app.companies') : 'Minha Empresa' }}
+                    {{ in_array(Auth::user()->role, ['admin', 'proprietario']) ? __('app.companies') : 'Minha Empresa' }}
                 </a>
                 
                 <a href="/reviews" class="nav-item {{ request()->is('reviews*') && !request()->is('reviews/negative') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
@@ -720,13 +720,15 @@
                 <div class="pt-4 mt-4 border-t border-gray-200">
                     <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.settings') }}</p>
                     
-                    @if(Auth::user()->role === 'admin')
+                    @if(in_array(Auth::user()->role, ['admin', 'proprietario']))
                     <a href="{{ route('users.index') }}" class="nav-item {{ request()->is('users*') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-users w-5 h-5 mr-3"></i>
-                        Usuários
+                        {{ __('users.title') }}
                     </a>
                     @endif
                     
+                    {{-- Subscription and Billing - Hidden for future use --}}
+                    {{-- 
                     <a href="/subscription" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-crown w-5 h-5 mr-3"></i>
                         {{ __('app.subscription') }}
@@ -735,6 +737,7 @@
                         <i class="fas fa-credit-card w-5 h-5 mr-3"></i>
                         {{ __('app.billing') }}
                     </a>
+                    --}}
                     <a href="/profile" class="nav-item {{ request()->is('profile') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-user w-5 h-5 mr-3"></i>
                         {{ __('app.profile') }}
@@ -743,11 +746,11 @@
                 
                 <div class="pt-4 mt-4 border-t border-gray-200">
                     <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{{ __('app.support') }}</p>
-                    <a href="/support" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                    <a href="{{ route('support.help-center') }}" class="nav-item {{ request()->is('support') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-life-ring w-5 h-5 mr-3"></i>
                         {{ __('app.help_center') }}
                     </a>
-                    <a href="/faqs" class="nav-item flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
+                    <a href="{{ route('support.faqs') }}" class="nav-item {{ request()->is('faqs') ? 'active' : '' }} flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700">
                         <i class="fas fa-question-circle w-5 h-5 mr-3"></i>
                         {{ __('app.faqs') }}
                     </a>

@@ -41,7 +41,7 @@ class ProfileController extends Controller
         // Update password if provided
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
-                return back()->withErrors(['current_password' => 'A senha atual está incorreta.']);
+                return back()->withErrors(['current_password' => __('profile.current_password_incorrect')]);
             }
 
             $user->password = Hash::make($request->new_password);
@@ -60,7 +60,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return back()->with('success', 'Perfil atualizado com sucesso!');
+        return back()->with('success', __('profile.update_success'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ProfileController extends Controller
             $user->save();
         }
 
-        return back()->with('success', 'Foto removida com sucesso!');
+        return back()->with('success', __('profile.photo_removed_success'));
     }
 }
 

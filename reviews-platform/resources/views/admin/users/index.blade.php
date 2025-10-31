@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Gerenciar Usuários')
-@section('page-title', 'Gerenciar Usuários')
-@section('page-description', 'Gerencie os usuários do sistema')
+@section('title', __('users.title') . ' - ' . __('app.name'))
+@section('page-title', __('users.title'))
+@section('page-description', __('users.description'))
 
 @section('header-actions')
     <a href="{{ route('users.create') }}" class="btn-primary px-6 py-2 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
         <i class="fas fa-plus"></i>
-        Novo Usuário
+        {{ __('users.new_user') }}
     </a>
 @endsection
 
@@ -18,7 +18,7 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6 card-hover stagger-item">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Total de Usuários</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">{{ __('users.total_users') }}</p>
                     <p class="text-3xl font-bold text-gray-800" id="statTotal">{{ $users->count() }}</p>
                     <p class="text-xs text-gray-500 mt-1" id="statTotalFiltered"></p>
                 </div>
@@ -31,8 +31,13 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6 card-hover stagger-item">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Administradores</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">{{ __('users.administrators') }}</p>
                     <p class="text-3xl font-bold text-gray-800" id="statAdmin">{{ $users->where('role', 'admin')->count() }}</p>
+                    @if(Auth::user()->role === 'proprietario')
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ __('users.owners') }}: {{ $users->where('role', 'proprietario')->count() }}
+                        </p>
+                    @endif
                     <p class="text-xs text-gray-500 mt-1" id="statAdminFiltered"></p>
                 </div>
                 <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -44,7 +49,7 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6 card-hover stagger-item">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Usuários Padrão</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">{{ __('users.standard_users') }}</p>
                     <p class="text-3xl font-bold text-gray-800" id="statUser">{{ $users->where('role', 'user')->count() }}</p>
                     <p class="text-xs text-gray-500 mt-1" id="statUserFiltered"></p>
                 </div>
@@ -68,7 +73,7 @@
                         type="text" 
                         id="searchInput"
                         class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" 
-                        placeholder="Buscar por nome ou email..."
+                        placeholder="{{ __('users.search_placeholder') }}"
                         onkeyup="filterUsers()"
                     >
                 </div>
@@ -81,9 +86,14 @@
                     class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     onchange="filterUsers()"
                 >
-                    <option value="all">Todas as funções</option>
-                    <option value="admin">Administradores</option>
-                    <option value="user">Usuários</option>
+                    <option value="all">{{ __('users.all_roles') }}</option>
+                    @if(Auth::user()->role === 'proprietario')
+                        <option value="proprietario">{{ __('users.role_owner') }}</option>
+                    @endif
+                    @if(Auth::user()->role === 'proprietario')
+                        <option value="admin">{{ __('users.role_admin') }}</option>
+                    @endif
+                    <option value="user">{{ __('users.role_user') }}</option>
                 </select>
             </div>
             
@@ -94,10 +104,10 @@
                     class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     onchange="filterUsers()"
                 >
-                    <option value="newest">Mais recentes</option>
-                    <option value="oldest">Mais antigos</option>
-                    <option value="name-asc">Nome (A-Z)</option>
-                    <option value="name-desc">Nome (Z-A)</option>
+                    <option value="newest">{{ __('users.sort_newest') }}</option>
+                    <option value="oldest">{{ __('users.sort_oldest') }}</option>
+                    <option value="name-asc">{{ __('users.sort_name_asc') }}</option>
+                    <option value="name-desc">{{ __('users.sort_name_desc') }}</option>
                 </select>
             </div>
             
@@ -107,7 +117,7 @@
                 class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium whitespace-nowrap"
             >
                 <i class="fas fa-times mr-2"></i>
-                Limpar
+                {{ __('users.clear') }}
             </button>
         </div>
         
@@ -115,7 +125,7 @@
         <div class="mt-4 pt-4 border-t border-gray-200">
             <p class="text-sm text-gray-600">
                 <i class="fas fa-info-circle mr-1"></i>
-                Mostrando <span id="resultCount" class="font-semibold text-purple-600">{{ $users->count() }}</span> de <span class="font-semibold">{{ $users->count() }}</span> usuários
+                <span id="resultText">{{ __('users.showing') }} <span id="resultCount" class="font-semibold text-purple-600">{{ $users->count() }}</span> {{ __('users.of') }} <span id="resultTotal" class="font-semibold">{{ $users->count() }}</span> {{ __('users.users') }}</span>
             </p>
         </div>
     </div>
@@ -151,7 +161,7 @@
                             </h3>
                             @if($user->id === Auth::id())
                                 <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                    <i class="fas fa-user-check mr-1"></i>Você
+                                    <i class="fas fa-user-check mr-1"></i>{{ __('users.you') }}
                                 </span>
                             @endif
                         </div>
@@ -171,15 +181,20 @@
                 <!-- Role & Actions -->
                 <div class="flex items-center gap-3 ml-4">
                     <!-- Role Badge -->
-                    @if($user->role === 'admin')
+                    @if($user->role === 'proprietario')
+                        <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700">
+                            <i class="fas fa-crown mr-2"></i>
+                            {{ __('users.owner') }}
+                        </span>
+                    @elseif($user->role === 'admin')
                         <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-purple-100 text-purple-800">
                             <i class="fas fa-user-shield mr-2"></i>
-                            Administrador
+                            {{ __('users.administrator') }}
                         </span>
                     @else
                         <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-gray-100 text-gray-800">
                             <i class="fas fa-user mr-2"></i>
-                            Usuário
+                            {{ __('users.user') }}
                         </span>
                     @endif
                     
@@ -188,20 +203,20 @@
                         <a href="{{ route('users.edit', $user->id) }}" 
                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
                             <i class="fas fa-edit mr-2"></i>
-                            Editar
+                            {{ __('users.edit') }}
                         </a>
                         
                         @if($user->id !== Auth::id())
                         <form action="{{ route('users.destroy', $user->id) }}" 
                               method="POST" 
                               class="inline-block"
-                              onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
+                              onsubmit="return confirm('{{ __('users.confirm_delete') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
                                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-all shadow-sm hover:shadow-md">
                                 <i class="fas fa-trash mr-2"></i>
-                                Excluir
+                                {{ __('users.delete') }}
                             </button>
                         </form>
                         @endif
@@ -215,11 +230,11 @@
                 <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mb-4">
                     <i class="fas fa-users text-purple-600 text-3xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum usuário encontrado</h3>
-                <p class="text-gray-600 mb-6">Comece criando seu primeiro usuário no sistema.</p>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('users.no_users_found') }}</h3>
+                <p class="text-gray-600 mb-6">{{ __('users.start_creating') }}</p>
                 <a href="{{ route('users.create') }}" class="btn-primary px-6 py-3 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                     <i class="fas fa-plus"></i>
-                    Criar Primeiro Usuário
+                    {{ __('users.create_first_user') }}
                 </a>
             </div>
         </div>
@@ -230,7 +245,33 @@
 
 @section('scripts')
 <script>
+    // Translations for JavaScript
+    const translations = {
+        pt_BR: {
+            visible: '{{ __('users.visible') }}',
+            no_users_found: '{{ __('users.no_users_found') }}',
+            try_adjusting_filters: '{{ __('users.try_adjusting_filters') }}',
+            clear_filters: '{{ __('users.clear_filters') }}',
+            showing: '{{ __('users.showing') }}',
+            of: '{{ __('users.of') }}',
+            users: '{{ __('users.users') }}'
+        },
+        en_US: {
+            visible: '{{ __('users.visible') }}',
+            no_users_found: '{{ __('users.no_users_found') }}',
+            try_adjusting_filters: '{{ __('users.try_adjusting_filters') }}',
+            clear_filters: '{{ __('users.clear_filters') }}',
+            showing: '{{ __('users.showing') }}',
+            of: '{{ __('users.of') }}',
+            users: '{{ __('users.users') }}'
+        }
+    };
+    
+    const currentLang = '{{ app()->getLocale() }}';
+    const t = translations[currentLang] || translations.pt_BR;
+    
     const totalUsers = {{ $users->count() }};
+    const totalOwners = {{ $users->where('role', 'proprietario')->count() }};
     const totalAdmins = {{ $users->where('role', 'admin')->count() }};
     const totalRegularUsers = {{ $users->where('role', 'user')->count() }};
     
@@ -257,7 +298,7 @@
                 card.style.display = '';
                 visibleCount++;
                 if (role === 'admin') visibleAdmins++;
-                else visibleUsers++;
+                else if (role === 'user') visibleUsers++;
             } else {
                 card.style.display = 'none';
             }
@@ -287,8 +328,10 @@
             container.appendChild(card);
         });
         
-        // Update count
+        // Update count and text
         document.getElementById('resultCount').textContent = visibleCount;
+        document.getElementById('resultTotal').textContent = totalUsers;
+        document.getElementById('resultText').innerHTML = `${t.showing} <span id="resultCount" class="font-semibold text-purple-600">${visibleCount}</span> ${t.of} <span id="resultTotal" class="font-semibold">${totalUsers}</span> ${t.users}`;
         
         // Update stats
         updateStats(visibleCount, visibleAdmins, visibleUsers);
@@ -302,15 +345,16 @@
         
         // Update total
         document.getElementById('statTotal').textContent = totalUsers;
-        document.getElementById('statTotalFiltered').textContent = isFiltered ? `${visible} visíveis` : '';
+        document.getElementById('statTotalFiltered').textContent = isFiltered ? `${visible} ${t.visible}` : '';
         
         // Update admins
         document.getElementById('statAdmin').textContent = totalAdmins;
-        document.getElementById('statAdminFiltered').textContent = isFiltered ? `${admins} visíveis` : '';
+        document.getElementById('statAdminFiltered').textContent = isFiltered ? `${admins} ${t.visible}` : '';
         
         // Update users
         document.getElementById('statUser').textContent = totalRegularUsers;
-        document.getElementById('statUserFiltered').textContent = isFiltered ? `${users} visíveis` : '';
+        document.getElementById('statUserFiltered').textContent = isFiltered ? `${users} ${t.visible}` : '';
+        
     }
     
     function clearFilters() {
@@ -334,11 +378,11 @@
                         <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                             <i class="fas fa-search text-gray-400 text-3xl"></i>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum usuário encontrado</h3>
-                        <p class="text-gray-600 mb-6">Tente ajustar os filtros ou a busca.</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">${t.no_users_found}</h3>
+                        <p class="text-gray-600 mb-6">${t.try_adjusting_filters}</p>
                         <button onclick="clearFilters()" class="btn-primary px-6 py-3 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                             <i class="fas fa-times"></i>
-                            Limpar Filtros
+                            ${t.clear_filters}
                         </button>
                     </div>
                 `;

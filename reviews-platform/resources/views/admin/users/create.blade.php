@@ -88,15 +88,27 @@
                         id="role" 
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('role') border-red-500 @enderror"
                         required
+                        @if(Auth::user()->role === 'admin') disabled @endif
                     >
-                        <option value="">Selecione uma função</option>
-                        <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Administrador (Acesso Total)</option>
-                        <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>Usuário (Acesso Limitado)</option>
+                        <option value="">{{ __('users.select_role') }}</option>
+                        @if(Auth::user()->role === 'proprietario')
+                            <option value="proprietario" {{ old('role') === 'proprietario' ? 'selected' : '' }}>{{ __('users.role_owner_full') }}</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>{{ __('users.role_admin_full') }}</option>
+                        @endif
+                        <option value="user" {{ old('role') === 'user' || Auth::user()->role === 'admin' ? 'selected' : '' }}>{{ __('users.role_user_limited') }}</option>
                     </select>
-                    <p class="mt-1 text-xs text-gray-500">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        Administradores têm acesso total ao sistema, incluindo gerenciamento de usuários
-                    </p>
+                    @if(Auth::user()->role === 'admin')
+                        <input type="hidden" name="role" value="user">
+                        <p class="mt-1 text-xs text-yellow-600">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            Como administrador, você só pode criar usuários comuns.
+                        </p>
+                    @elseif(Auth::user()->role === 'proprietario')
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            {{ __('users.role_owner_info') }}
+                        </p>
+                    @endif
                     @error('role')
                         <p class="mt-1 text-sm text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                     @enderror

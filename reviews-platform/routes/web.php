@@ -46,17 +46,59 @@ Route::middleware(['auth'])->group(function () {
             return view('dashboard', compact('negativeCount'));
         } else {
             // Dashboard de usuário comum
-            $company = $user->companies()->first();
-            $hasCompany = $company !== null;
+            $companies = $user->companies()->orderBy('created_at', 'desc')->get();
+            $hasCompany = $companies->count() > 0;
             
+            // Get selected company from query parameter
+            // If user has only one company, default to that company; otherwise default to 'all'
+            $defaultView = $companies->count() === 1 ? $companies->first()->id : 'all';
+            $selectedCompanyId = request()->get('company_id', $defaultView);
+            $selectedCompany = null;
             $stats = [
-                'total_reviews' => $hasCompany ? $company->reviews()->count() : 0,
-                'positive_reviews' => $hasCompany ? $company->reviews()->where('is_positive', true)->count() : 0,
-                'negative_reviews' => $hasCompany ? $company->reviews()->where('is_positive', false)->count() : 0,
-                'average_rating' => $hasCompany ? round($company->reviews()->avg('rating'), 1) : 0,
+                'total_reviews' => 0,
+                'positive_reviews' => 0,
+                'negative_reviews' => 0,
+                'average_rating' => 0,
             ];
             
-            return view('dashboard-user', compact('company', 'hasCompany', 'stats'));
+            if ($hasCompany) {
+                if ($selectedCompanyId === 'all') {
+                    // Aggregate stats from all companies
+                    $allReviews = \App\Models\Review::whereIn('company_id', $companies->pluck('id'))->get();
+                    $stats = [
+                        'total_reviews' => $allReviews->count(),
+                        'positive_reviews' => $allReviews->where('is_positive', true)->count(),
+                        'negative_reviews' => $allReviews->where('is_positive', false)->count(),
+                        'average_rating' => $allReviews->count() > 0 ? round($allReviews->avg('rating'), 1) : 0,
+                    ];
+                } else {
+                    // Single company stats
+                    $selectedCompany = $companies->find($selectedCompanyId) ?? $companies->first();
+                    if ($selectedCompany) {
+                        $stats = [
+                            'total_reviews' => $selectedCompany->reviews()->count(),
+                            'positive_reviews' => $selectedCompany->reviews()->where('is_positive', true)->count(),
+                            'negative_reviews' => $selectedCompany->reviews()->where('is_positive', false)->count(),
+                            'average_rating' => round($selectedCompany->reviews()->avg('rating'), 1) ?? 0,
+                        ];
+                    }
+                }
+            }
+            
+            // If no company selected and has companies, use first as default
+            if (!$selectedCompany && $hasCompany && $selectedCompanyId !== 'all') {
+                $selectedCompany = $companies->first();
+                if ($selectedCompany) {
+                    $stats = [
+                        'total_reviews' => $selectedCompany->reviews()->count(),
+                        'positive_reviews' => $selectedCompany->reviews()->where('is_positive', true)->count(),
+                        'negative_reviews' => $selectedCompany->reviews()->where('is_positive', false)->count(),
+                        'average_rating' => round($selectedCompany->reviews()->avg('rating'), 1) ?? 0,
+                    ];
+                }
+            }
+            
+            return view('dashboard-user', compact('companies', 'selectedCompany', 'hasCompany', 'stats', 'selectedCompanyId'));
         }
     })->name('dashboard');
 });
@@ -147,6 +189,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/photo', [App\Http\Controllers\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+    
+    // Support Routes
+    Route::get('/support', function () {
+        return view('support.help-center');
+    })->name('support.help-center');
+    
+    Route::get('/faqs', function () {
+        return view('support.faqs');
+    })->name('support.faqs');
 });
 
 // Public review page (no auth required)

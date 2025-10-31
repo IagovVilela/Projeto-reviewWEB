@@ -19,4 +19,5 @@ Route::middleware('web')->group(function () {
     Route::get('/api/reviews', [AjaxAuthController::class, 'getReviews']);
     Route::get('/api/reviews/negative', [AjaxAuthController::class, 'getNegativeReviews']);
     Route::get('/api/companies/{companyId}/contacts', [AjaxAuthController::class, 'exportContacts']);
+    Route::get('/api/users/with-companies', [AjaxAuthController::class, 'getUsersWithCompanies']);
 });

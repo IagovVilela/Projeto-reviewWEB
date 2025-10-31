@@ -71,6 +71,24 @@
                     </div>
 
                     <div class="space-y-3 mb-4">
+                        @if($company->user && (auth()->user()->role === 'admin' || auth()->user()->role === 'proprietario'))
+                            <div class="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
+                                <i class="fas fa-user w-4 mr-2 text-purple-600"></i>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-gray-800 truncate">{{ $company->user->name }}</div>
+                                    <div class="text-xs text-gray-500 truncate">{{ $company->user->email }}</div>
+                                    <div class="text-xs mt-1">
+                                        @if($company->user->role === 'proprietario')
+                                            <span class="px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-800 text-xs font-medium">Proprietário</span>
+                                        @elseif($company->user->role === 'admin')
+                                            <span class="px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 text-xs font-medium">Admin</span>
+                                        @else
+                                            <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-800 text-xs font-medium">Usuário</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-envelope w-4 mr-2"></i>
                             <span class="truncate">{{ $company->negative_email }}</span>

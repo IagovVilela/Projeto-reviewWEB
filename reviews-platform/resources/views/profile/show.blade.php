@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Meu Perfil')
-@section('page-title', 'Meu Perfil')
-@section('page-description', 'Gerencie suas informações pessoais e configurações')
+@section('title', __('profile.title') . ' - ' . __('app.name'))
+@section('page-title', __('profile.title'))
+@section('page-description', __('profile.description'))
 
 @section('content')
 <div class="fade-in">
@@ -13,7 +13,7 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-gray-700 dark:to-gray-700">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
                     <i class="fas fa-camera mr-2"></i>
-                    Foto de Perfil
+                    {{ __('profile.profile_photo') }}
                 </h2>
             </div>
             
@@ -40,7 +40,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    onclick="return confirm('Tem certeza que deseja remover sua foto?')"
+                                    onclick="return confirm('{{ __('profile.confirm_delete_photo') }}')"
                                     class="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-colors flex items-center justify-center">
                                 <i class="fas fa-trash text-sm"></i>
                             </button>
@@ -50,8 +50,8 @@
                     
                     <!-- Upload Form -->
                     <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Alterar Foto</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">JPG, PNG ou GIF. Máximo 2MB.</p>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{{ __('profile.change_photo') }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ __('profile.photo_formats') }}</p>
                         
                         <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" id="photoForm">
                             @csrf
@@ -66,7 +66,7 @@
                                            onchange="previewPhoto(event); document.getElementById('photoForm').submit();">
                                     <span class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm">
                                         <i class="fas fa-upload mr-2"></i>
-                                        Escolher Foto
+                                        {{ __('profile.choose_photo') }}
                                     </span>
                                 </label>
                             </div>
@@ -81,7 +81,7 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-gray-700 dark:to-gray-700">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
                     <i class="fas fa-user-edit mr-2"></i>
-                    Informações Pessoais
+                    {{ __('profile.personal_information') }}
                 </h2>
             </div>
             
@@ -93,7 +93,7 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-user text-gray-400 mr-1"></i>
-                        Nome Completo <span class="text-red-500">*</span>
+                        {{ __('profile.full_name') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="text" 
@@ -131,24 +131,24 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-user-tag text-gray-400 mr-1"></i>
-                        Função
+                        {{ __('profile.role') }}
                     </label>
                     <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
                         @if($user->role === 'admin')
                             <span class="inline-flex items-center text-sm font-semibold text-purple-800 dark:text-purple-300">
                                 <i class="fas fa-user-shield mr-2"></i>
-                                Administrador
+                                {{ __('users.administrator') }}
                             </span>
                         @else
                             <span class="inline-flex items-center text-sm font-semibold text-gray-800 dark:text-gray-200">
                                 <i class="fas fa-user mr-2"></i>
-                                Usuário
+                                {{ __('users.user') }}
                             </span>
                         @endif
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Sua função não pode ser alterada aqui
+                        {{ __('profile.role_cannot_change') }}
                     </p>
                 </div>
 
@@ -158,7 +158,7 @@
                         type="submit" 
                         class="btn-primary px-6 py-3 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                         <i class="fas fa-save"></i>
-                        Salvar Alterações
+                        {{ __('profile.save_changes') }}
                     </button>
                 </div>
             </form>
@@ -169,7 +169,7 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-gray-700 dark:to-gray-700">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
                     <i class="fas fa-lock mr-2"></i>
-                    Alterar Senha
+                    {{ __('profile.change_password') }}
                 </h2>
             </div>
             
@@ -184,14 +184,14 @@
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-key text-gray-400 mr-1"></i>
-                        Senha Atual <span class="text-red-500">*</span>
+                        {{ __('profile.current_password') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="password" 
                         name="current_password" 
                         id="current_password" 
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('current_password') border-red-500 @enderror" 
-                        placeholder="Digite sua senha atual"
+                        placeholder="{{ __('profile.current_password_placeholder') }}"
                     >
                     @error('current_password')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
@@ -202,14 +202,14 @@
                 <div>
                     <label for="new_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-1"></i>
-                        Nova Senha <span class="text-red-500">*</span>
+                        {{ __('profile.new_password') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="password" 
                         name="new_password" 
                         id="new_password" 
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('new_password') border-red-500 @enderror" 
-                        placeholder="Mínimo 6 caracteres"
+                        placeholder="{{ __('profile.new_password_placeholder') }}"
                     >
                     @error('new_password')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
@@ -220,14 +220,14 @@
                 <div>
                     <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-1"></i>
-                        Confirmar Nova Senha <span class="text-red-500">*</span>
+                        {{ __('profile.confirm_new_password') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="password" 
                         name="new_password_confirmation" 
                         id="new_password_confirmation" 
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" 
-                        placeholder="Digite a nova senha novamente"
+                        placeholder="{{ __('profile.confirm_password_placeholder') }}"
                     >
                 </div>
 
@@ -238,13 +238,13 @@
                             <i class="fas fa-info-circle text-blue-600 dark:text-blue-400 text-lg"></i>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">Dicas de Segurança</h3>
+                            <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">{{ __('profile.security_tips_title') }}</h3>
                             <div class="text-sm text-blue-700 dark:text-blue-400">
                                 <ul class="list-disc list-inside space-y-1">
-                                    <li>Use no mínimo 6 caracteres</li>
-                                    <li>Misture letras maiúsculas e minúsculas</li>
-                                    <li>Adicione números e caracteres especiais</li>
-                                    <li>Não use informações pessoais óbvias</li>
+                                    <li>{{ __('profile.security_tip_1') }}</li>
+                                    <li>{{ __('profile.security_tip_2') }}</li>
+                                    <li>{{ __('profile.security_tip_3') }}</li>
+                                    <li>{{ __('profile.security_tip_4') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -257,7 +257,7 @@
                         type="submit" 
                         class="btn-primary px-6 py-3 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                         <i class="fas fa-key"></i>
-                        Alterar Senha
+                        {{ __('profile.change_password') }}
                     </button>
                 </div>
             </form>
@@ -267,15 +267,15 @@
         <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
             <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 <i class="fas fa-info-circle mr-2"></i>
-                Informações da Conta
+                {{ __('profile.account_info') }}
             </h3>
             <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <div>
-                    <span class="font-medium text-gray-700 dark:text-gray-300">Conta criada em:</span>
+                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('profile.account_created') }}</span>
                     {{ $user->created_at->format('d/m/Y H:i') }}
                 </div>
                 <div>
-                    <span class="font-medium text-gray-700 dark:text-gray-300">Última atualização:</span>
+                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('profile.last_updated') }}</span>
                     {{ $user->updated_at->format('d/m/Y H:i') }}
                 </div>
             </div>

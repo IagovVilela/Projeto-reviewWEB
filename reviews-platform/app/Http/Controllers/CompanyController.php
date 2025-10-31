@@ -13,15 +13,17 @@ class CompanyController extends Controller
     {
         $user = auth()->user();
         
-        // Admin vê todas as empresas
-        if ($user->role === 'admin') {
-            $companies = Company::withCount(['reviews', 'reviewPages'])
+        // Admin e Proprietário vêem todas as empresas
+        if (in_array($user->role, ['admin', 'proprietario'])) {
+            $companies = Company::with('user')
+                ->withCount(['reviews', 'reviewPages'])
                 ->orderBy('status', 'asc')
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
         } else {
             // User comum vê apenas suas empresas
             $companies = Company::where('user_id', $user->id)
+                ->with('user')
                 ->withCount(['reviews', 'reviewPages'])
                 ->orderBy('status', 'asc')
                 ->orderBy('created_at', 'desc')
@@ -33,14 +35,7 @@ class CompanyController extends Controller
 
     public function create()
     {
-        $user = auth()->user();
-        
-        // Se for usuário comum e já tem uma empresa, redirecionar
-        if ($user->role === 'user' && $user->companies()->count() >= 1) {
-            return redirect()->route('companies.index')
-                ->with('error', 'Você já possui uma empresa cadastrada. Usuários podem criar apenas 1 empresa.');
-        }
-        
+        // Usuários agora podem criar quantas empresas quiserem
         return view('companies-create');
     }
 
@@ -48,12 +43,7 @@ class CompanyController extends Controller
     {
         $user = auth()->user();
         
-        // Verificar se usuário comum já tem uma empresa
-        if ($user->role === 'user' && $user->companies()->count() >= 1) {
-            return redirect()->route('companies.index')
-                ->with('error', 'Você já possui uma empresa cadastrada. Usuários podem criar apenas 1 empresa.');
-        }
-        
+        // Usuários agora podem criar quantas empresas/páginas de avaliação quiserem
         \Log::info('CompanyController@store chamado', ['request_data' => $request->all()]);
         
         $request->validate([

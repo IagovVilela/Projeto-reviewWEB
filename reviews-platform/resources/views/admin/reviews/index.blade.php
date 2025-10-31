@@ -93,6 +93,59 @@
         .trend-down {
             color: #ef4444;
         }
+        
+        /* Stat card clickable styles */
+        [id^="statCard"] {
+            transition: all 0.3s ease;
+            user-select: none;
+            position: relative;
+        }
+        
+        [id^="statCard"].cursor-pointer {
+            cursor: pointer !important;
+        }
+        
+        [id^="statCard"].cursor-pointer:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea !important;
+        }
+        
+        [id^="statCard"].cursor-pointer:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        [id^="statCard"].ring-2 {
+            border-color: #667eea !important;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+        }
+        
+        /* Always show cursor pointer on hoverable cards */
+        [id^="statCard"].cursor-pointer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        [id^="statCard"].cursor-pointer:hover::before {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Ensure content is above pseudo-elements */
+        [id^="statCard"] > * {
+            position: relative;
+            z-index: 2;
+        }
     </style>
 @endsection
 
@@ -101,13 +154,39 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{{ __('reviews.filters') }}</h3>
         <div class="flex flex-wrap items-center gap-4">
-            <!-- Company Filter -->
+            <!-- Company Filter (with search) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.company') }}</label>
-                <select id="companyFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="">{{ __('reviews.all_companies') }}</option>
+                <div class="relative" id="companyFilterWrapper">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="companySearchInput" 
+                            placeholder="{{ __('reviews.search_company_placeholder') }}"
+                            class="px-3 py-2 pl-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            autocomplete="off"
+                        >
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="hidden" id="companyFilter" value="">
+                    </div>
+                    <div id="companyDropdown" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div id="companyOptions" class="py-1">
+                            <!-- Options will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Filter (Admin only) -->
+            @if(Auth::user()->role === 'admin')
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.filter_by_user') }}</label>
+                <select id="userFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">{{ __('reviews.all_users') }}</option>
+                    <!-- Users will be loaded dynamically -->
                 </select>
             </div>
+            @endif
             
             <!-- Type Filter -->
             <div>
@@ -159,7 +238,12 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <!-- Total Reviews -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
+        <div id="statCardTotal" onclick="filterByStat('total')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver todas as avaliações">
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded-full font-medium">
+                    <i class="fas fa-hand-pointer mr-1"></i>Clique
+                </span>
+            </div>
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-star text-blue-600 dark:text-blue-400 text-xl"></i>
@@ -175,7 +259,12 @@
         </div>
         
         <!-- Positive Reviews -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
+        <div id="statCardPositive" onclick="filterByStat('positive')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver apenas avaliações positivas">
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium">
+                    <i class="fas fa-hand-pointer mr-1"></i>Clique
+                </span>
+            </div>
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-thumbs-up text-green-600 dark:text-green-400 text-xl"></i>
@@ -191,7 +280,12 @@
         </div>
         
         <!-- Negative Reviews -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
+        <div id="statCardNegative" onclick="filterByStat('negative')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver apenas avaliações negativas">
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full font-medium">
+                    <i class="fas fa-hand-pointer mr-1"></i>Clique
+                </span>
+            </div>
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 pulse-alert">
                     <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
@@ -207,7 +301,7 @@
         </div>
         
         <!-- Average Rating -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
+        <div id="statCardAverage" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-chart-line text-yellow-600 dark:text-yellow-400 text-xl"></i>
@@ -415,11 +509,14 @@
                 this.currentPage = 1;
                 this.filters = {
                     company_id: '',
+                    user_id: '',
                     type: '',
                     rating: '',
                     date: ''
                 };
                 this.companies = [];
+                this.users = [];
+                this.companySearchTerm = '';
                 this.charts = {};
                 this.chartPeriod = 7; // Default to 7 days
                 this.allReviews = []; // Store all reviews for chart updates
@@ -427,9 +524,13 @@
             }
             
             async init() {
-                await this.loadCompanies();
+                await Promise.all([
+                    this.loadCompanies(),
+                    this.loadUsers()
+                ]);
                 await this.loadReviews();
                 this.initializeCharts();
+                this.initCompanySearch();
                 this.bindEvents();
             }
             
@@ -446,23 +547,140 @@
                     
                     if (result.success) {
                         this.companies = result.data;
-                        this.populateCompanyFilter();
+                        this.renderCompanyOptions();
                     }
                 } catch (error) {
                     console.error('Erro ao carregar empresas:', error);
                 }
             }
             
-            populateCompanyFilter() {
-                const select = document.getElementById('companyFilter');
-                select.innerHTML = '<option value="">Todas as empresas</option>';
+            async loadUsers() {
+                try {
+                    @if(Auth::user()->role === 'admin')
+                    const response = await fetch('/api/users/with-companies', {
+                        credentials: 'include',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.users = result.data;
+                        this.populateUserFilter();
+                    }
+                    @endif
+                } catch (error) {
+                    console.error('Erro ao carregar usuários:', error);
+                }
+            }
+            
+            populateUserFilter() {
+                const select = document.getElementById('userFilter');
+                if (!select) return;
                 
-                this.companies.forEach(company => {
+                this.users.forEach(user => {
                     const option = document.createElement('option');
-                    option.value = company.id;
-                    option.textContent = company.name;
+                    option.value = user.id;
+                    option.textContent = `${user.name} (${user.companies_count} ${user.companies_count === 1 ? 'empresa' : 'empresas'})`;
                     select.appendChild(option);
                 });
+            }
+            
+            initCompanySearch() {
+                const searchInput = document.getElementById('companySearchInput');
+                const dropdown = document.getElementById('companyDropdown');
+                const wrapper = document.getElementById('companyFilterWrapper');
+                
+                if (!searchInput) return;
+                
+                searchInput.addEventListener('focus', () => {
+                    if (this.companies.length > 0) {
+                        dropdown.classList.remove('hidden');
+                        this.renderCompanyOptions();
+                    }
+                });
+                
+                searchInput.addEventListener('input', (e) => {
+                    this.companySearchTerm = e.target.value.toLowerCase();
+                    this.renderCompanyOptions();
+                    dropdown.classList.remove('hidden');
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+                
+                this.updateCompanyInput();
+            }
+            
+            renderCompanyOptions() {
+                const optionsDiv = document.getElementById('companyOptions');
+                if (!optionsDiv) return;
+                
+                const filtered = this.companies.filter(company => {
+                    if (!this.companySearchTerm) return true;
+                    const name = company.name ? company.name.toLowerCase() : '';
+                    const owner = company.user_name ? company.user_name.toLowerCase() : '';
+                    return name.includes(this.companySearchTerm) || owner.includes(this.companySearchTerm);
+                });
+                
+                if (filtered.length === 0) {
+                    optionsDiv.innerHTML = `<div class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('reviews.no_companies_found') }}</div>`;
+                    return;
+                }
+                
+                let html = `
+                    <div class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${!this.filters.company_id ? 'bg-purple-50 dark:bg-purple-900/30' : ''}" 
+                         onclick="reviewsPanel.selectCompany(null)">
+                        <div class="font-medium text-gray-900 dark:text-gray-100">{{ __('reviews.all_companies') }}</div>
+                    </div>
+                `;
+                
+                filtered.forEach(company => {
+                    const isSelected = this.filters.company_id == company.id;
+                    html += `
+                        <div class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${isSelected ? 'bg-purple-50 dark:bg-purple-900/30' : ''}" 
+                             onclick="reviewsPanel.selectCompany(${company.id}, '${company.name.replace(/'/g, "\\'")}')">
+                            <div class="font-medium text-gray-900 dark:text-gray-100">${company.name}</div>
+                            ${company.user_name ? `<div class="text-xs text-gray-500 dark:text-gray-400">{{ __('reviews.company_owner') }}: ${company.user_name}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                optionsDiv.innerHTML = html;
+            }
+            
+            selectCompany(companyId, companyName) {
+                this.filters.company_id = companyId || '';
+                document.getElementById('companyFilter').value = companyId || '';
+                
+                const searchInput = document.getElementById('companySearchInput');
+                if (searchInput) {
+                    searchInput.value = companyName || '';
+                }
+                
+                document.getElementById('companyDropdown').classList.add('hidden');
+                this.updateCompanyInput();
+                this.applyFilters();
+            }
+            
+            updateCompanyInput() {
+                const searchInput = document.getElementById('companySearchInput');
+                if (!searchInput) return;
+                
+                if (!this.filters.company_id) {
+                    searchInput.value = '';
+                    searchInput.placeholder = '{{ __('reviews.search_company_placeholder') }}';
+                } else {
+                    const company = this.companies.find(c => c.id == this.filters.company_id);
+                    if (company) {
+                        searchInput.value = company.name;
+                    }
+                }
             }
             
             async loadReviews() {
@@ -470,9 +688,14 @@
                     this.showLoading();
                     
                     const params = new URLSearchParams({
-                        page: this.currentPage,
-                        ...this.filters
+                        page: this.currentPage
                     });
+                    
+                    if (this.filters.company_id) params.set('company_id', this.filters.company_id);
+                    if (this.filters.user_id) params.set('user_id', this.filters.user_id);
+                    if (this.filters.type) params.set('type', this.filters.type);
+                    if (this.filters.rating) params.set('rating', this.filters.rating);
+                    if (this.filters.date) params.set('date', this.filters.date);
                     
                     const response = await fetch(`/api/reviews?${params}`, {
                         credentials: 'include',
@@ -973,7 +1196,13 @@
             }
             
             bindEvents() {
-                document.getElementById('companyFilter').addEventListener('change', () => this.applyFilters());
+                const userFilter = document.getElementById('userFilter');
+                if (userFilter) {
+                    userFilter.addEventListener('change', () => {
+                        this.filters.user_id = userFilter.value;
+                        this.applyFilters();
+                    });
+                }
                 document.getElementById('typeFilter').addEventListener('change', () => this.applyFilters());
                 document.getElementById('ratingFilter').addEventListener('change', () => this.applyFilters());
                 document.getElementById('dateFilter').addEventListener('change', () => this.applyFilters());
@@ -982,10 +1211,29 @@
             applyFilters() {
                 this.filters = {
                     company_id: document.getElementById('companyFilter').value,
+                    user_id: document.getElementById('userFilter') ? document.getElementById('userFilter').value : '',
                     type: document.getElementById('typeFilter').value,
                     rating: document.getElementById('ratingFilter').value,
                     date: document.getElementById('dateFilter').value
                 };
+                
+                // Update stat card active states based on filters
+                document.querySelectorAll('[id^="statCard"]').forEach(card => {
+                    card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
+                });
+                
+                const typeFilter = this.filters.type;
+                if (typeFilter === 'positive') {
+                    const card = document.getElementById('statCardPositive');
+                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                } else if (typeFilter === 'negative') {
+                    const card = document.getElementById('statCardNegative');
+                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                } else if (!typeFilter && !this.filters.company_id && !this.filters.user_id && !this.filters.rating && !this.filters.date) {
+                    // Only highlight total if no filters are applied
+                    const card = document.getElementById('statCardTotal');
+                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                }
                 
                 this.currentPage = 1;
                 this.loadReviews();
@@ -993,17 +1241,29 @@
             
             clearFilters() {
                 document.getElementById('companyFilter').value = '';
+                const companySearchInput = document.getElementById('companySearchInput');
+                if (companySearchInput) companySearchInput.value = '';
+                const userFilter = document.getElementById('userFilter');
+                if (userFilter) userFilter.value = '';
                 document.getElementById('typeFilter').value = '';
                 document.getElementById('ratingFilter').value = '';
                 document.getElementById('dateFilter').value = '';
                 
+                // Remove active state from stat cards
+                document.querySelectorAll('[id^="statCard"]').forEach(card => {
+                    card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
+                    card.style.borderColor = '';
+                });
+                
                 this.filters = {
                     company_id: '',
+                    user_id: '',
                     type: '',
                     rating: '',
                     date: ''
                 };
                 
+                this.updateCompanyInput();
                 this.currentPage = 1;
                 this.loadReviews();
             }
@@ -1033,6 +1293,121 @@
         
         function refreshReviews() {
             reviewsPanel.loadReviews();
+        }
+        
+        function filterByStat(statType) {
+            // Wait for reviewsPanel to be initialized if not ready
+            if (!reviewsPanel) {
+                // If DOM is ready, wait a bit for initialization
+                if (document.readyState === 'complete') {
+                    setTimeout(() => filterByStat(statType), 100);
+                } else {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        setTimeout(() => filterByStat(statType), 100);
+                    });
+                }
+                return;
+            }
+            
+            // Remove active state from all cards first
+            document.querySelectorAll('[id^="statCard"]').forEach(card => {
+                card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
+            });
+            
+            // Get filter elements
+            const companyFilter = document.getElementById('companyFilter');
+            const companySearchInput = document.getElementById('companySearchInput');
+            const userFilter = document.getElementById('userFilter');
+            const typeFilter = document.getElementById('typeFilter');
+            const ratingFilter = document.getElementById('ratingFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            
+            // Apply appropriate filter
+            switch(statType) {
+                case 'total':
+                    // Clear all filters to show all reviews
+                    if (companyFilter) companyFilter.value = '';
+                    if (companySearchInput) companySearchInput.value = '';
+                    if (userFilter) userFilter.value = '';
+                    if (typeFilter) typeFilter.value = '';
+                    if (ratingFilter) ratingFilter.value = '';
+                    if (dateFilter) dateFilter.value = '';
+                    
+                    reviewsPanel.filters = {
+                        company_id: '',
+                        user_id: '',
+                        type: '',
+                        rating: '',
+                        date: ''
+                    };
+                    
+                    reviewsPanel.updateCompanyInput();
+                    reviewsPanel.currentPage = 1;
+                    reviewsPanel.loadReviews();
+                    
+                    // Highlight total card after a small delay to ensure it's applied
+                    setTimeout(() => {
+                        const totalCard = document.getElementById('statCardTotal');
+                        if (totalCard) totalCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                    }, 50);
+                    break;
+                    
+                case 'positive':
+                    // Filter by positive reviews
+                    if (typeFilter) typeFilter.value = 'positive';
+                    
+                    // Update filters object
+                    reviewsPanel.filters = {
+                        company_id: companyFilter ? companyFilter.value : '',
+                        user_id: userFilter ? userFilter.value : '',
+                        type: 'positive',
+                        rating: ratingFilter ? ratingFilter.value : '',
+                        date: dateFilter ? dateFilter.value : ''
+                    };
+                    
+                    // Apply filters and highlight card
+                    reviewsPanel.currentPage = 1;
+                    reviewsPanel.loadReviews();
+                    
+                    // Highlight positive card after a small delay
+                    setTimeout(() => {
+                        const positiveCard = document.getElementById('statCardPositive');
+                        if (positiveCard) positiveCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                    }, 50);
+                    break;
+                    
+                case 'negative':
+                    // Filter by negative reviews
+                    if (typeFilter) typeFilter.value = 'negative';
+                    
+                    // Update filters object
+                    reviewsPanel.filters = {
+                        company_id: companyFilter ? companyFilter.value : '',
+                        user_id: userFilter ? userFilter.value : '',
+                        type: 'negative',
+                        rating: ratingFilter ? ratingFilter.value : '',
+                        date: dateFilter ? dateFilter.value : ''
+                    };
+                    
+                    // Apply filters and highlight card
+                    reviewsPanel.currentPage = 1;
+                    reviewsPanel.loadReviews();
+                    
+                    // Highlight negative card after a small delay
+                    setTimeout(() => {
+                        const negativeCard = document.getElementById('statCardNegative');
+                        if (negativeCard) negativeCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
+                    }, 50);
+                    break;
+                    
+                case 'average':
+                    // Average doesn't filter, just scroll to charts
+                    const chartContainer = document.querySelector('.chart-container');
+                    if (chartContainer) {
+                        chartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    return;
+            }
         }
         
         function contactWhatsApp(whatsapp) {
