@@ -95,5 +95,10 @@ return [
     'edit' => 'Edit',
     'view' => 'View',
     'delete' => 'Delete',
+    'activate' => 'ACTIVATE',
+    'activating' => 'ACTIVATING...',
+    'save' => 'SAVE',
+    'form_not_found' => 'Form not found!',
+    'error_form_not_found' => 'Error: Form not found!',
 ];
 

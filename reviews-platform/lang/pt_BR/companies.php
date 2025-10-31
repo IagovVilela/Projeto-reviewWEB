@@ -95,5 +95,10 @@ return [
     'edit' => 'Editar',
     'view' => 'Ver',
     'delete' => 'Excluir',
+    'activate' => 'ATIVAR',
+    'activating' => 'ATIVANDO...',
+    'save' => 'SALVAR',
+    'form_not_found' => 'Formulário não encontrado!',
+    'error_form_not_found' => 'Erro: Formulário não encontrado!',
 ];
 
