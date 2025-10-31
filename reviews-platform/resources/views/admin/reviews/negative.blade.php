@@ -105,186 +105,6 @@
         </div>
     </div>
     
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <!-- Total Negative Reviews -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.total_negatives') }}</p>
-                    <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="totalNegative">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <i class="fas fa-arrow-down trend-down"></i> {{ __('reviews.last_24h') }}
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Unprocessed Reviews -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item priority-high border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 pulse-soft">
-                    <i class="fas fa-clock text-orange-600 dark:text-orange-400 text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.unprocessed') }}</p>
-                    <p class="text-2xl font-bold text-orange-600 dark:text-orange-400" id="unprocessedNegative">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <i class="fas fa-exclamation-circle"></i> {{ __('reviews.requires_action') }}
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Today's Negatives -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 card-hover stagger-item border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mr-4 shimmer">
-                    <i class="fas fa-calendar-day text-purple-600 dark:text-purple-400 text-xl"></i>
-                </div>
-<<<<<<< HEAD
-            </div>
-            
-            <!-- Filters Section -->
-            <div class="px-6 py-4">
-                <div class="bg-white rounded-xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Filtros</h3>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="applyFilters()" class="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors">
-                                <i class="fas fa-filter mr-2"></i>
-                                Aplicar Filtros
-                            </button>
-                            <button onclick="clearFilters()" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition-colors">
-                                <i class="fas fa-times mr-2"></i>
-                                Limpar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Company Filter -->
-                        <div>
-                            <label for="companyFilter" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-building mr-2"></i>
-                                Empresa
-                            </label>
-                            <select id="companyFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                <option value="">Todas as empresas</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Status Filter -->
-                        <div>
-                            <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-clock mr-2"></i>
-                                Status
-                            </label>
-                            <select id="statusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                <option value="">Todos os status</option>
-                                <option value="unprocessed">Não Processadas</option>
-                                <option value="processed">Processadas</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Rating Filter -->
-                        <div>
-                            <label for="ratingFilter" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-star mr-2"></i>
-                                Nota
-                            </label>
-                            <select id="ratingFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                <option value="">Todas as notas</option>
-                                <option value="1">1 estrela</option>
-                                <option value="2">2 estrelas</option>
-                                <option value="3">3 estrelas</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Period Filter -->
-                        <div>
-                            <label for="periodFilter" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-calendar mr-2"></i>
-                                Período
-                            </label>
-                            <select id="periodFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                <option value="">Todos os períodos</option>
-                                <option value="today">Hoje</option>
-                                <option value="yesterday">Ontem</option>
-                                <option value="week">Esta semana</option>
-                                <option value="month">Este mês</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Search by WhatsApp -->
-                    <div class="mt-4">
-                        <label for="whatsappSearch" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fab fa-whatsapp mr-2"></i>
-                            Buscar por WhatsApp
-                        </label>
-                        <div class="flex space-x-2">
-                            <input 
-                                type="text" 
-                                id="whatsappSearch" 
-                                placeholder="Digite o número do WhatsApp..."
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                maxlength="15"
-                                oninput="formatPhoneNumber(this)"
-                            >
-                            <button onclick="searchByWhatsApp()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Negative Reviews List -->
-            <div class="flex-1 overflow-y-auto px-6 pb-6">
-                <div class="bg-white rounded-xl shadow-sm">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Lista de Avaliações Negativas</h2>
-                        <p class="text-gray-600 text-sm">Avaliações que requerem atenção imediata</p>
-                    </div>
-                    
-                    <!-- Loading State -->
-                    <div id="loadingState" class="p-8 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-                            <i class="fas fa-spinner fa-spin text-red-600 text-2xl"></i>
-                        </div>
-                        <p class="text-gray-600">Carregando avaliações negativas...</p>
-                    </div>
-                    
-                    <!-- Reviews Container -->
-                    <div id="reviewsContainer" class="hidden">
-                        <!-- Reviews will be loaded here -->
-                    </div>
-                    
-                    <!-- Empty State -->
-                    <div id="emptyState" class="hidden p-8 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Nenhuma avaliação negativa!</h3>
-                        <p class="text-gray-600">Parabéns! Todas as avaliações estão positivas.</p>
-                    </div>
-=======
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.today') }}</p>
-                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-400" id="todayNegative">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <i class="fas fa-clock"></i> {{ __('reviews.last_24h') }}
-                    </p>
->>>>>>> Perfil-gerenciamento-usuarios
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Smart Filters Section -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6 fade-in">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -347,7 +167,7 @@
                 </div>
                 
                 <!-- User Filter (Admin only) -->
-                @if(Auth::user()->role === 'admin')
+                @if(in_array(Auth::user()->role, ['admin', 'proprietario']))
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <i class="fas fa-user mr-1"></i>
@@ -562,16 +382,6 @@
         class NegativeReviewsPanel {
             constructor() {
                 this.currentPage = 1;
-<<<<<<< HEAD
-                this.filters = {
-                    company_id: '',
-                    status: '',
-                    rating: '',
-                    period: '',
-                    whatsapp: ''
-                };
-                this.companies = [];
-=======
                 this.sortBy = 'recent';
                 this.filters = {
                     company_id: 'all',
@@ -586,16 +396,10 @@
                 this.users = [];
                 this.selectedCompany = null;
                 this.companySearchTerm = '';
->>>>>>> Perfil-gerenciamento-usuarios
                 this.init();
             }
             
             async init() {
-<<<<<<< HEAD
-                await this.loadCompanies();
-                await this.loadNegativeReviews();
-                this.bindFilterEvents();
-=======
                 await Promise.all([
                     this.loadCompanies(),
                     this.loadUsers()
@@ -604,14 +408,10 @@
                 this.initCompanySearch();
                 this.bindEvents();
                 this.loadFiltersFromURL();
->>>>>>> Perfil-gerenciamento-usuarios
             }
             
             async loadCompanies() {
                 try {
-<<<<<<< HEAD
-                    const response = await fetch('/api/companies');
-=======
                     const response = await fetch('/api/companies', {
                         credentials: 'include',
                         headers: {
@@ -619,35 +419,20 @@
                             'Content-Type': 'application/json'
                         }
                     });
->>>>>>> Perfil-gerenciamento-usuarios
                     const result = await response.json();
                     
                     if (result.success) {
                         this.companies = result.data;
-<<<<<<< HEAD
-                        this.populateCompanyFilter();
-=======
                         this.renderCompanyOptions();
->>>>>>> Perfil-gerenciamento-usuarios
                     }
                 } catch (error) {
                     console.error('Erro ao carregar empresas:', error);
                 }
             }
             
-<<<<<<< HEAD
-            populateCompanyFilter() {
-                const select = document.getElementById('companyFilter');
-                select.innerHTML = '<option value="">Todas as empresas</option>';
-                
-                this.companies.forEach(company => {
-                    const option = document.createElement('option');
-                    option.value = company.id;
-                    option.textContent = company.name;
-=======
             async loadUsers() {
                 try {
-                    @if(Auth::user()->role === 'admin')
+                    @if(Auth::user()->role === 'admin' || Auth::user()->role === 'proprietario')
                     const response = await fetch('/api/users/with-companies', {
                         credentials: 'include',
                         headers: {
@@ -675,41 +460,10 @@
                     const option = document.createElement('option');
                     option.value = user.id;
                     option.textContent = `${user.name} (${user.companies_count} ${user.companies_count === 1 ? 'empresa' : 'empresas'})`;
->>>>>>> Perfil-gerenciamento-usuarios
                     select.appendChild(option);
                 });
             }
             
-<<<<<<< HEAD
-            bindFilterEvents() {
-                // Auto-apply filters when dropdowns change
-                document.getElementById('companyFilter').addEventListener('change', () => {
-                    this.filters.company_id = document.getElementById('companyFilter').value;
-                    this.loadNegativeReviews();
-                });
-                
-                document.getElementById('statusFilter').addEventListener('change', () => {
-                    this.filters.status = document.getElementById('statusFilter').value;
-                    this.loadNegativeReviews();
-                });
-                
-                document.getElementById('ratingFilter').addEventListener('change', () => {
-                    this.filters.rating = document.getElementById('ratingFilter').value;
-                    this.loadNegativeReviews();
-                });
-                
-                document.getElementById('periodFilter').addEventListener('change', () => {
-                    this.filters.period = document.getElementById('periodFilter').value;
-                    this.loadNegativeReviews();
-                });
-                
-                // Enter key for WhatsApp search
-                document.getElementById('whatsappSearch').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.searchByWhatsApp();
-                    }
-                });
-=======
             initCompanySearch() {
                 const searchInput = document.getElementById('companySearchInput');
                 const dropdown = document.getElementById('companyDropdown');
@@ -1028,11 +782,10 @@
                 document.getElementById('statusFilter').value = this.filters.status;
                 document.getElementById('periodFilter').value = this.filters.period;
                 document.getElementById('ratingFilter').value = this.filters.rating;
-                document.getElementById('searchFilter').value = this.filters.search;
+                document.getElementById('searchFilter').value = this.filters.search;                
                 document.getElementById('sortFilter').value = this.sortBy;
                 
                 this.updateActiveFilters();
->>>>>>> Perfil-gerenciamento-usuarios
             }
             
             async loadNegativeReviews() {
@@ -1040,13 +793,6 @@
                     this.showLoading();
                     
                     const params = new URLSearchParams({
-<<<<<<< HEAD
-                        page: this.currentPage,
-                        ...this.filters
-                    });
-                    
-                    const response = await fetch(`/api/reviews/negative?${params}`);
-=======
                         sort: this.sortBy,
                         page: this.currentPage
                     });
@@ -1078,12 +824,10 @@
                             'Content-Type': 'application/json'
                         }
                     });
->>>>>>> Perfil-gerenciamento-usuarios
                     const result = await response.json();
                     
                     if (result.success) {
                         this.displayNegativeReviews(result.data);
-                        this.updateStats(result.data);
                     } else {
                         this.showError(t.error_loading_negative);
                     }
@@ -1198,25 +942,14 @@
             }
             
             updateStats(data) {
+                // Stats cards were removed, only update results count if element exists
                 const reviews = data.data || data;
                 const total = data.total || reviews.length;
-                const unprocessed = reviews.filter(r => !r.is_processed).length;
-                const today = reviews.filter(r => {
-                    const today = new Date().toDateString();
-                    const reviewDate = new Date(r.created_at).toDateString();
-                    return today === reviewDate;
-                }).length;
                 
-                document.getElementById('totalNegative').textContent = total;
-                document.getElementById('unprocessedNegative').textContent = unprocessed;
-                document.getElementById('todayNegative').textContent = today;
-                
-                // Update results count
-                document.getElementById('resultsCount').textContent = total;
-                
-                // Update page title with count
-                if (unprocessed > 0) {
-                    document.title = `(${unprocessed}) ${t.negative_title} - {{ __('app.name') }}`;
+                // Update results count only if element exists
+                const resultsCountEl = document.getElementById('resultsCount');
+                if (resultsCountEl) {
+                    resultsCountEl.textContent = total;
                 }
             }
             

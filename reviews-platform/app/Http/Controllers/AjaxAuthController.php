@@ -25,25 +25,39 @@ class AjaxAuthController extends Controller
             
             if (in_array($user->role, ['admin', 'proprietario'])) {
                 // Admin e Proprietário vêem todas empresas com informações do usuário
-                $companies = Company::with('user:id,name,email')
+                $companies = Company::with(['user' => function($query) {
+                        $query->select('id', 'name', 'email');
+                    }])
                     ->select('id', 'name', 'token', 'user_id')
                     ->get()
                     ->map(function ($company) {
-                        return [
-                            'id' => $company->id,
-                            'name' => $company->name,
-                            'token' => $company->token,
-                            'user_id' => $company->user_id,
-                            'user_name' => $company->user ? $company->user->name : null,
-                            'user_email' => $company->user ? $company->user->email : null
-                        ];
+                        try {
+                            return [
+                                'id' => $company->id,
+                                'name' => $company->name,
+                                'token' => $company->token,
+                                'user_id' => $company->user_id,
+                                'user_name' => ($company->relationLoaded('user') && $company->user) ? $company->user->name : null,
+                                'user_email' => ($company->relationLoaded('user') && $company->user) ? $company->user->email : null
+                            ];
+                        } catch (\Exception $e) {
+                            \Log::error('Erro ao mapear empresa', ['company_id' => $company->id, 'error' => $e->getMessage()]);
+                            return [
+                                'id' => $company->id,
+                                'name' => $company->name,
+                                'token' => $company->token,
+                                'user_id' => $company->user_id,
+                                'user_name' => null,
+                                'user_email' => null
+                            ];
+                        }
                     });
             } else {
                 // Usuários normais vêem apenas suas empresas
                 $companies = Company::select('id', 'name', 'token', 'user_id')
                     ->where('user_id', $user->id)
                     ->get()
-                    ->map(function ($company) {
+                    ->map(function ($company) use ($user) {
                         return [
                             'id' => $company->id,
                             'name' => $company->name,

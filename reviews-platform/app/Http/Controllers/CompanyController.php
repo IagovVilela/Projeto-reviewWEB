@@ -11,12 +11,6 @@ class CompanyController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
-        $companies = Company::withCount(['reviews', 'reviewPages'])
-            ->orderBy('status', 'asc') // Rascunhos primeiro
-            ->orderBy('created_at', 'desc')
-            ->get();
-=======
         $user = auth()->user();
         
         // Admin e Proprietário vêem todas as empresas
@@ -35,7 +29,6 @@ class CompanyController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
         }
->>>>>>> Perfil-gerenciamento-usuarios
             
         return view('companies', compact('companies'));
     }
@@ -142,10 +135,6 @@ class CompanyController extends Controller
 
     public function edit($id)
     {
-<<<<<<< HEAD
-        $company = Company::findOrFail($id);
-        
-=======
         $user = auth()->user();
         $company = Company::findOrFail($id);
         
@@ -155,7 +144,6 @@ class CompanyController extends Controller
                 ->with('error', 'Você não tem permissão para editar esta empresa.');
         }
         
->>>>>>> Perfil-gerenciamento-usuarios
         // Verificar se a empresa já está ativa (publicada)
         if ($company->status === 'published') {
             return redirect()->route('companies.index')
@@ -167,23 +155,17 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
-<<<<<<< HEAD
-=======
         $user = auth()->user();
->>>>>>> Perfil-gerenciamento-usuarios
         \Log::info('CompanyController@update chamado', ['company_id' => $id, 'request_data' => $request->all()]);
         
         $company = Company::findOrFail($id);
         
-<<<<<<< HEAD
-=======
         // Verificar se o usuário tem permissão para editar
         if ($user->role === 'user' && $company->user_id !== $user->id) {
             return redirect()->route('companies.index')
                 ->with('error', 'Você não tem permissão para editar esta empresa.');
         }
         
->>>>>>> Perfil-gerenciamento-usuarios
         // Verificar se a empresa já está ativa (publicada) e não é um rascunho
         if ($company->status === 'published' && !$request->has('save_as_draft')) {
             return redirect()->route('companies.index')

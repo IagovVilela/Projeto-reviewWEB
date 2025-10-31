@@ -94,58 +94,6 @@
             color: #ef4444;
         }
         
-        /* Stat card clickable styles */
-        [id^="statCard"] {
-            transition: all 0.3s ease;
-            user-select: none;
-            position: relative;
-        }
-        
-        [id^="statCard"].cursor-pointer {
-            cursor: pointer !important;
-        }
-        
-        [id^="statCard"].cursor-pointer:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            border-color: #667eea !important;
-        }
-        
-        [id^="statCard"].cursor-pointer:active {
-            transform: translateY(-2px) scale(0.98);
-        }
-        
-        [id^="statCard"].ring-2 {
-            border-color: #667eea !important;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
-        }
-        
-        /* Always show cursor pointer on hoverable cards */
-        [id^="statCard"].cursor-pointer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 0.75rem;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        [id^="statCard"].cursor-pointer:hover::before {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        /* Ensure content is above pseudo-elements */
-        [id^="statCard"] > * {
-            position: relative;
-            z-index: 2;
-        }
     </style>
 @endsection
 
@@ -178,7 +126,7 @@
             </div>
             
             <!-- User Filter (Admin only) -->
-            @if(Auth::user()->role === 'admin')
+            @if(in_array(Auth::user()->role, ['admin', 'proprietario']))
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.filter_by_user') }}</label>
                 <select id="userFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
@@ -231,156 +179,6 @@
                     <i class="fas fa-times mr-2"></i>
                     {{ __('reviews.clear') }}
                 </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <!-- Total Reviews -->
-        <div id="statCardTotal" onclick="filterByStat('total')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver todas as avaliações">
-            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded-full font-medium">
-                    <i class="fas fa-hand-pointer mr-1"></i>Clique
-                </span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-star text-blue-600 dark:text-blue-400 text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.total_reviews') }}</p>
-                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="totalReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400" id="totalTrend">
-                        <!-- Trend data will be loaded dynamically -->
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Positive Reviews -->
-        <div id="statCardPositive" onclick="filterByStat('positive')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver apenas avaliações positivas">
-            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium">
-                    <i class="fas fa-hand-pointer mr-1"></i>Clique
-                </span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-thumbs-up text-green-600 dark:text-green-400 text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.positive') }}</p>
-                    <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="positiveReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400" id="positiveTrend">
-                        <!-- Trend data will be loaded dynamically -->
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Negative Reviews -->
-        <div id="statCardNegative" onclick="filterByStat('negative')" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-gray-200 dark:border-gray-700 card-hover cursor-pointer transition-all hover:shadow-lg relative group" style="cursor: pointer;" title="👆 Clique para ver apenas avaliações negativas">
-            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full font-medium">
-                    <i class="fas fa-hand-pointer mr-1"></i>Clique
-                </span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 pulse-alert">
-                    <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
-                </div>
-<<<<<<< HEAD
-                
-                <!-- Charts Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <!-- Reviews Over Time Chart -->
-                    <div class="bg-white rounded-xl p-6 card-hover">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Avaliações ao Longo do Tempo</h3>
-                                <p class="text-sm text-gray-500" id="chartPeriodInfo">Visualização por dias</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button onclick="updateChartPeriod('7d')" class="chart-period-btn period-tab active px-3 py-1 text-xs rounded-full bg-purple-500 text-white">7 dias</button>
-                                <button onclick="updateChartPeriod('30d')" class="chart-period-btn period-tab px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">30 dias</button>
-                                <button onclick="updateChartPeriod('90d')" class="chart-period-btn period-tab px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">90 dias</button>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="reviewsOverTimeChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <!-- Rating Distribution Chart -->
-                    <div class="bg-white rounded-xl p-6 card-hover">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800">Distribuição de Notas</h3>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span class="text-sm text-gray-600">Positivas</span>
-                                <div class="w-3 h-3 bg-red-500 rounded-full ml-4"></div>
-                                <span class="text-sm text-gray-600">Negativas</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="ratingDistributionChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Company Performance Table -->
-                <div class="bg-white rounded-xl p-6 card-hover mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Performance por Empresa</h3>
-                        <button onclick="exportCompanyData()" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-colors">
-                            <i class="fas fa-download mr-2"></i>
-                            Exportar Dados
-                        </button>
-                    </div>
-                    <div class="table-container">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50 sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Empresa</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Total</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Positivas</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Negativas</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Média</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Última Avaliação</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="companyPerformanceTable">
-                                <!-- Data will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-=======
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.negative') }}</p>
-                    <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="negativeReviews">0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400" id="negativeTrend">
-                        <!-- Trend data will be loaded dynamically -->
-                    </p>
->>>>>>> Perfil-gerenciamento-usuarios
-                </div>
-            </div>
-        </div>
-        
-        <!-- Average Rating -->
-        <div id="statCardAverage" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-chart-line text-yellow-600 dark:text-yellow-400 text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('reviews.average') }}</p>
-                    <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400" id="averageRating">0.0</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400" id="averageTrend">
-                        <!-- Trend data will be loaded dynamically -->
-                    </p>
-                </div>
             </div>
         </div>
     </div>
@@ -544,12 +342,32 @@
             pt_BR: {
                 monday: 'Seg', tuesday: 'Ter', wednesday: 'Qua', thursday: 'Qui', 
                 friday: 'Sex', saturday: 'Sáb', sunday: 'Dom',
-                positivas: 'Positivas', negativas: 'Negativas'
+                positivas: 'Positivas', negativas: 'Negativas',
+                all_companies_filter: 'Todas as Empresas',
+                search_company_placeholder: 'Buscar empresa...',
+                no_companies_found: 'Nenhuma empresa encontrada',
+                company_owner: 'Proprietário',
+                positive: @json(__('reviews.positive')),
+                negative: @json(__('reviews.negative')),
+                contact: @json(__('reviews.contact')),
+                process: @json(__('reviews.process')),
+                delete: @json(__('reviews.delete')),
+                view: @json(__('reviews.view'))
             },
             en_US: {
                 monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu',
                 friday: 'Fri', saturday: 'Sat', sunday: 'Sun',
-                positivas: 'Positive', negativas: 'Negative'
+                positivas: 'Positive', negativas: 'Negative',
+                all_companies_filter: 'All Companies',
+                search_company_placeholder: 'Search company...',
+                no_companies_found: 'No companies found',
+                company_owner: 'Owner',
+                positive: @json(__('reviews.positive')),
+                negative: @json(__('reviews.negative')),
+                contact: @json(__('reviews.contact')),
+                process: @json(__('reviews.process')),
+                delete: @json(__('reviews.delete')),
+                view: @json(__('reviews.view'))
             }
         };
         
@@ -624,7 +442,7 @@
             
             async loadUsers() {
                 try {
-                    @if(Auth::user()->role === 'admin')
+                    @if(in_array(Auth::user()->role, ['admin', 'proprietario']))
                     const response = await fetch('/api/users/with-companies', {
                         credentials: 'include',
                         headers: {
@@ -697,14 +515,14 @@
                 });
                 
                 if (filtered.length === 0) {
-                    optionsDiv.innerHTML = `<div class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('reviews.no_companies_found') }}</div>`;
+                    optionsDiv.innerHTML = `<div class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">${t.no_companies_found || 'Nenhuma empresa encontrada'}</div>`;
                     return;
                 }
                 
                 let html = `
                     <div class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${!this.filters.company_id ? 'bg-purple-50 dark:bg-purple-900/30' : ''}" 
                          onclick="reviewsPanel.selectCompany(null)">
-                        <div class="font-medium text-gray-900 dark:text-gray-100">{{ __('reviews.all_companies') }}</div>
+                        <div class="font-medium text-gray-900 dark:text-gray-100">${t.all_companies_filter || 'Todas as Empresas'}</div>
                     </div>
                 `;
                 
@@ -714,7 +532,7 @@
                         <div class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${isSelected ? 'bg-purple-50 dark:bg-purple-900/30' : ''}" 
                              onclick="reviewsPanel.selectCompany(${company.id}, '${company.name.replace(/'/g, "\\'")}')">
                             <div class="font-medium text-gray-900 dark:text-gray-100">${company.name}</div>
-                            ${company.user_name ? `<div class="text-xs text-gray-500 dark:text-gray-400">{{ __('reviews.company_owner') }}: ${company.user_name}</div>` : ''}
+                            ${company.user_name ? `<div class="text-xs text-gray-500 dark:text-gray-400">${t.company_owner || 'Proprietário'}: ${company.user_name}</div>` : ''}
                         </div>
                     `;
                 });
@@ -742,7 +560,7 @@
                 
                 if (!this.filters.company_id) {
                     searchInput.value = '';
-                    searchInput.placeholder = '{{ __('reviews.search_company_placeholder') }}';
+                    searchInput.placeholder = t.search_company_placeholder || 'Buscar empresa...';
                 } else {
                     const company = this.companies.find(c => c.id == this.filters.company_id);
                     if (company) {
@@ -780,7 +598,6 @@
                         this.allReviews = reviews;
                         
                         this.displayReviews(result.data);
-                        this.updateStats(result.data);
                         this.updateCompanyPerformanceTable(result.data);
                         this.updateChartsWithRealData(reviews);
                     } else {
@@ -792,228 +609,127 @@
                 }
             }
             
-<<<<<<< HEAD
             updateChartsWithRealData(reviews) {
+                console.log('updateChartsWithRealData chamado', reviews);
                 if (!reviews || reviews.length === 0) {
-                    // Se não há avaliações, manter gráficos zerados
-                    this.updateChartsWithEmptyData();
+                    console.log('Sem reviews para atualizar gráficos');
                     return;
                 }
                 
-                // Atualizar gráfico de distribuição de notas
-                const ratingCounts = [0, 0, 0, 0, 0]; // [5★, 4★, 3★, 2★, 1★]
-                
+                // Update rating distribution chart
+                const ratingCounts = [0, 0, 0, 0, 0];
                 reviews.forEach(review => {
-                    const rating = review.rating;
-                    if (rating >= 1 && rating <= 5) {
-                        ratingCounts[5 - rating]++; // 5★ = index 0, 4★ = index 1, etc.
+                    if (review.rating >= 1 && review.rating <= 5) {
+                        ratingCounts[5 - review.rating]++;
                     }
                 });
+                
+                console.log('Rating counts:', ratingCounts);
                 
                 if (this.charts.ratingDistribution) {
                     this.charts.ratingDistribution.data.datasets[0].data = ratingCounts;
                     this.charts.ratingDistribution.update();
                 }
                 
-                // Atualizar gráfico de avaliações ao longo do tempo baseado no período selecionado
-                this.updateTimeChartWithRealData(reviews);
+                // Update reviews over time chart
+                this.updateReviewsOverTimeChart(reviews);
             }
             
-            updateChartsWithEmptyData() {
-                // Zerar gráfico de distribuição de notas
-                if (this.charts.ratingDistribution) {
-                    this.charts.ratingDistribution.data.datasets[0].data = [0, 0, 0, 0, 0];
-                    this.charts.ratingDistribution.update();
-                }
+            updateReviewsOverTimeChart(reviews) {
+                if (!reviews || reviews.length === 0 || !this.charts.reviewsOverTime) return;
                 
-                // Zerar gráfico de avaliações ao longo do tempo
-                this.updateTimeChartWithEmptyData();
-            }
-            
-            updateTimeChartWithRealData(reviews) {
-                const selectedPeriod = this.getSelectedPeriod();
-                let timeData, labels;
+                const today = new Date();
+                const dateRanges = [];
+                const labels = [];
+                const positiveData = [];
+                const negativeData = [];
                 
-                if (selectedPeriod === '7') {
-                    // Para 7 dias: mostrar cada dia individualmente
-                    const last7Days = this.getLast7Days();
-                    timeData = {
-                        positive: new Array(7).fill(0),
-                        negative: new Array(7).fill(0)
-                    };
-                    labels = last7Days.map(day => {
-                        const date = new Date(day);
-                        return date.toLocaleDateString('pt-BR', { weekday: 'short' });
-                    });
-                    
-                    reviews.forEach(review => {
-                        const reviewDate = new Date(review.created_at);
-                        const dayIndex = this.getDayIndex(reviewDate, last7Days);
+                // Create array of dates based on period
+                const period = this.chartPeriod;
+                
+                if (period === 7) {
+                    // Last 7 days - show day names
+                    for (let i = period - 1; i >= 0; i--) {
+                        const date = new Date(today);
+                        date.setDate(date.getDate() - i);
+                        date.setHours(0, 0, 0, 0);
+                        dateRanges.push(date);
+                        labels.push(date.toLocaleDateString('pt-BR', { weekday: 'short' }));
+                        positiveData.push(0);
+                        negativeData.push(0);
+                    }
+                } else if (period === 30) {
+                    // Last 30 days - group by week
+                    const weeksCount = Math.ceil(30 / 7);
+                    for (let i = weeksCount - 1; i >= 0; i--) {
+                        const startDate = new Date(today);
+                        startDate.setDate(startDate.getDate() - (i * 7 + 6));
+                        const endDate = new Date(today);
+                        endDate.setDate(endDate.getDate() - (i * 7));
                         
-                        if (dayIndex >= 0 && dayIndex < 7) {
-                            if (review.is_positive) {
-                                timeData.positive[dayIndex]++;
-                            } else {
-                                timeData.negative[dayIndex]++;
-                            }
-                        }
-                    });
-                } else if (selectedPeriod === '30') {
-                    // Para 30 dias: agrupar por semanas (4 semanas)
-                    const weeklyData = this.groupReviewsByWeeks(reviews, 30);
-                    timeData = {
-                        positive: weeklyData.positive,
-                        negative: weeklyData.negative
-                    };
-                    labels = weeklyData.labels;
-                } else if (selectedPeriod === '90') {
-                    // Para 90 dias: agrupar por semanas (12 semanas)
-                    const weeklyData = this.groupReviewsByWeeks(reviews, 90);
-                    timeData = {
-                        positive: weeklyData.positive,
-                        negative: weeklyData.negative
-                    };
-                    labels = weeklyData.labels;
+                        dateRanges.push({ start: startDate, end: endDate });
+                        const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                        const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                        labels.push(`${startStr} - ${endStr}`);
+                        positiveData.push(0);
+                        negativeData.push(0);
+                    }
+                } else if (period === 90) {
+                    // Last 90 days - group by week
+                    const weeksCount = Math.ceil(90 / 7);
+                    for (let i = weeksCount - 1; i >= 0; i--) {
+                        const startDate = new Date(today);
+                        startDate.setDate(startDate.getDate() - (i * 7 + 6));
+                        const endDate = new Date(today);
+                        endDate.setDate(endDate.getDate() - (i * 7));
+                        
+                        dateRanges.push({ start: startDate, end: endDate });
+                        const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                        const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                        labels.push(`${startStr} - ${endStr}`);
+                        positiveData.push(0);
+                        negativeData.push(0);
+                    }
                 }
                 
-                if (this.charts.reviewsOverTime && timeData && labels) {
-                    this.charts.reviewsOverTime.data.labels = labels;
-                    this.charts.reviewsOverTime.data.datasets[0].data = timeData.positive;
-                    this.charts.reviewsOverTime.data.datasets[1].data = timeData.negative;
-                    this.charts.reviewsOverTime.update();
-                }
-            }
-            
-            updateTimeChartWithEmptyData() {
-                const selectedPeriod = this.getSelectedPeriod();
-                let labels;
-                
-                if (selectedPeriod === '7') {
-                    const last7Days = this.getLast7Days();
-                    labels = last7Days.map(day => {
-                        const date = new Date(day);
-                        return date.toLocaleDateString('pt-BR', { weekday: 'short' });
-                    });
-                } else if (selectedPeriod === '30') {
-                    // Para 30 dias: 4 semanas
-                    labels = this.generateWeekLabels(4);
-                } else if (selectedPeriod === '90') {
-                    // Para 90 dias: 12 semanas
-                    labels = this.generateWeekLabels(12);
-                }
-                
-                if (this.charts.reviewsOverTime && labels) {
-                    this.charts.reviewsOverTime.data.labels = labels;
-                    this.charts.reviewsOverTime.data.datasets[0].data = new Array(labels.length).fill(0);
-                    this.charts.reviewsOverTime.data.datasets[1].data = new Array(labels.length).fill(0);
-                    this.charts.reviewsOverTime.update();
-                }
-            }
-            
-            generateWeekLabels(weeksCount) {
-                const labels = [];
-                for (let i = weeksCount - 1; i >= 0; i--) {
-                    const startDate = new Date();
-                    startDate.setDate(startDate.getDate() - (i * 7 + 6));
-                    const endDate = new Date();
-                    endDate.setDate(endDate.getDate() - (i * 7));
-                    
-                    const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    labels.push(`${startStr} - ${endStr}`);
-                }
-                return labels.reverse(); // Mais recente primeiro
-            }
-            
-            getSelectedPeriod() {
-                // Verificar qual aba está ativa
-                const activeTab = document.querySelector('.period-tab.active');
-                if (activeTab) {
-                    const text = activeTab.textContent.trim();
-                    if (text.includes('7')) return '7';
-                    if (text.includes('30')) return '30';
-                    if (text.includes('90')) return '90';
-                }
-                return '7'; // Default
-            }
-            
-            getLast30Days() {
-                const days = [];
-                for (let i = 29; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    days.push(date.toISOString().split('T')[0]); // Formato YYYY-MM-DD
-                }
-                return days;
-            }
-            
-            getLast90Days() {
-                const days = [];
-                for (let i = 89; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    days.push(date.toISOString().split('T')[0]); // Formato YYYY-MM-DD
-                }
-                return days;
-            }
-            
-            getLast7Days() {
-                const days = [];
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    days.push(date.toISOString().split('T')[0]);
-                }
-                return days;
-            }
-            
-            getDayIndex(reviewDate, last7Days) {
-                const reviewDateStr = reviewDate.toISOString().split('T')[0];
-                return last7Days.indexOf(reviewDateStr);
-            }
-            
-            groupReviewsByWeeks(reviews, days) {
-                const weeksCount = Math.ceil(days / 7);
-                const positive = new Array(weeksCount).fill(0);
-                const negative = new Array(weeksCount).fill(0);
-                const labels = [];
-                
-                // Gerar labels das semanas
-                for (let i = weeksCount - 1; i >= 0; i--) {
-                    const startDate = new Date();
-                    startDate.setDate(startDate.getDate() - (i * 7 + 6));
-                    const endDate = new Date();
-                    endDate.setDate(endDate.getDate() - (i * 7));
-                    
-                    const startStr = startDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    const endStr = endDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                    labels.push(`${startStr} - ${endStr}`);
-                }
-                
-                // Agrupar avaliações por semana
+                // Count reviews per period
                 reviews.forEach(review => {
                     const reviewDate = new Date(review.created_at);
-                    const daysAgo = Math.floor((new Date() - reviewDate) / (1000 * 60 * 60 * 24));
-                    const weekIndex = Math.floor(daysAgo / 7);
+                    reviewDate.setHours(0, 0, 0, 0);
                     
-                    if (weekIndex >= 0 && weekIndex < weeksCount) {
-                        if (review.is_positive) {
-                            positive[weekIndex]++;
-                        } else {
-                            negative[weekIndex]++;
+                    if (period === 7) {
+                        const index = dateRanges.findIndex(d => d.getTime() === reviewDate.getTime());
+                        if (index >= 0) {
+                            if (review.is_positive) {
+                                positiveData[index]++;
+                            } else {
+                                negativeData[index]++;
+                            }
+                        }
+                    } else {
+                        // For 30 or 90 days
+                        const index = dateRanges.findIndex(range => {
+                            return reviewDate >= range.start && reviewDate <= range.end;
+                        });
+                        if (index >= 0) {
+                            if (review.is_positive) {
+                                positiveData[index]++;
+                            } else {
+                                negativeData[index]++;
+                            }
                         }
                     }
                 });
                 
-                return {
-                    positive: positive.reverse(), // Mais recente primeiro
-                    negative: negative.reverse(),
-                    labels: labels.reverse()
-                };
+                // Update chart
+                if (this.charts.reviewsOverTime) {
+                    this.charts.reviewsOverTime.data.labels = labels;
+                    this.charts.reviewsOverTime.data.datasets[0].data = positiveData;
+                    this.charts.reviewsOverTime.data.datasets[1].data = negativeData;
+                    this.charts.reviewsOverTime.update();
+                }
             }
             
-=======
->>>>>>> Perfil-gerenciamento-usuarios
             initializeCharts() {
                 // Reviews Over Time Chart with sample data
                 const reviewsOverTimeCtx = document.getElementById('reviewsOverTimeChart').getContext('2d');
@@ -1064,8 +780,6 @@
                         plugins: {
                             legend: {
                                 position: 'top',
-<<<<<<< HEAD
-=======
                                 labels: {
                                     usePointStyle: true,
                                     padding: 15,
@@ -1073,31 +787,20 @@
                                         size: 13
                                     }
                                 }
->>>>>>> Perfil-gerenciamento-usuarios
                             },
                             tooltip: {
                                 mode: 'index',
                                 intersect: false,
-<<<<<<< HEAD
-                                callbacks: {
-                                    title: function(tooltipItems) {
-                                        const period = document.querySelector('.period-tab.active').textContent.trim();
-                                        if (period.includes('7')) {
-                                            return tooltipItems[0].label;
-                                        } else {
-                                            return `Semana: ${tooltipItems[0].label}`;
-                                        }
-                                    }
-                                }
-=======
                                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                                 padding: 12,
                                 cornerRadius: 8
->>>>>>> Perfil-gerenciamento-usuarios
                             }
                         },
                         scales: {
                             x: {
+                                grid: {
+                                    display: false
+                                },
                                 ticks: {
                                     maxRotation: 45,
                                     minRotation: 0,
@@ -1106,33 +809,18 @@
                             },
                             y: {
                                 beginAtZero: true,
-<<<<<<< HEAD
-                                ticks: {
-                                    stepSize: 1
-=======
                                 grid: {
                                     color: 'rgba(0, 0, 0, 0.05)'
                                 },
                                 ticks: {
                                     precision: 0
                                 }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
->>>>>>> Perfil-gerenciamento-usuarios
-                                }
                             }
                         },
                         interaction: {
-<<<<<<< HEAD
-                            mode: 'index',
-                            intersect: false,
-=======
                             mode: 'nearest',
                             axis: 'x',
                             intersect: false
->>>>>>> Perfil-gerenciamento-usuarios
                         }
                     }
                 });
@@ -1208,33 +896,6 @@
                 
                 console.log('Rating counts:', ratingCounts);
                 
-<<<<<<< HEAD
-                // Update period info text
-                const periodInfo = document.getElementById('chartPeriodInfo');
-                if (periodInfo) {
-                    if (period === '7d') {
-                        periodInfo.textContent = 'Visualização por dias';
-                    } else if (period === '30d') {
-                        periodInfo.textContent = 'Visualização por semanas (4 semanas)';
-                    } else if (period === '90d') {
-                        periodInfo.textContent = 'Visualização por semanas (12 semanas)';
-                    }
-                }
-                
-                // Update chart data based on period
-                this.loadChartData(period);
-            }
-            
-            async loadChartData(period) {
-                // Usar dados reais em vez de dados fictícios
-                // Recarregar avaliações para atualizar os gráficos com dados reais
-                try {
-                    await this.loadReviews();
-                    console.log(`Gráficos atualizados com dados reais para período: ${period}`);
-                } catch (error) {
-                    console.error('Erro ao carregar dados reais:', error);
-                }
-=======
                 if (this.charts.ratingDistribution) {
                     this.charts.ratingDistribution.data.datasets[0].data = ratingCounts;
                     this.charts.ratingDistribution.update();
@@ -1378,7 +1039,7 @@
             createReviewCard(review) {
                 const isPositive = review.is_positive;
                 const ratingClass = isPositive ? 'rating-positive' : 'rating-negative';
-                const typeText = isPositive ? '{{ __('reviews.positive') }}' : '{{ __('reviews.negative') }}';
+                const typeText = isPositive ? t.positive : t.negative;
                 const typeIcon = isPositive ? 'fa-thumbs-up' : 'fa-exclamation-triangle';
                 
                 return `
@@ -1409,7 +1070,7 @@
                                     </div>
                                     <button onclick="contactWhatsApp('${review.whatsapp}')" class="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors">
                                         <i class="fab fa-whatsapp mr-1"></i>
-                                        {{ __('reviews.contact') }}
+                                        ${t.contact}
                                     </button>
                                 </div>
                                 
@@ -1423,38 +1084,16 @@
                             <div class="flex flex-col space-y-2 ml-4">
                                 <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
                                     <i class="fas fa-check mr-1"></i>
-                                    {{ __('reviews.process') }}
+                                    ${t.process}
                                 </button>
                                 <button onclick="deleteReview(${review.id})" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
                                     <i class="fas fa-trash mr-1"></i>
-                                    {{ __('reviews.delete') }}
+                                    ${t.delete}
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
-            }
-            
-            updateStats(data) {
-                const reviews = data.data || data;
-                const total = data.total || reviews.length;
-                
-                const positive = reviews.filter(r => r.is_positive).length;
-                const negative = reviews.filter(r => !r.is_positive).length;
-                const average = reviews.length > 0 ? 
-                    (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : 0;
-                
-                document.getElementById('totalReviews').textContent = total;
-                document.getElementById('positiveReviews').textContent = positive;
-                document.getElementById('negativeReviews').textContent = negative;
-                document.getElementById('averageRating').textContent = average;
-                
-                // Limpar tendências - serão preenchidas com dados reais quando disponíveis
-                document.getElementById('totalTrend').innerHTML = '';
-                document.getElementById('positiveTrend').innerHTML = '';
-                document.getElementById('negativeTrend').innerHTML = '';
-                document.getElementById('averageTrend').innerHTML = '';
->>>>>>> Perfil-gerenciamento-usuarios
             }
             
             updateCompanyPerformanceTable(data) {
@@ -1502,7 +1141,7 @@
                             <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">${company.lastReview ? formatDate(company.lastReview) : 'N/A'}</td>
                             <td class="px-4 py-3">
                                 <button onclick="viewCompanyDetails('${company.name}', ${companyId})" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm">
-                                    <i class="fas fa-eye mr-1"></i>{{ __('reviews.view') }}
+                                    <i class="fas fa-eye mr-1"></i>${t.view}
                                 </button>
                             </td>
                         </tr>
@@ -1568,24 +1207,6 @@
                     date: document.getElementById('dateFilter').value
                 };
                 
-                // Update stat card active states based on filters
-                document.querySelectorAll('[id^="statCard"]').forEach(card => {
-                    card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
-                });
-                
-                const typeFilter = this.filters.type;
-                if (typeFilter === 'positive') {
-                    const card = document.getElementById('statCardPositive');
-                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                } else if (typeFilter === 'negative') {
-                    const card = document.getElementById('statCardNegative');
-                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                } else if (!typeFilter && !this.filters.company_id && !this.filters.user_id && !this.filters.rating && !this.filters.date) {
-                    // Only highlight total if no filters are applied
-                    const card = document.getElementById('statCardTotal');
-                    if (card) card.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                }
-                
                 this.currentPage = 1;
                 this.loadReviews();
             }
@@ -1599,12 +1220,6 @@
                 document.getElementById('typeFilter').value = '';
                 document.getElementById('ratingFilter').value = '';
                 document.getElementById('dateFilter').value = '';
-                
-                // Remove active state from stat cards
-                document.querySelectorAll('[id^="statCard"]').forEach(card => {
-                    card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
-                    card.style.borderColor = '';
-                });
                 
                 this.filters = {
                     company_id: '',
@@ -1646,120 +1261,6 @@
             reviewsPanel.loadReviews();
         }
         
-        function filterByStat(statType) {
-            // Wait for reviewsPanel to be initialized if not ready
-            if (!reviewsPanel) {
-                // If DOM is ready, wait a bit for initialization
-                if (document.readyState === 'complete') {
-                    setTimeout(() => filterByStat(statType), 100);
-                } else {
-                    document.addEventListener('DOMContentLoaded', () => {
-                        setTimeout(() => filterByStat(statType), 100);
-                    });
-                }
-                return;
-            }
-            
-            // Remove active state from all cards first
-            document.querySelectorAll('[id^="statCard"]').forEach(card => {
-                card.classList.remove('ring-2', 'ring-purple-500', 'ring-offset-2');
-            });
-            
-            // Get filter elements
-            const companyFilter = document.getElementById('companyFilter');
-            const companySearchInput = document.getElementById('companySearchInput');
-            const userFilter = document.getElementById('userFilter');
-            const typeFilter = document.getElementById('typeFilter');
-            const ratingFilter = document.getElementById('ratingFilter');
-            const dateFilter = document.getElementById('dateFilter');
-            
-            // Apply appropriate filter
-            switch(statType) {
-                case 'total':
-                    // Clear all filters to show all reviews
-                    if (companyFilter) companyFilter.value = '';
-                    if (companySearchInput) companySearchInput.value = '';
-                    if (userFilter) userFilter.value = '';
-                    if (typeFilter) typeFilter.value = '';
-                    if (ratingFilter) ratingFilter.value = '';
-                    if (dateFilter) dateFilter.value = '';
-                    
-                    reviewsPanel.filters = {
-                        company_id: '',
-                        user_id: '',
-                        type: '',
-                        rating: '',
-                        date: ''
-                    };
-                    
-                    reviewsPanel.updateCompanyInput();
-                    reviewsPanel.currentPage = 1;
-                    reviewsPanel.loadReviews();
-                    
-                    // Highlight total card after a small delay to ensure it's applied
-                    setTimeout(() => {
-                        const totalCard = document.getElementById('statCardTotal');
-                        if (totalCard) totalCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                    }, 50);
-                    break;
-                    
-                case 'positive':
-                    // Filter by positive reviews
-                    if (typeFilter) typeFilter.value = 'positive';
-                    
-                    // Update filters object
-                    reviewsPanel.filters = {
-                        company_id: companyFilter ? companyFilter.value : '',
-                        user_id: userFilter ? userFilter.value : '',
-                        type: 'positive',
-                        rating: ratingFilter ? ratingFilter.value : '',
-                        date: dateFilter ? dateFilter.value : ''
-                    };
-                    
-                    // Apply filters and highlight card
-                    reviewsPanel.currentPage = 1;
-                    reviewsPanel.loadReviews();
-                    
-                    // Highlight positive card after a small delay
-                    setTimeout(() => {
-                        const positiveCard = document.getElementById('statCardPositive');
-                        if (positiveCard) positiveCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                    }, 50);
-                    break;
-                    
-                case 'negative':
-                    // Filter by negative reviews
-                    if (typeFilter) typeFilter.value = 'negative';
-                    
-                    // Update filters object
-                    reviewsPanel.filters = {
-                        company_id: companyFilter ? companyFilter.value : '',
-                        user_id: userFilter ? userFilter.value : '',
-                        type: 'negative',
-                        rating: ratingFilter ? ratingFilter.value : '',
-                        date: dateFilter ? dateFilter.value : ''
-                    };
-                    
-                    // Apply filters and highlight card
-                    reviewsPanel.currentPage = 1;
-                    reviewsPanel.loadReviews();
-                    
-                    // Highlight negative card after a small delay
-                    setTimeout(() => {
-                        const negativeCard = document.getElementById('statCardNegative');
-                        if (negativeCard) negativeCard.classList.add('ring-2', 'ring-purple-500', 'ring-offset-2');
-                    }, 50);
-                    break;
-                    
-                case 'average':
-                    // Average doesn't filter, just scroll to charts
-                    const chartContainer = document.querySelector('.chart-container');
-                    if (chartContainer) {
-                        chartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                    return;
-            }
-        }
         
         function contactWhatsApp(whatsapp) {
             const cleanNumber = whatsapp.replace(/[^0-9]/g, '');
