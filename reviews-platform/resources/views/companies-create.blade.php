@@ -6,14 +6,17 @@
 @section('page-description', __('companies.create_company_desc'))
 
 @section('header-actions')
-    <a href="/companies" class="text-gray-600 hover:text-gray-800 transition-colors mr-4">
-        <i class="fas fa-arrow-left mr-2"></i>
-        {{ __('companies.back') }}
-    </a>
-    <button type="button" onclick="document.getElementById('companyForm').submit()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-        <i class="fas fa-save mr-2"></i>
-        {{ __('companies.save_company') }}
-    </button>
+    <div class="flex items-center gap-2 sm:gap-4">
+        <a href="/companies" class="text-gray-600 hover:text-gray-800 transition-colors hidden sm:inline-flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span>{{ __('companies.back') }}</span>
+        </a>
+        <button type="button" onclick="document.getElementById('companyForm').submit()" class="btn-primary text-white px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base whitespace-nowrap">
+            <i class="fas fa-save mr-2"></i>
+            <span class="hidden sm:inline">{{ __('companies.save_company') }}</span>
+            <span class="sm:hidden">{{ __('companies.save') }}</span>
+        </button>
+    </div>
 @endsection
 
 @section('styles')

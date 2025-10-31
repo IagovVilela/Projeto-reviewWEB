@@ -28,13 +28,13 @@
     @else
     <!-- Company Selector (if multiple companies) -->
     @if($companies->count() > 1)
-    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-6">
-        <div class="flex items-center justify-between flex-wrap gap-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 lg:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div class="flex items-center gap-3">
-                <i class="fas fa-building text-purple-600 dark:text-purple-400 text-xl"></i>
+                <i class="fas fa-building text-purple-600 dark:text-purple-400 text-lg sm:text-xl"></i>
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('dashboard.view_dashboard') }}</label>
             </div>
-            <select id="companySelector" onchange="changeCompany(this.value)" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-w-[250px]">
+            <select id="companySelector" onchange="changeCompany(this.value)" class="w-full sm:w-auto px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:min-w-[250px] text-sm sm:text-base">
                 <option value="all" {{ $selectedCompanyId === 'all' ? 'selected' : '' }}>📊 {{ __('dashboard.all_companies_overview') }}</option>
                 @foreach($companies as $comp)
                     <option value="{{ $comp->id }}" {{ $selectedCompanyId == $comp->id ? 'selected' : '' }}>
@@ -204,20 +204,22 @@
                     {{ __('dashboard.public_link_of', ['name' => $selectedCompany->name]) }}
                 </h3>
                 <p class="text-gray-700 dark:text-gray-300 mb-3">{{ __('dashboard.share_link_message') }}</p>
-                <div class="flex items-center gap-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <input type="text" 
                            value="{{ $selectedCompany->public_url }}" 
                            id="publicUrl"
                            readonly 
-                           class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200">
-                    <button onclick="copyLink()" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors inline-flex items-center gap-2">
-                        <i class="fas fa-copy"></i>
-                        {{ __('dashboard.copy') }}
-                    </button>
-                    <a href="{{ $selectedCompany->public_url }}" target="_blank" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-flex items-center gap-2">
-                        <i class="fas fa-external-link-alt"></i>
-                        {{ __('dashboard.view') }}
-                    </a>
+                           class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 text-sm sm:text-base">
+                    <div class="flex items-stretch sm:items-center gap-2">
+                        <button onclick="copyLink()" class="flex-1 sm:flex-none px-4 sm:px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm sm:text-base">
+                            <i class="fas fa-copy"></i>
+                            <span>{{ __('dashboard.copy') }}</span>
+                        </button>
+                        <a href="{{ $selectedCompany->public_url }}" target="_blank" class="flex-1 sm:flex-none px-4 sm:px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm sm:text-base">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>{{ __('dashboard.view') }}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

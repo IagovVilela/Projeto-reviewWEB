@@ -7,14 +7,14 @@
 @section('content')
 <div class="fade-in">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl border border-purple-200 dark:border-purple-800 p-8 mb-8">
-        <div class="flex items-center gap-4">
-            <div class="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center">
-                <i class="fas fa-life-ring text-white text-2xl"></i>
+    <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl border border-purple-200 dark:border-purple-800 p-4 sm:p-6 lg:p-8 mb-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-life-ring text-white text-xl sm:text-2xl"></i>
             </div>
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('support.help_center_title') }}</h1>
-                <p class="text-gray-700 dark:text-gray-300">{{ __('support.help_center_description') }}</p>
+            <div class="flex-1 min-w-0">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ __('support.help_center_title') }}</h1>
+                <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300">{{ __('support.help_center_description') }}</p>
             </div>
         </div>
     </div>

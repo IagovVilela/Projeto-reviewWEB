@@ -61,8 +61,8 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-        <div class="flex flex-col md:flex-row gap-4">
+    <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <!-- Search -->
             <div class="flex-1">
                 <div class="relative">
@@ -80,10 +80,10 @@
             </div>
             
             <!-- Role Filter -->
-            <div class="md:w-64">
+            <div class="w-full sm:w-auto sm:min-w-[200px]">
                 <select 
                     id="roleFilter" 
-                    class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-sm sm:text-base"
                     onchange="filterUsers()"
                 >
                     <option value="all">{{ __('users.all_roles') }}</option>
@@ -98,10 +98,10 @@
             </div>
             
             <!-- Sort -->
-            <div class="md:w-64">
+            <div class="w-full sm:w-auto sm:min-w-[200px]">
                 <select 
                     id="sortFilter" 
-                    class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-sm sm:text-base"
                     onchange="filterUsers()"
                 >
                     <option value="newest">{{ __('users.sort_newest') }}</option>
@@ -114,7 +114,7 @@
             <!-- Clear Filters -->
             <button 
                 onclick="clearFilters()" 
-                class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium whitespace-nowrap"
+                class="w-full sm:w-auto px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium whitespace-nowrap text-sm sm:text-base"
             >
                 <i class="fas fa-times mr-2"></i>
                 {{ __('users.clear') }}
@@ -138,16 +138,16 @@
              data-email="{{ strtolower($user->email) }}"
              data-role="{{ $user->role }}"
              data-date="{{ $user->created_at->timestamp }}">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4 flex-1">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div class="flex items-center space-x-4 flex-1 min-w-0">
                     <!-- Avatar -->
                     @if($user->photo)
                         <img src="{{ asset('storage/' . $user->photo) }}" 
                              alt="{{ $user->name }}" 
-                             class="flex-shrink-0 h-14 w-14 rounded-xl object-cover shadow-md border-2 border-purple-200">
+                             class="flex-shrink-0 h-12 w-12 lg:h-14 lg:w-14 rounded-xl object-cover shadow-md border-2 border-purple-200">
                     @else
-                        <div class="flex-shrink-0 h-14 w-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                            <span class="text-white font-bold text-lg">
+                        <div class="flex-shrink-0 h-12 w-12 lg:h-14 lg:w-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                            <span class="text-white font-bold text-base lg:text-lg">
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </span>
                         </div>
@@ -155,19 +155,19 @@
                     
                     <!-- User Info -->
                     <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="text-lg font-semibold text-gray-800 truncate">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                            <h3 class="text-base lg:text-lg font-semibold text-gray-800 truncate">
                                 {{ $user->name }}
                             </h3>
                             @if($user->id === Auth::id())
-                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 self-start">
                                     <i class="fas fa-user-check mr-1"></i>{{ __('users.you') }}
                                 </span>
                             @endif
                         </div>
-                        <div class="flex items-center gap-4 text-sm text-gray-600">
-                            <div class="flex items-center">
-                                <i class="fas fa-envelope mr-1.5 text-gray-400"></i>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
+                            <div class="flex items-center min-w-0">
+                                <i class="fas fa-envelope mr-1.5 text-gray-400 flex-shrink-0"></i>
                                 <span class="truncate">{{ $user->email }}</span>
                             </div>
                             <div class="flex items-center">
@@ -179,44 +179,47 @@
                 </div>
                 
                 <!-- Role & Actions -->
-                <div class="flex items-center gap-3 ml-4">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:ml-4">
                     <!-- Role Badge -->
-                    @if($user->role === 'proprietario')
-                        <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700">
-                            <i class="fas fa-crown mr-2"></i>
-                            {{ __('users.owner') }}
-                        </span>
-                    @elseif($user->role === 'admin')
-                        <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-purple-100 text-purple-800">
-                            <i class="fas fa-user-shield mr-2"></i>
-                            {{ __('users.administrator') }}
-                        </span>
-                    @else
-                        <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-gray-100 text-gray-800">
-                            <i class="fas fa-user mr-2"></i>
-                            {{ __('users.user') }}
-                        </span>
-                    @endif
+                    <div class="self-start sm:self-auto">
+                        @if($user->role === 'proprietario')
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 inline-flex items-center text-xs lg:text-sm font-semibold rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700">
+                                <i class="fas fa-crown mr-2"></i>
+                                {{ __('users.owner') }}
+                            </span>
+                        @elseif($user->role === 'admin')
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 inline-flex items-center text-xs lg:text-sm font-semibold rounded-lg bg-purple-100 text-purple-800">
+                                <i class="fas fa-user-shield mr-2"></i>
+                                {{ __('users.administrator') }}
+                            </span>
+                        @else
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 inline-flex items-center text-xs lg:text-sm font-semibold rounded-lg bg-gray-100 text-gray-800">
+                                <i class="fas fa-user mr-2"></i>
+                                {{ __('users.user') }}
+                            </span>
+                        @endif
+                    </div>
                     
                     <!-- Action Buttons -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-stretch sm:items-center gap-2">
                         <a href="{{ route('users.edit', $user->id) }}" 
-                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
+                           class="flex-1 sm:flex-none inline-flex items-center justify-center px-3 lg:px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
                             <i class="fas fa-edit mr-2"></i>
-                            {{ __('users.edit') }}
+                            <span>{{ __('users.edit') }}</span>
                         </a>
                         
                         @if($user->id !== Auth::id())
                         <form action="{{ route('users.destroy', $user->id) }}" 
                               method="POST" 
-                              class="inline-block"
+                              class="flex-1 sm:flex-none"
                               onsubmit="return confirm('{{ __('users.confirm_delete') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-all shadow-sm hover:shadow-md">
+                                    class="w-full sm:w-auto inline-flex items-center justify-center px-3 lg:px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-all shadow-sm hover:shadow-md">
                                 <i class="fas fa-trash mr-2"></i>
-                                {{ __('users.delete') }}
+                                <span class="sm:hidden lg:inline">{{ __('users.delete') }}</span>
+                                <span class="hidden sm:inline lg:hidden">{{ __('users.delete_short', ['default' => 'Excluir']) }}</span>
                             </button>
                         </form>
                         @endif

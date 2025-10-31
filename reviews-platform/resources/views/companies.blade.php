@@ -116,23 +116,26 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-2">
                         @if($company->status === 'published')
                             <a href="{{ $company->public_url }}" target="_blank" class="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors text-center">
                                 <i class="fas fa-external-link-alt mr-1"></i>
-                                {{ __('companies.view_page') }}
+                                <span class="hidden sm:inline">{{ __('companies.view_page') }}</span>
+                                <span class="sm:hidden">{{ __('companies.view') }}</span>
                             </a>
                         @else
                             <a href="{{ route('companies.edit', $company->id) }}" class="flex-1 bg-purple-50 text-purple-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-purple-100 transition-colors text-center">
                                 <i class="fas fa-edit mr-1"></i>
-                                {{ __('companies.edit_company') }}
+                                <span class="hidden sm:inline">{{ __('companies.edit_company') }}</span>
+                                <span class="sm:hidden">{{ __('companies.edit') }}</span>
                             </a>
                         @endif
-                        <form method="POST" action="{{ route('companies.destroy', $company->id) }}" class="inline" onsubmit="return confirm('{{ __('companies.confirm_delete') }}')">
+                        <form method="POST" action="{{ route('companies.destroy', $company->id) }}" class="inline sm:flex-shrink-0" onsubmit="return confirm('{{ __('companies.confirm_delete') }}')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
-                                <i class="fas fa-trash"></i>
+                            <button type="submit" class="w-full sm:w-auto bg-red-50 text-red-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
+                                <i class="fas fa-trash mr-1 sm:mr-0"></i>
+                                <span class="sm:hidden">{{ __('companies.delete') }}</span>
                             </button>
                         </form>
                     </div>

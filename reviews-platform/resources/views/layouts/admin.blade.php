@@ -675,13 +675,42 @@
             display: none !important;
         }
         
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .sidebar-mobile-hidden {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar-overlay {
+                opacity: 0;
+                pointer-events: none;
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            /* Mobile header */
+            header .text-2xl {
+                font-size: 1.25rem;
+            }
+            
+            header .text-sm {
+                font-size: 0.75rem;
+            }
+        }
+        
         @yield('styles')
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 sidebar-overlay transition-opacity duration-300 lg:hidden" onclick="toggleMobileSidebar()"></div>
+    
     <div class="flex h-screen page-container">
         <!-- Sidebar -->
-        <div class="w-64 sidebar-gradient border-r border-gray-200 flex flex-col">
+        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out sidebar-mobile-hidden lg:translate-x-0">
             <!-- Logo -->
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
@@ -787,17 +816,30 @@
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden lg:ml-0">
             <!-- Header -->
-            <header class="bg-white border-b border-gray-200 px-6 py-4">
+            <header class="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 lg:py-4">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800">@yield('page-title', 'Dashboard')</h1>
-                        <p class="text-gray-600 text-sm">@yield('page-description', 'Bem-vindo ao sistema')</p>
+                    <div class="flex items-center space-x-3 flex-1 min-w-0">
+                        <!-- Mobile Menu Button -->
+                        <button 
+                            id="mobileMenuBtn"
+                            onclick="toggleMobileSidebar()"
+                            class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300"
+                            aria-label="Toggle menu"
+                        >
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div class="min-w-0 flex-1">
+                            <h1 class="text-xl lg:text-2xl font-bold text-gray-800 truncate">@yield('page-title', 'Dashboard')</h1>
+                            <p class="text-gray-600 text-xs lg:text-sm truncate">@yield('page-description', 'Bem-vindo ao sistema')</p>
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
                         <!-- Language Selector -->
-                        <x-language-selector />
+                        <div class="hidden sm:block">
+                            <x-language-selector />
+                        </div>
                         
                         <!-- Dark Mode Toggle -->
                         <button 
@@ -806,15 +848,24 @@
                             class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             aria-label="Toggle dark mode"
                         >
-                            <i id="darkModeIcon" class="fas fa-moon text-gray-600 dark:text-gray-300 text-lg"></i>
+                            <i id="darkModeIcon" class="fas fa-moon text-gray-600 dark:text-gray-300 text-base lg:text-lg"></i>
                         </button>
+                        <div class="hidden sm:block">
+                            @yield('header-actions')
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Header Actions -->
+                <div class="sm:hidden mt-3 flex items-center space-x-2">
+                    <x-language-selector />
+                    <div class="flex-1">
                         @yield('header-actions')
                     </div>
                 </div>
             </header>
             
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6 content-area">
+            <main class="flex-1 overflow-y-auto p-4 lg:p-6 content-area">
                 <!-- Notifications -->
                 @if(session('success'))
                     <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 fade-in">
@@ -1034,6 +1085,43 @@
             }
         `;
         document.head.appendChild(spinStyle);
+        
+        // Mobile Sidebar Toggle
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('sidebar-mobile-hidden');
+                overlay.classList.toggle('active');
+            }
+        }
+        
+        // Close sidebar when clicking on a link (mobile only)
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+            const isMobile = window.innerWidth < 1024;
+            
+            if (isMobile) {
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        setTimeout(() => {
+                            toggleMobileSidebar();
+                        }, 150);
+                    });
+                });
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebarOverlay');
+                    if (sidebar) sidebar.classList.remove('sidebar-mobile-hidden');
+                    if (overlay) overlay.classList.remove('active');
+                }
+            });
+        });
         
         // Add smooth page transitions
         document.addEventListener('DOMContentLoaded', function() {

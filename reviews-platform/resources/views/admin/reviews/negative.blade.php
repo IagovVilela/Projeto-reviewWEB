@@ -6,10 +6,6 @@
 @section('page-description', __('reviews.negative_description'))
 
 @section('header-actions')
-    <div class="urgent-badge text-white px-4 py-2 rounded-lg font-bold pulse-soft">
-        <i class="fas fa-exclamation-triangle mr-2"></i>
-        {{ __('reviews.action_required') }}
-    </div>
     <button onclick="refreshNegativeReviews()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors">
         <i class="fas fa-sync-alt mr-2"></i>
         {{ __('reviews.refresh') }}
@@ -37,30 +33,6 @@
         .dark .alert-card:hover {
             border-color: #dc2626;
             box-shadow: 0 8px 16px rgba(239, 68, 68, 0.25);
-        }
-        
-        .urgent-badge {
-            background: #dc2626;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .urgent-badge::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .urgent-badge:hover::before {
-            width: 300px;
-            height: 300px;
         }
         
         .stars-negative {
@@ -306,6 +278,22 @@
 
 @section('scripts')
     <script>
+        // Format date function
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+        
         // Translations for JavaScript
         const translations = {
             pt_BR: {
@@ -881,7 +869,7 @@
                                         <h3 class="font-bold text-red-800 dark:text-red-300 text-lg">${review.company.name}</h3>
                                         <div class="flex items-center mt-1 space-x-2">
                                             <span class="text-sm text-red-600 dark:text-red-400">
-                                                ${isToday ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">🚨 ' + t.today_badge + '</span>' : `<i class="far fa-clock mr-1"></i>${review.created_at}`}
+                                                ${isToday ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">🚨 ' + t.today_badge + '</span>' : `<i class="far fa-clock mr-1"></i>${formatDate(review.created_at)}`}
                                             </span>
                                             ${!review.is_processed ? '<span class="bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full text-xs font-medium">' + t.unprocessed + '</span>' : ''}
                                         </div>
