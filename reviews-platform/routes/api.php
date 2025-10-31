@@ -19,25 +19,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Review API Routes
+// Review API Routes (Public - for review submission from public pages)
 Route::post('/reviews', [ReviewController::class, 'store']);
 Route::post('/reviews/private-feedback', [ReviewController::class, 'storePrivateFeedback']);
-Route::get('/reviews', [ReviewController::class, 'index']);
-Route::get('/reviews/negative', [ReviewController::class, 'negativeReviews']);
-Route::get('/companies/{companyId}/contacts', [ReviewController::class, 'exportContacts']);
 
-// Company API Routes
-Route::get('/companies', function () {
-    try {
-        $companies = \App\Models\Company::select('id', 'name', 'token')->get();
-        return response()->json([
-            'success' => true,
-            'data' => $companies
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erro ao carregar empresas'
-        ], 500);
-    }
-});
+/*
+ | NOTE:
+ | As rotas GET usadas pelo painel autenticado foram movidas para routes/web.php
+ | (grupo 'auth' + 'web') para garantir sessão/cookies nas requisições fetch.
+ | Mantemos em api.php apenas as rotas públicas consumidas pela página pública.
+ */

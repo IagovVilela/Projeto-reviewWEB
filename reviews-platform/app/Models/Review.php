@@ -16,6 +16,7 @@ class Review extends Model
         'comment',
         'private_feedback',
         'contact_preference',
+        'contact_detail',
         'has_private_feedback',
         'is_positive',
         'is_processed',

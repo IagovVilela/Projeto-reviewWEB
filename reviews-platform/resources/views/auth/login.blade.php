@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Reviews Platform</title>
+    <title>{{ __('auth.title') }} - {{ __('app.name') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -85,7 +86,7 @@
         
         .input-group {
             position: relative;
-            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
         }
         
         .input-field {
@@ -95,7 +96,8 @@
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
+            background: #ffffff;
+            box-sizing: border-box;
         }
         
         .input-field:focus {
@@ -112,6 +114,12 @@
             transform: translateY(-50%);
             color: #9ca3af;
             transition: color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .input-group:focus-within .input-icon {
+            color: #667eea;
         }
         
         .input-field:focus + .input-icon {
@@ -121,7 +129,7 @@
         .btn-login {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             border: none;
             border-radius: 12px;
@@ -130,16 +138,26 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
         
         .btn-login:hover {
+            background: #5568d3;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
         
         .btn-login:active {
             transform: translateY(0);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .btn-login::before {
@@ -151,10 +169,16 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
+            z-index: 0;
         }
         
         .btn-login:hover::before {
             left: 100%;
+        }
+        
+        .btn-login > * {
+            position: relative;
+            z-index: 1;
         }
         
         .logo-container {
@@ -218,7 +242,7 @@
         }
         
         .success-message {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
             color: white;
             padding: 1rem;
             border-radius: 12px;
@@ -232,12 +256,50 @@
         }
         
         .error-message {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #ef4444;
             color: white;
             padding: 1rem;
             border-radius: 12px;
             margin-bottom: 1rem;
             animation: slideDown 0.5s ease-out;
+        }
+        
+        .language-selector {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+        
+        .language-selector-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem;
+        }
+        
+        .language-link {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .language-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .language-link:not(.active) {
+            color: #4b5563;
+        }
+        
+        .language-link:not(.active):hover {
+            background: #f3f4f6;
         }
         
         @media (max-width: 768px) {
@@ -249,10 +311,34 @@
             .shape {
                 display: none;
             }
+            
+            .language-selector {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+            
+            .language-link {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <div class="language-selector-container">
+            <div class="flex items-center space-x-1">
+                <a href="?lang=pt_BR" class="language-link {{ app()->getLocale() === 'pt_BR' ? 'active' : '' }}">
+                    🇧🇷 PT
+                </a>
+                <a href="?lang=en_US" class="language-link {{ app()->getLocale() === 'en_US' ? 'active' : '' }}">
+                    🇺🇸 EN
+                </a>
+            </div>
+        </div>
+    </div>
+    
     <!-- Floating Background Shapes -->
     <div class="floating-shapes">
         <div class="shape"></div>
@@ -265,11 +351,11 @@
     <div class="login-container rounded-2xl p-8 w-full max-w-md relative z-10 fade-in">
         <!-- Logo and Title -->
         <div class="text-center mb-8 logo-container">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 pulse-animation">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-600 rounded-full mb-4 pulse-animation">
                 <i class="fas fa-shield-alt text-white text-2xl"></i>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Bem-vindo de volta!</h1>
-            <p class="text-gray-600">Faça login para acessar sua conta</p>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ __('auth.welcome_back') }}</h1>
+            <p class="text-gray-600">{{ __('auth.login_subtitle') }}</p>
         </div>
         
         <!-- Login Form -->
@@ -282,10 +368,11 @@
                     type="email" 
                     id="email" 
                     name="email" 
-                    value="admin@reviewsplatform.com" 
+                    value="{{ old('email') }}" 
                     required
+                    autocomplete="off"
                     class="input-field"
-                    placeholder="Digite seu email"
+                    placeholder="{{ __('auth.email_placeholder') }}"
                 >
                 <i class="fas fa-envelope input-icon"></i>
             </div>
@@ -296,18 +383,18 @@
                     type="password" 
                     id="password" 
                     name="password" 
-                    value="password123" 
                     required
+                    autocomplete="off"
                     class="input-field"
-                    placeholder="Digite sua senha"
+                    placeholder="{{ __('auth.password_placeholder') }}"
                 >
                 <i class="fas fa-lock input-icon"></i>
             </div>
             
             <!-- Login Button -->
-            <button type="submit" class="btn-login fade-in">
-                <i class="fas fa-sign-in-alt mr-2"></i>
-                Entrar na Plataforma
+            <button type="submit" class="btn-login fade-in w-full">
+                <i class="fas fa-arrow-right mr-2"></i>
+                {{ __('auth.login_button') }}
             </button>
         </form>
         
@@ -315,25 +402,45 @@
         <div class="text-center mt-6 fade-in">
             <a href="/" class="back-link">
                 <i class="fas fa-arrow-left"></i>
-                Voltar ao início
+                {{ __('auth.back_to_home') }}
             </a>
         </div>
         
         <!-- Additional Info -->
         <div class="mt-8 text-center text-sm text-gray-500 fade-in">
-            <p>🔒 Sua segurança é nossa prioridade</p>
-            <p class="mt-1">Reviews Platform v2.0</p>
+            <p class="flex items-center justify-center gap-2">
+                <i class="fas fa-lock text-orange-500"></i>
+                {{ __('auth.security_message') }}
+            </p>
+            <p class="mt-1">{{ __('auth.platform_version') }}</p>
         </div>
     </div>
     
     <!-- JavaScript for Enhanced Interactions -->
     <script>
+        // Translations for JavaScript
+        const translations = {
+            pt_BR: {
+                logging_in: '{{ __('auth.logging_in') }}',
+                login_success: '{{ __('auth.login_success') }}',
+                login_error: '{{ __('auth.login_error') }}'
+            },
+            en_US: {
+                logging_in: '{{ __('auth.logging_in') }}',
+                login_success: '{{ __('auth.login_success') }}',
+                login_error: '{{ __('auth.login_error') }}'
+            }
+        };
+        
+        const currentLang = '{{ app()->getLocale() }}';
+        const t = translations[currentLang] || translations.pt_BR;
+        
         // Add loading state to button
         document.querySelector('form').addEventListener('submit', function(e) {
             const button = document.querySelector('.btn-login');
             const originalText = button.innerHTML;
             
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Entrando...';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + t.logging_in;
             button.disabled = true;
             
             // Re-enable after 3 seconds (in case of error)
@@ -346,7 +453,7 @@
         // Add focus animations
         document.querySelectorAll('.input-field').forEach(input => {
             input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.02)';
+                this.parentElement.style.transform = 'scale(1.01)';
             });
             
             input.addEventListener('blur', function() {
@@ -373,14 +480,14 @@
         if (urlParams.get('success')) {
             const successDiv = document.createElement('div');
             successDiv.className = 'success-message';
-            successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Login realizado com sucesso!';
+            successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i>' + t.login_success;
             document.querySelector('form').insertBefore(successDiv, document.querySelector('form').firstChild);
         }
         
         if (urlParams.get('error')) {
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
-            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i>Credenciais inválidas. Tente novamente.';
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i>' + t.login_error;
             document.querySelector('form').insertBefore(errorDiv, document.querySelector('form').firstChild);
         }
     </script>

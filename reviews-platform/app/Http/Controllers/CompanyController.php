@@ -11,21 +11,46 @@ class CompanyController extends Controller
 {
     public function index()
     {
+<<<<<<< HEAD
         $companies = Company::withCount(['reviews', 'reviewPages'])
             ->orderBy('status', 'asc') // Rascunhos primeiro
             ->orderBy('created_at', 'desc')
             ->get();
+=======
+        $user = auth()->user();
+        
+        // Admin e Proprietário vêem todas as empresas
+        if (in_array($user->role, ['admin', 'proprietario'])) {
+            $companies = Company::with('user')
+                ->withCount(['reviews', 'reviewPages'])
+                ->orderBy('status', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
+        } else {
+            // User comum vê apenas suas empresas
+            $companies = Company::where('user_id', $user->id)
+                ->with('user')
+                ->withCount(['reviews', 'reviewPages'])
+                ->orderBy('status', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
+        }
+>>>>>>> Perfil-gerenciamento-usuarios
             
         return view('companies', compact('companies'));
     }
 
     public function create()
     {
+        // Usuários agora podem criar quantas empresas quiserem
         return view('companies-create');
     }
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        
+        // Usuários agora podem criar quantas empresas/páginas de avaliação quiserem
         \Log::info('CompanyController@store chamado', ['request_data' => $request->all()]);
         
         // Determinar se é rascunho ou publicação
@@ -65,6 +90,9 @@ class CompanyController extends Controller
         \Log::info('Validação passou com sucesso', ['is_draft' => $isDraft]);
         
         $data = $request->all();
+        
+        // Adicionar user_id automaticamente
+        $data['user_id'] = $user->id;
         
         // Handle file uploads
         if ($request->hasFile('logo')) {
@@ -114,8 +142,20 @@ class CompanyController extends Controller
 
     public function edit($id)
     {
+<<<<<<< HEAD
         $company = Company::findOrFail($id);
         
+=======
+        $user = auth()->user();
+        $company = Company::findOrFail($id);
+        
+        // Verificar se o usuário tem permissão para editar
+        if ($user->role === 'user' && $company->user_id !== $user->id) {
+            return redirect()->route('companies.index')
+                ->with('error', 'Você não tem permissão para editar esta empresa.');
+        }
+        
+>>>>>>> Perfil-gerenciamento-usuarios
         // Verificar se a empresa já está ativa (publicada)
         if ($company->status === 'published') {
             return redirect()->route('companies.index')
@@ -127,10 +167,23 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
+<<<<<<< HEAD
+=======
+        $user = auth()->user();
+>>>>>>> Perfil-gerenciamento-usuarios
         \Log::info('CompanyController@update chamado', ['company_id' => $id, 'request_data' => $request->all()]);
         
         $company = Company::findOrFail($id);
         
+<<<<<<< HEAD
+=======
+        // Verificar se o usuário tem permissão para editar
+        if ($user->role === 'user' && $company->user_id !== $user->id) {
+            return redirect()->route('companies.index')
+                ->with('error', 'Você não tem permissão para editar esta empresa.');
+        }
+        
+>>>>>>> Perfil-gerenciamento-usuarios
         // Verificar se a empresa já está ativa (publicada) e não é um rascunho
         if ($company->status === 'published' && !$request->has('save_as_draft')) {
             return redirect()->route('companies.index')
@@ -217,7 +270,15 @@ class CompanyController extends Controller
 
     public function destroy($id)
     {
+        $user = auth()->user();
         $company = Company::findOrFail($id);
+        
+        // Verificar se o usuário tem permissão para excluir
+        if ($user->role === 'user' && $company->user_id !== $user->id) {
+            return redirect()->route('companies.index')
+                ->with('error', 'Você não tem permissão para excluir esta empresa.');
+        }
+        
         $company->delete();
         
         return redirect()->route('companies.index')
