@@ -287,13 +287,12 @@
         
         <div class="relative z-10 px-4 py-8 sm:py-16 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto text-center">
-<<<<<<< HEAD
                 <!-- Company Logo/Name Section -->
                 <div class="mb-6 sm:mb-8 fade-in">
                     @if(isset($company->logo) && $company->logo)
                         <!-- Logo exists - show much larger logo -->
                         <div class="inline-flex items-center justify-center w-32 h-32 sm:w-48 sm:h-48 bg-white/20 backdrop-blur-sm rounded-3xl mb-4 sm:mb-8 shadow-lg">
-                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-24 h-24 sm:w-40 sm:h-40 object-contain company-logo">
+                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="w-24 h-24 sm:w-40 sm:h-40 object-contain company-logo" loading="lazy">
                         </div>
                         <!-- Company Name below logo -->
                         <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-8 fade-in company-name-large">
@@ -305,34 +304,11 @@
                             {{ $company->name ?? 'Nossa Empresa' }}
                         </h1>
                     @endif
-=======
-                <!-- Company Logo -->
-                <div class="mb-8 fade-in">
-                    <div class="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl mb-6">
-                        @if(isset($company->logo) && $company->logo)
-                            <div class="image-placeholder w-16 h-16 bg-transparent">
-                                <img src="{{ asset('storage/' . $company->logo) }}" 
-                                     alt="{{ $company->name }}" 
-                                     loading="lazy"
-                                     class="w-16 h-16 object-contain"
-                                     onload="this.parentElement.classList.add('loaded')">
-                                <div class="placeholder-shimmer"></div>
-                            </div>
-                        @else
-                            <i class="fas fa-building text-white text-3xl"></i>
-                        @endif
-                    </div>
->>>>>>> Perfil-gerenciamento-usuarios
                 </div>
                 
                 <!-- Subtitle -->
-<<<<<<< HEAD
                 <p class="text-lg sm:text-xl md:text-2xl text-blue-100 mb-6 sm:mb-8 fade-in px-4">
-                    Sua opinião é muito importante para nós!
-=======
-                <p class="text-xl md:text-2xl text-blue-100 mb-8 fade-in">
                     {{ __('public.your_opinion_matters') }}
->>>>>>> Perfil-gerenciamento-usuarios
                 </p>
                 
                 <!-- Rating Info -->
@@ -356,13 +332,8 @@
     <div class="max-w-4xl mx-auto px-4 py-16">
         <!-- Review Form -->
         <div class="max-w-2xl mx-auto mb-16">
-<<<<<<< HEAD
             <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Como foi sua experiência?</h2>
-=======
-            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">{{ __('public.how_was_experience') }}</h2>
->>>>>>> Perfil-gerenciamento-usuarios
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">{{ __('public.how_was_experience') }}</h2>
                 
                 <!-- Rating Stars -->
                 <div class="text-center mb-6 sm:mb-8">
@@ -373,11 +344,7 @@
                         <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="4"></i>
                         <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="5"></i>
                     </div>
-<<<<<<< HEAD
-                    <p class="text-sm sm:text-base text-gray-600 px-4" id="ratingText">Toque nas estrelas para avaliar</p>
-=======
-                    <p class="text-gray-600" id="ratingText">{{ __('public.touch_stars_to_rate') }}</p>
->>>>>>> Perfil-gerenciamento-usuarios
+                    <p class="text-sm sm:text-base text-gray-600 px-4" id="ratingText">{{ __('public.touch_stars_to_rate') }}</p>
                 </div>
                 
                 <!-- Review Form -->
@@ -397,15 +364,9 @@
                             id="whatsapp" 
                             name="whatsapp"
                             required
-<<<<<<< HEAD
                             class="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
-                            placeholder="(11) 99999-9999"
-                            maxlength="15"
-                            oninput="formatPhoneNumber(this)"
-=======
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="{{ __('public.whatsapp_placeholder') }}"
->>>>>>> Perfil-gerenciamento-usuarios
+                            maxlength="15"
                         >
                         <p class="text-xs text-gray-500 mt-1">{{ __('public.whatsapp_hint') }}</p>
                     </div>
@@ -419,15 +380,9 @@
                         <textarea 
                             id="comment" 
                             name="comment"
-<<<<<<< HEAD
                             rows="3"
                             class="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input resize-none"
-                            placeholder="Conte-nos mais sobre sua experiência..."
-=======
-                            rows="4"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                             placeholder="{{ __('public.comment_placeholder') }}"
->>>>>>> Perfil-gerenciamento-usuarios
                         ></textarea>
                     </div>
                     
@@ -436,11 +391,7 @@
                         type="submit" 
                         id="submitBtn"
                         disabled
-<<<<<<< HEAD
                         class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 btn-mobile touch-target"
-=======
-                        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
->>>>>>> Perfil-gerenciamento-usuarios
                     >
                         <i class="fas fa-paper-plane mr-2"></i>
                         {{ __('public.send_review') }}
@@ -470,25 +421,15 @@
         </div>
         
         <!-- Company Info -->
-<<<<<<< HEAD
         <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Sobre Nós</h2>
-=======
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 fade-in">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">{{ __('public.about_us') }}</h2>
->>>>>>> Perfil-gerenciamento-usuarios
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">{{ __('public.about_us') }}</h2>
             
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <!-- Contact Info -->
                 <div>
-<<<<<<< HEAD
-                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Informações de Contato</h3>
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">{{ __('public.contact_information') }}</h3>
                     <div class="space-y-3 contact-info-mobile">
-=======
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">{{ __('public.contact_information') }}</h3>
-                    <div class="space-y-3">
->>>>>>> Perfil-gerenciamento-usuarios
                         @if(isset($company->contact_number) && $company->contact_number)
                         <div class="flex items-center">
                             <i class="fas fa-phone text-blue-500 mr-3"></i>
@@ -507,24 +448,23 @@
                         
                         @if(isset($company->business_address) && $company->business_address)
                         <div class="flex items-start">
-<<<<<<< HEAD
-                            <a href="https://www.google.com/maps/search/{{ urlencode($company->business_address) }}" 
-                               target="_blank" 
-                               class="flex items-start hover:opacity-80 transition-opacity duration-200"
-                               title="Ver no Google Maps">
-                                <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
-                            </a>
-                            <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
-=======
-                            <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1"></i>
                             @if($company->google_maps_url)
-                                <a href="{{ $company->google_maps_url }}" target="_blank" class="text-blue-600 hover:text-blue-800 underline transition-colors">
-                                    {{ $company->business_address }}
+                                <a href="{{ $company->google_maps_url }}" 
+                                   target="_blank" 
+                                   class="flex items-start hover:opacity-80 transition-opacity duration-200"
+                                   title="Ver no Google Maps">
+                                    <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
                                 </a>
+                                <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
                             @else
-                                <span class="text-gray-600">{{ $company->business_address }}</span>
+                                <a href="https://www.google.com/maps/search/{{ urlencode($company->business_address) }}" 
+                                   target="_blank" 
+                                   class="flex items-start hover:opacity-80 transition-opacity duration-200"
+                                   title="Ver no Google Maps">
+                                    <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
+                                </a>
+                                <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
                             @endif
->>>>>>> Perfil-gerenciamento-usuarios
                         </div>
                         @endif
                     </div>
@@ -532,45 +472,21 @@
                 
                 <!-- Google Reviews -->
                 <div>
-<<<<<<< HEAD
-                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Nossas Avaliações</h3>
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">{{ __('public.our_reviews') }}</h3>
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6">
                             <div class="flex items-center mb-3 sm:mb-4">
                                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-sm">
-                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-6 h-6 sm:w-8 sm:h-8 object-contain">
+                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-6 h-6 sm:w-8 sm:h-8 object-contain" loading="lazy">
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-800 text-sm sm:text-base">Google My Business</h4>
-                                    <p class="text-xs sm:text-sm text-gray-600">Avaliações verificadas</p>
-=======
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4">{{ __('public.our_reviews') }}</h3>
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
-                                    <div class="image-placeholder w-8 h-8 bg-transparent">
-                                        <img src="/assets/images/platforms/google.png" 
-                                             alt="Google" 
-                                             loading="lazy"
-                                             class="w-8 h-8 object-contain"
-                                             onload="this.parentElement.classList.add('loaded')">
-                                        <div class="placeholder-shimmer"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">{{ __('public.google_my_business') }}</h4>
-                                    <p class="text-sm text-gray-600">{{ __('public.verified_reviews') }}</p>
->>>>>>> Perfil-gerenciamento-usuarios
+                                    <h4 class="font-semibold text-gray-800 text-sm sm:text-base">{{ __('public.google_my_business') }}</h4>
+                                    <p class="text-xs sm:text-sm text-gray-600">{{ __('public.verified_reviews') }}</p>
                                 </div>
                             </div>
                             <a href="{{ $company->google_business_url ?? '#' }}" 
                                target="_blank"
-<<<<<<< HEAD
                                class="text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base">
-                                Ver todas as avaliações →
-=======
-                               class="text-blue-600 hover:text-blue-800 font-medium">
                                 {{ __('public.view_all_reviews') }} →
->>>>>>> Perfil-gerenciamento-usuarios
                             </a>
                         </div>
                 </div>
@@ -578,47 +494,14 @@
         </div>
         
         <!-- Footer -->
-<<<<<<< HEAD
         <div class="text-center mt-8 sm:mt-16 fade-in">
             <p class="text-gray-500 text-xs sm:text-sm">
-                Powered by Reviews Platform
-=======
-        <div class="text-center mt-16 fade-in">
-            <p class="text-gray-500 text-sm">
                 {{ __('public.powered_by') }}
->>>>>>> Perfil-gerenciamento-usuarios
             </p>
         </div>
     </div>
     
     <script>
-<<<<<<< HEAD
-        // Phone number formatting function
-        function formatPhoneNumber(input) {
-            // Remove all non-numeric characters
-            let value = input.value.replace(/\D/g, '');
-            
-            // Limit to 11 digits (DDD + 9 digits)
-            if (value.length > 11) {
-                value = value.substring(0, 11);
-            }
-            
-            // Format based on length
-            if (value.length <= 2) {
-                // Just DDD: (11
-                input.value = value.length > 0 ? `(${value}` : '';
-            } else if (value.length <= 6) {
-                // DDD + first part: (11) 9999
-                input.value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
-            } else if (value.length <= 10) {
-                // DDD + first part + second part: (11) 9999-9999
-                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
-            } else {
-                // DDD + first part + second part: (11) 99999-9999
-                input.value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
-            }
-        }
-=======
         // Translations for public review page
         const translations = {
             pt_BR: {
@@ -691,7 +574,23 @@
         
         const currentLang = '{{ app()->getLocale() }}';
         const t = translations[currentLang] || translations.pt_BR;
->>>>>>> Perfil-gerenciamento-usuarios
+        
+        // Phone number formatting function
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            if (value.length > 10) {
+                input.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 7) + '-' + value.substring(7);
+            } else if (value.length > 6) {
+                input.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 6) + '-' + value.substring(6);
+            } else if (value.length > 2) {
+                input.value = '(' + value.substring(0, 2) + ') ' + value.substring(2);
+            } else if (value.length > 0) {
+                input.value = '(' + value;
+            }
+        }
         
         // Review System
         class ReviewSystem {
@@ -1099,25 +998,7 @@
             const whatsappInput = document.getElementById('whatsapp');
             if (whatsappInput) {
                 whatsappInput.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
-                    if (value.length > 11) {
-                        value = value.substring(0, 11); // Limita a 11 dígitos
-                    }
-                    
-                    // Aplica a máscara
-                    if (value.length > 10) {
-                        // Telefone com 11 dígitos (celular): (XX) XXXXX-XXXX
-                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 7) + '-' + value.substring(7);
-                    } else if (value.length > 6) {
-                        // Telefone com 10 dígitos (fixo): (XX) XXXX-XXXX
-                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 6) + '-' + value.substring(6);
-                    } else if (value.length > 2) {
-                        // Começou a digitar: (XX) XXX
-                        e.target.value = '(' + value.substring(0, 2) + ') ' + value.substring(2);
-                    } else if (value.length > 0) {
-                        // Apenas DDD: (XX
-                        e.target.value = '(' + value;
-                    }
+                    formatPhoneNumber(e.target);
                 });
             }
         });
