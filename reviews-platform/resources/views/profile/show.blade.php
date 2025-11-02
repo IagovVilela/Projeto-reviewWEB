@@ -18,7 +18,7 @@
             </div>
             
             <div class="p-6">
-                <div class="flex items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                     <!-- Current Photo -->
                     <div class="relative">
                         @if($user->photo)
@@ -49,7 +49,7 @@
                     </div>
                     
                     <!-- Upload Form -->
-                    <div class="flex-1">
+                    <div class="flex-1 w-full sm:w-auto">
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{{ __('profile.change_photo') }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ __('profile.photo_formats') }}</p>
                         
@@ -60,7 +60,7 @@
                             <input type="hidden" name="name" value="{{ $user->name }}">
                             <input type="hidden" name="email" value="{{ $user->email }}">
                             
-                            <div class="flex items-center gap-3">
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                                 <label class="cursor-pointer">
                                     <input type="file" name="photo" class="hidden" accept="image/*" 
                                            onchange="previewPhoto(event); document.getElementById('photoForm').submit();">

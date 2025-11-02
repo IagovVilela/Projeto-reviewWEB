@@ -8,29 +8,29 @@
 @section('content')
     <!-- Alerta de Avaliações Negativas -->
     @if(isset($negativeCount) && $negativeCount > 0)
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg flex items-center justify-between fade-in animate-pulse">
-        <div class="flex items-center">
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 fade-in animate-pulse">
+        <div class="flex items-center flex-1">
             <div class="flex-shrink-0">
-                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-4"></i>
+                <i class="fas fa-exclamation-triangle text-red-500 text-xl sm:text-2xl mr-3 sm:mr-4"></i>
             </div>
             <div>
-                <h3 class="text-lg font-semibold text-red-800">
+                <h3 class="text-base sm:text-lg font-semibold text-red-800">
                     {{ __('dashboard.attention_required') }}
                 </h3>
-                <p class="text-red-600">
+                <p class="text-sm sm:text-base text-red-600">
                     {{ __('dashboard.negative_reviews_pending', ['count' => $negativeCount]) }}
                 </p>
             </div>
         </div>
-        <div>
-            <a href="/reviews?filter=negative" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center">
+        <div class="w-full sm:w-auto">
+            <a href="/reviews?filter=negative" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center w-full sm:w-auto">
                 <i class="fas fa-eye mr-2"></i>
                 {{ __('dashboard.view_negative_reviews') }}
             </a>
         </div>
     </div>
     @endif
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     <!-- Submissions Card -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 card-hover cursor-pointer stagger-item">
                         <div class="flex items-center mb-4">

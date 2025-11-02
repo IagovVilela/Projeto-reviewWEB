@@ -71,6 +71,22 @@
             overflow-y: auto;
         }
         
+        /* Responsive table wrapper */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-responsive table {
+                min-width: 600px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+        
         .chart-period-btn {
             transition: var(--transition-smooth);
         }
@@ -99,9 +115,9 @@
 
 @section('content')
     <!-- Filters -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{{ __('reviews.filters') }}</h3>
-        <div class="flex flex-wrap items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-6">
+        <h3 class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{{ __('reviews.filters') }}</h3>
+        <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
             <!-- Company Filter (with search) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('reviews.company') }}</label>
@@ -170,12 +186,12 @@
                 </select>
             </div>
             
-            <div class="flex items-end space-x-2">
-                <button onclick="applyFilters()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-end space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
+                <button onclick="applyFilters()" class="btn-primary text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto">
                     <i class="fas fa-filter mr-2"></i>
                     {{ __('reviews.apply') }}
                 </button>
-                <button onclick="clearFilters()" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium">
+                <button onclick="clearFilters()" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto">
                     <i class="fas fa-times mr-2"></i>
                     {{ __('reviews.clear') }}
                 </button>
@@ -184,7 +200,7 @@
     </div>
     
     <!-- Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
         <!-- Reviews Over Time Chart -->
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
                 <div class="flex items-center justify-between mb-4">
@@ -226,8 +242,8 @@
                 {{ __('reviews.export_data') }}
             </button>
         </div>
-        <div class="table-container">
-            <table class="w-full text-sm">
+        <div class="table-container table-responsive">
+            <table class="w-full text-sm min-w-full">
                 <thead class="bg-gray-50 dark:bg-gray-900 sticky top-0">
                     <tr>
                         <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('reviews.empresa') }}</th>

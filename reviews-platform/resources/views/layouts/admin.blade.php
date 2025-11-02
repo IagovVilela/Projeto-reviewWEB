@@ -676,7 +676,7 @@
         }
         
         /* Mobile Responsiveness */
-        @media (max-width: 768px) {
+        @media (max-width: 1023px) {
             .sidebar-mobile-hidden {
                 transform: translateX(-100%);
             }
@@ -684,6 +684,7 @@
             .sidebar-overlay {
                 opacity: 0;
                 pointer-events: none;
+                transition: opacity 0.3s ease;
             }
             
             .sidebar-overlay.active {
@@ -699,6 +700,101 @@
             header .text-sm {
                 font-size: 0.75rem;
             }
+            
+            /* Ensure main content takes full width on mobile */
+            .page-container {
+                position: relative;
+            }
+            
+            /* Mobile content padding */
+            main.content-area {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            
+            /* Ensure tables are scrollable on mobile */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Mobile cards */
+            .card-hover {
+                margin-bottom: 1rem;
+            }
+            
+            /* Mobile grid - force single column */
+            .grid-responsive {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        
+        /* Tablet responsiveness */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .grid-responsive-md {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Form responsive adjustments */
+        @media (max-width: 768px) {
+            /* Make form inputs full width on mobile */
+            form input[type="text"],
+            form input[type="email"],
+            form input[type="password"],
+            form input[type="number"],
+            form input[type="tel"],
+            form input[type="url"],
+            form select,
+            form textarea {
+                width: 100%;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Ensure buttons stack on mobile */
+            form .flex.items-center.space-x-2,
+            form .flex.items-center.space-x-4 {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            
+            form .flex.items-center.space-x-2 > *,
+            form .flex.items-center.space-x-4 > * {
+                width: 100%;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            /* Make form buttons responsive */
+            form button[type="submit"],
+            form .btn-primary,
+            form .btn-secondary {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            
+            /* Adjust form labels */
+            label {
+                font-size: 0.875rem;
+            }
+            
+            /* Stack form groups */
+            .flex.flex-col.sm\\:flex-row {
+                flex-direction: column;
+            }
+            
+            /* Header actions responsive */
+            header a.btn-primary,
+            header button.btn-primary,
+            header a.bg-green-500,
+            header button.bg-green-500 {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
         }
         
         @yield('styles')
@@ -708,21 +804,32 @@
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 sidebar-overlay transition-opacity duration-300 lg:hidden" onclick="toggleMobileSidebar()"></div>
     
-    <div class="flex h-screen page-container">
+    <div class="flex h-screen page-container overflow-hidden">
         <!-- Sidebar -->
-        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out sidebar-mobile-hidden lg:translate-x-0">
+        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out sidebar-mobile-hidden lg:translate-x-0 lg:z-auto">
             <!-- Logo -->
             <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 logo-gradient rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 logo-gradient rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-gray-800">{{ __('app.name') }}</h1>
+                            <p class="text-xs text-gray-500">{{ __('app.subtitle') }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-gray-800">{{ __('app.name') }}</h1>
-                        <p class="text-xs text-gray-500">{{ __('app.subtitle') }}</p>
-                    </div>
+                    <!-- Close button for mobile -->
+                    <button 
+                        onclick="toggleMobileSidebar(); event.stopPropagation(); return false;"
+                        type="button"
+                        class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600 z-10"
+                        aria-label="Close menu"
+                    >
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
             </div>
             
@@ -816,23 +923,24 @@
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        <div class="flex-1 flex flex-col overflow-hidden w-full lg:ml-0">
             <!-- Header -->
-            <header class="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 lg:py-4">
+            <header class="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 lg:py-4 z-30 relative">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3 flex-1 min-w-0">
                         <!-- Mobile Menu Button -->
                         <button 
                             id="mobileMenuBtn"
-                            onclick="toggleMobileSidebar()"
-                            class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300"
+                            onclick="toggleMobileSidebar(event); return false;"
+                            type="button"
+                            class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 flex-shrink-0"
                             aria-label="Toggle menu"
                         >
                             <i class="fas fa-bars text-xl"></i>
                         </button>
                         <div class="min-w-0 flex-1">
                             <h1 class="text-xl lg:text-2xl font-bold text-gray-800 truncate">@yield('page-title', 'Dashboard')</h1>
-                            <p class="text-gray-600 text-xs lg:text-sm truncate">@yield('page-description', 'Bem-vindo ao sistema')</p>
+                            <p class="text-gray-600 text-xs lg:text-sm truncate hidden sm:block">@yield('page-description', 'Bem-vindo ao sistema')</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
@@ -856,16 +964,18 @@
                     </div>
                 </div>
                 <!-- Mobile Header Actions -->
-                <div class="sm:hidden mt-3 flex items-center space-x-2">
-                    <x-language-selector />
-                    <div class="flex-1">
+                <div class="sm:hidden mt-3 flex flex-col space-y-2">
+                    <div class="flex items-center justify-between space-x-2">
+                        <x-language-selector />
+                    </div>
+                    <div class="w-full">
                         @yield('header-actions')
                     </div>
                 </div>
             </header>
             
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-4 lg:p-6 content-area">
+            <main class="flex-1 overflow-y-auto p-4 lg:p-6 content-area w-full">
                 <!-- Notifications -->
                 @if(session('success'))
                     <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 fade-in">
@@ -1087,40 +1197,123 @@
         document.head.appendChild(spinStyle);
         
         // Mobile Sidebar Toggle
-        function toggleMobileSidebar() {
+        function toggleMobileSidebar(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('sidebar-mobile-hidden');
-                overlay.classList.toggle('active');
+            if (!sidebar || !overlay) {
+                console.error('Sidebar elements not found');
+                return false;
             }
+            
+            const isHidden = sidebar.classList.contains('sidebar-mobile-hidden');
+            
+            if (isHidden) {
+                // Open sidebar
+                sidebar.classList.remove('sidebar-mobile-hidden');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close sidebar
+                sidebar.classList.add('sidebar-mobile-hidden');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            return false;
         }
         
         // Close sidebar when clicking on a link (mobile only)
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
-            const isMobile = window.innerWidth < 1024;
+            const sidebarLinks = document.querySelectorAll('#sidebar nav a, #sidebar form button[type="submit"]');
             
-            if (isMobile) {
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        setTimeout(() => {
-                            toggleMobileSidebar();
-                        }, 150);
-                    });
+            function closeSidebarOnMobile(e) {
+                // Don't close if clicking the close button itself
+                if (e.target.closest('button[aria-label="Close menu"]')) {
+                    return;
+                }
+                
+                if (window.innerWidth < 1024) {
+                    setTimeout(() => {
+                        const sidebar = document.getElementById('sidebar');
+                        const overlay = document.getElementById('sidebarOverlay');
+                        if (sidebar && overlay) {
+                            sidebar.classList.add('sidebar-mobile-hidden');
+                            overlay.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    }, 150);
+                }
+            }
+            
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', closeSidebarOnMobile);
+            });
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth >= 1024) {
+                        const sidebar = document.getElementById('sidebar');
+                        const overlay = document.getElementById('sidebarOverlay');
+                        if (sidebar) sidebar.classList.remove('sidebar-mobile-hidden');
+                        if (overlay) {
+                            overlay.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    } else {
+                        // Ensure sidebar is hidden on mobile by default
+                        const sidebar = document.getElementById('sidebar');
+                        const overlay = document.getElementById('sidebarOverlay');
+                        if (sidebar && !sidebar.classList.contains('sidebar-mobile-hidden')) {
+                            sidebar.classList.add('sidebar-mobile-hidden');
+                        }
+                        if (overlay) {
+                            overlay.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    }
+                }, 100);
+            });
+            
+            // Close sidebar on overlay click
+            const overlay = document.getElementById('sidebarOverlay');
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.innerWidth < 1024) {
+                        toggleMobileSidebar(e);
+                    }
                 });
             }
             
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 1024) {
-                    const sidebar = document.getElementById('sidebar');
-                    const overlay = document.getElementById('sidebarOverlay');
-                    if (sidebar) sidebar.classList.remove('sidebar-mobile-hidden');
-                    if (overlay) overlay.classList.remove('active');
-                }
-            });
+            // Add click handler to close button via event listener as well
+            const closeBtn = document.querySelector('#sidebar button[aria-label="Close menu"]');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMobileSidebar(e);
+                });
+            }
+            
+            // Ensure hamburger button also works via event listener
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMobileSidebar(e);
+                });
+            }
         });
         
         // Add smooth page transitions
