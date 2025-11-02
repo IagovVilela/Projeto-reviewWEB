@@ -18,6 +18,7 @@
             background: #fef2f2;
             border: 2px solid #fecaca;
             transition: var(--transition-smooth);
+            overflow: hidden;
         }
         
         .dark .alert-card {
@@ -59,18 +60,188 @@
         .review-action-btn:hover {
             transform: translateY(-2px);
         }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            /* Filters grid - force single column on mobile */
+            .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Search field - prevent text truncation */
+            #searchFilter {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Company search input - prevent icon overlap */
+            #companySearchInput {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding-left: 2.75rem !important;
+                padding-right: 1rem !important;
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Company search icon positioning */
+            #companySearchInput + .fa-search {
+                left: 0.875rem !important;
+                z-index: 10;
+                pointer-events: none;
+            }
+            
+            /* All select inputs mobile */
+            select {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
+            }
+            
+            /* Alert banner mobile */
+            .bg-red-50,
+            .bg-red-50 > div {
+                padding: 1rem !important;
+                margin-left: -1rem;
+                margin-right: -1rem;
+                width: calc(100% + 2rem);
+                max-width: calc(100% + 2rem);
+            }
+            
+            /* Cards mobile */
+            .alert-card {
+                padding: 1rem !important;
+                margin: 0 -0.5rem;
+                width: calc(100% + 1rem);
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            /* Card header - stack on mobile */
+            .alert-card > div:first-child {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+            
+            /* Rating section mobile */
+            .alert-card .text-right {
+                width: 100% !important;
+                text-align: left !important;
+                margin-top: 0.5rem;
+                padding-top: 0.75rem;
+                border-top: 1px solid rgba(220, 38, 38, 0.2);
+            }
+            
+            /* Rating text - prevent cutoff */
+            .alert-card .text-3xl {
+                font-size: 1.75rem !important;
+                word-break: keep-all;
+                white-space: nowrap;
+            }
+            
+            /* Contact buttons mobile */
+            .alert-card .flex.items-center.space-x-3 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0.5rem !important;
+                width: 100%;
+            }
+            
+            .alert-card .bg-green-50,
+            .alert-card .btn-primary {
+                width: 100% !important;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            /* Action buttons mobile */
+            .alert-card .flex.flex-wrap.gap-2 {
+                flex-direction: column !important;
+            }
+            
+            .alert-card .flex.flex-wrap.gap-2 > button {
+                width: 100% !important;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Comment boxes mobile */
+            .alert-card .bg-white,
+            .alert-card .bg-orange-50 {
+                padding: 0.75rem !important;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                max-width: 100%;
+            }
+            
+            /* List header mobile */
+            .flex.items-center.justify-between {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+            
+            /* Sort select mobile */
+            #sortFilter {
+                width: 100% !important;
+                min-height: 44px;
+                font-size: 16px !important;
+            }
+            
+            /* Filters section mobile */
+            .bg-white.rounded-xl,
+            .dark .bg-gray-800.rounded-xl {
+                margin-left: -1rem;
+                margin-right: -1rem;
+                width: calc(100% + 2rem);
+                max-width: calc(100% + 2rem);
+                border-radius: 0 !important;
+            }
+            
+            .bg-white.rounded-xl > div,
+            .dark .bg-gray-800.rounded-xl > div {
+                padding: 1rem !important;
+            }
+            
+            /* Prevent horizontal scroll */
+            body, html {
+                overflow-x: hidden;
+                max-width: 100vw;
+            }
+            
+            main {
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            
+            /* Company name mobile */
+            .alert-card h3 {
+                word-break: break-word;
+                overflow-wrap: break-word;
+                max-width: 100%;
+            }
+        }
     </style>
 @endsection
 
 @section('content')
     <!-- Alert Banner -->
-    <div class="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-lg mb-6 fade-in">
-        <div class="flex">
-            <div class="flex-shrink-0">
+    <div class="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-lg mb-6 fade-in overflow-hidden">
+        <div class="flex flex-col sm:flex-row">
+            <div class="flex-shrink-0 mb-2 sm:mb-0">
                 <i class="fas fa-exclamation-triangle text-red-400 dark:text-red-500 text-xl"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm text-red-700 dark:text-red-300">
+            <div class="ml-0 sm:ml-3 flex-1">
+                <p class="text-sm text-red-700 dark:text-red-300 break-words">
                     <strong>{{ __('reviews.alert_attention') }}</strong> {{ __('reviews.alert_message') }}
                 </p>
             </div>
@@ -109,6 +280,7 @@
                         id="searchFilter" 
                         placeholder="{{ __('reviews.search_placeholder') }}"
                         class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        style="font-size: 16px; min-height: 44px;"
                     >
                 </div>
                 
@@ -124,10 +296,11 @@
                                 type="text" 
                                 id="companySearchInput" 
                                 placeholder="{{ __('reviews.search_company_placeholder') }}"
-                                class="w-full px-4 py-2 pl-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                class="w-full px-4 py-2 pl-10 pr-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                style="font-size: 16px; min-height: 44px; padding-left: 2.75rem;"
                                 autocomplete="off"
                             >
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10"></i>
                             <input type="hidden" id="companyFilter" value="all">
                         </div>
                         <div id="companyDropdown" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -198,16 +371,16 @@
 
     <!-- Negative Reviews List -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center justify-between">
-                <div>
+        <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex-1 min-w-0">
                     <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ __('reviews.negative_list_title') }}</h2>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">
                         <span id="resultsCount" class="font-medium text-red-600 dark:text-red-400">0</span> {{ __('reviews.results_count') }}
                     </p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <select id="sortFilter" class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500">
+                <div class="w-full sm:w-auto">
+                    <select id="sortFilter" class="w-full sm:w-auto px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-red-500 min-h-[44px] font-size-16">
                         <option value="recent">{{ __('reviews.sort_most_recent') }}</option>
                         <option value="oldest">{{ __('reviews.sort_oldest') }}</option>
                         <option value="lowest">{{ __('reviews.sort_lowest_rating') }}</option>
@@ -858,37 +1031,37 @@
                 const isToday = today === reviewDate;
                 
                 return `
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-gray-700/50 transition-all stagger-item" style="animation-delay: ${index * 0.05}s">
-                        <div class="alert-card rounded-xl p-6">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex items-center flex-1">
-                                    <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mr-4 shadow-lg">
+                    <div class="p-3 sm:p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-gray-700/50 transition-all stagger-item" style="animation-delay: ${index * 0.05}s">
+                        <div class="alert-card rounded-xl p-4 sm:p-6">
+                            <div class="flex items-start justify-between mb-4 flex-col sm:flex-row">
+                                <div class="flex items-center flex-1 w-full sm:w-auto">
+                                    <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mr-4 shadow-lg flex-shrink-0">
                                         <i class="fas fa-exclamation-triangle text-white text-lg"></i>
                                     </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-bold text-red-800 dark:text-red-300 text-lg">${review.company.name}</h3>
-                                        <div class="flex items-center mt-1 space-x-2">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="font-bold text-red-800 dark:text-red-300 text-lg break-words">${review.company.name}</h3>
+                                        <div class="flex items-center mt-1 flex-wrap gap-2">
                                             <span class="text-sm text-red-600 dark:text-red-400">
                                                 ${isToday ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">🚨 ' + t.today_badge + '</span>' : `<i class="far fa-clock mr-1"></i>${formatDate(review.created_at)}`}
                                             </span>
-                                            ${!review.is_processed ? '<span class="bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full text-xs font-medium">' + t.unprocessed + '</span>' : ''}
+                                            ${!review.is_processed ? '<span class="bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">' + t.unprocessed + '</span>' : ''}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-3xl font-bold text-red-600 dark:text-red-400">${review.rating}/5</div>
-                                    <div class="stars-negative text-xl mt-1">
+                                <div class="text-left sm:text-right mt-3 sm:mt-0 w-full sm:w-auto border-t sm:border-t-0 border-red-200 dark:border-red-800 pt-3 sm:pt-0">
+                                    <div class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400 whitespace-nowrap">${review.rating}/5</div>
+                                    <div class="stars-negative text-lg sm:text-xl mt-1">
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="flex items-center mb-4 space-x-3">
-                                <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium">
-                                    <i class="fab fa-whatsapp mr-2"></i>
-                                    ${review.whatsapp}
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center mb-4 gap-3">
+                                <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center sm:justify-start break-all">
+                                    <i class="fab fa-whatsapp mr-2 flex-shrink-0"></i>
+                                    <span class="break-all">${review.whatsapp}</span>
                                 </div>
-                                <button onclick="contactWhatsApp('${review.whatsapp}')" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium review-action-btn">
+                                <button onclick="contactWhatsApp('${review.whatsapp}')" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium review-action-btn w-full sm:w-auto flex items-center justify-center min-h-[44px]">
                                     <i class="fab fa-whatsapp mr-2"></i>
                                     ${t.contact_now}
                                 </button>
@@ -910,16 +1083,16 @@
                                 </div>
                             ` : ''}
                             
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
+                            <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn w-full sm:w-auto flex items-center justify-center min-h-[44px]">
                                     <i class="fas fa-check mr-2"></i>
                                     ${t.mark_as_processed}
                                 </button>
-                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
+                                <button onclick="sendFollowUp(${review.id})" class="bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn w-full sm:w-auto flex items-center justify-center min-h-[44px]">
                                     <i class="fas fa-envelope mr-2"></i>
                                     ${t.send_followup}
                                 </button>
-                                <button onclick="addNote(${review.id})" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn">
+                                <button onclick="addNote(${review.id})" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all review-action-btn w-full sm:w-auto flex items-center justify-center min-h-[44px]">
                                     <i class="fas fa-sticky-note mr-2"></i>
                                     ${t.add_note}
                                 </button>

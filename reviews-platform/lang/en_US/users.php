@@ -64,5 +64,20 @@ return [
     'save_changes' => 'Save Changes',
     'saving' => 'Saving...',
     'confirm_delete_permanent' => 'Are you sure you want to delete this user? This action cannot be undone.',
+    
+    // Create User Page
+    'create_title' => 'Create New User',
+    'create_description' => 'Add a new user to the system',
+    'create_new' => 'Create New',
+    'form_title' => 'New User Information',
+    'form_description' => 'Fill in the details below to create a new user',
+    'admin_only_message' => 'As an administrator, you can only create regular users.',
+    'important_info_title' => 'Important Information',
+    'important_info_password' => 'Password must be at least 6 characters',
+    'important_info_email' => 'The user will receive an email with their access credentials',
+    'important_info_admins_only' => 'Only administrators can create and manage users',
+    'creating' => 'Creating...',
+    'create_user' => 'Create User',
+    'create_password_placeholder' => 'Minimum 6 characters',
 ];
 

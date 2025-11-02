@@ -41,6 +41,8 @@
             height: 300px;
             opacity: 0;
             animation: chartFadeIn 0.8s ease-out forwards;
+            width: 100%;
+            overflow: hidden;
         }
         
         @keyframes chartFadeIn {
@@ -58,6 +60,8 @@
             animation: chartScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             animation-delay: 0.2s;
             transform: scale(0.95);
+            max-width: 100%;
+            height: auto !important;
         }
         
         @keyframes chartScale {
@@ -82,8 +86,114 @@
                 min-width: 600px;
             }
             
+            /* Charts mobile */
             .chart-container {
-                height: 250px;
+                height: 250px !important;
+                max-width: 100%;
+                overflow: hidden;
+                padding: 0.5rem !important;
+            }
+            
+            .chart-container canvas {
+                max-width: 100% !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            /* Chart cards mobile */
+            .bg-white.rounded-xl.p-6.shadow-sm,
+            .dark .bg-gray-800.rounded-xl.p-6.shadow-sm {
+                padding: 1rem !important;
+                overflow: hidden;
+                max-width: 100%;
+            }
+            
+            /* Chart header mobile */
+            .flex.items-center.justify-between.mb-4 {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            
+            /* Chart period buttons mobile */
+            .chart-period-btn {
+                min-height: 32px;
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.75rem;
+            }
+            
+            /* Prevent horizontal scroll on charts */
+            .grid.grid-cols-1.lg\\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* Reviews container mobile */
+            #reviewsContainer {
+                overflow-x: hidden;
+                padding-bottom: 1rem;
+            }
+            
+            /* Review cards mobile */
+            #reviewsContainer > div {
+                overflow: visible !important;
+            }
+            
+            /* Pagination mobile */
+            #paginationContainer {
+                padding-bottom: 2rem !important;
+                margin-bottom: 1rem;
+            }
+            
+            #paginationContainer .flex.items-center.justify-between {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            #paginationContainer .flex.space-x-2 {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            #paginationContainer button {
+                min-height: 44px;
+                padding: 0.75rem 1rem;
+            }
+            
+            /* Company search input - prevent icon overlap */
+            #companySearchInput {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding-left: 2.75rem !important;
+                padding-right: 1rem !important;
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Company search icon positioning */
+            #companySearchInput + .fa-search {
+                left: 0.875rem !important;
+                z-index: 10;
+                pointer-events: none;
+            }
+            
+            /* All select inputs mobile */
+            select {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
+            }
+            
+            /* All text inputs mobile */
+            input[type="text"],
+            input[type="email"],
+            input[type="number"] {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
             }
         }
         
@@ -127,10 +237,11 @@
                             type="text" 
                             id="companySearchInput" 
                             placeholder="{{ __('reviews.search_company_placeholder') }}"
-                            class="px-3 py-2 pl-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            class="w-full px-3 py-2 pl-10 pr-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            style="font-size: 16px; min-height: 44px; padding-left: 2.75rem;"
                             autocomplete="off"
                         >
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10"></i>
                         <input type="hidden" id="companyFilter" value="">
                     </div>
                     <div id="companyDropdown" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -343,7 +454,7 @@
         </div>
         
         <!-- Pagination -->
-        <div id="paginationContainer" class="hidden p-6 border-t border-gray-200 dark:border-gray-700">
+        <div id="paginationContainer" class="hidden p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 pb-6 sm:pb-6">
             <!-- Pagination will be loaded here -->
         </div>
     </div>
@@ -742,6 +853,20 @@
                     this.charts.reviewsOverTime.data.labels = labels;
                     this.charts.reviewsOverTime.data.datasets[0].data = positiveData;
                     this.charts.reviewsOverTime.data.datasets[1].data = negativeData;
+                    // Update scale options for mobile
+                    if (window.innerWidth < 768) {
+                        this.charts.reviewsOverTime.options.scales.x.ticks.maxRotation = 90;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.minRotation = 90;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.maxTicksLimit = 7;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.font.size = 10;
+                        this.charts.reviewsOverTime.options.scales.y.ticks.font.size = 10;
+                    } else {
+                        this.charts.reviewsOverTime.options.scales.x.ticks.maxRotation = 45;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.minRotation = 0;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.maxTicksLimit = 12;
+                        this.charts.reviewsOverTime.options.scales.x.ticks.font.size = 12;
+                        this.charts.reviewsOverTime.options.scales.y.ticks.font.size = 12;
+                    }
                     this.charts.reviewsOverTime.update();
                 }
             }
@@ -782,6 +907,15 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        resizeDelay: 0,
+                        layout: {
+                            padding: {
+                                left: 5,
+                                right: 5,
+                                top: 5,
+                                bottom: 5
+                            }
+                        },
                         animation: {
                             duration: 1500,
                             easing: 'easeInOutQuart',
@@ -798,10 +932,12 @@
                                 position: 'top',
                                 labels: {
                                     usePointStyle: true,
-                                    padding: 15,
+                                    padding: window.innerWidth < 768 ? 8 : 15,
                                     font: {
-                                        size: 13
-                                    }
+                                        size: window.innerWidth < 768 ? 11 : 13
+                                    },
+                                    boxWidth: window.innerWidth < 768 ? 10 : 12,
+                                    boxHeight: window.innerWidth < 768 ? 10 : 12
                                 }
                             },
                             tooltip: {
@@ -818,9 +954,13 @@
                                     display: false
                                 },
                                 ticks: {
-                                    maxRotation: 45,
-                                    minRotation: 0,
-                                    maxTicksLimit: 12
+                                    maxRotation: window.innerWidth < 768 ? 90 : 45,
+                                    minRotation: window.innerWidth < 768 ? 90 : 0,
+                                    maxTicksLimit: window.innerWidth < 768 ? 7 : 12,
+                                    font: {
+                                        size: window.innerWidth < 768 ? 10 : 12
+                                    },
+                                    padding: window.innerWidth < 768 ? 3 : 8
                                 }
                             },
                             y: {
@@ -829,7 +969,11 @@
                                     color: 'rgba(0, 0, 0, 0.05)'
                                 },
                                 ticks: {
-                                    precision: 0
+                                    precision: 0,
+                                    font: {
+                                        size: window.innerWidth < 768 ? 10 : 12
+                                    },
+                                    padding: window.innerWidth < 768 ? 3 : 8
                                 }
                             }
                         },
@@ -864,15 +1008,26 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        resizeDelay: 0,
+                        layout: {
+                            padding: {
+                                left: 5,
+                                right: 5,
+                                top: 5,
+                                bottom: 5
+                            }
+                        },
                         plugins: {
                             legend: {
                                 position: 'bottom',
                                 labels: {
-                                    padding: 15,
+                                    padding: window.innerWidth < 768 ? 8 : 15,
                                     usePointStyle: true,
                                     font: {
-                                        size: 13
-                                    }
+                                        size: window.innerWidth < 768 ? 11 : 13
+                                    },
+                                    boxWidth: window.innerWidth < 768 ? 10 : 12,
+                                    boxHeight: window.innerWidth < 768 ? 10 : 12
                                 }
                             },
                             tooltip: {
@@ -1059,51 +1214,51 @@
                 const typeIcon = isPositive ? 'fa-thumbs-up' : 'fa-exclamation-triangle';
                 
                 return `
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors fade-in">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
+                    <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors fade-in overflow-hidden">
+                        <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+                            <div class="flex-1 w-full min-w-0">
                                 <div class="flex items-center mb-3">
-                                    <div class="w-12 h-12 ${ratingClass} rounded-lg flex items-center justify-center mr-4">
+                                    <div class="w-12 h-12 ${ratingClass} rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                         <i class="fas ${typeIcon} text-white text-lg"></i>
                                     </div>
-                                    <div>
-                                        <h3 class="font-semibold text-gray-800 dark:text-gray-100">${review.company.name}</h3>
+                                    <div class="min-w-0 flex-1">
+                                        <h3 class="font-semibold text-gray-800 dark:text-gray-100 truncate">${review.company.name}</h3>
                                         <p class="text-sm text-gray-600 dark:text-gray-400">${typeText} • ${formatDate(review.created_at)}</p>
                                     </div>
                                 </div>
                                 
                                 <div class="flex items-center mb-3">
-                                    <div class="flex text-yellow-400 mr-3">
+                                    <div class="flex text-yellow-400 mr-3 flex-shrink-0">
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </div>
                                     <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">${review.rating}/5</span>
                                 </div>
                                 
-                                <div class="flex items-center mb-3">
-                                    <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium mr-3">
-                                        <i class="fab fa-whatsapp mr-1"></i>
-                                        ${review.whatsapp}
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mb-3">
+                                    <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-2 rounded-full text-sm font-medium flex items-center break-all sm:break-normal">
+                                        <i class="fab fa-whatsapp mr-2 flex-shrink-0"></i>
+                                        <span class="truncate">${review.whatsapp}</span>
                                     </div>
-                                    <button onclick="contactWhatsApp('${review.whatsapp}')" class="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors">
-                                        <i class="fab fa-whatsapp mr-1"></i>
+                                    <button onclick="contactWhatsApp('${review.whatsapp}')" class="bg-green-500 text-white px-4 py-2 rounded-full text-sm hover:bg-green-600 transition-colors flex items-center justify-center min-h-[44px] flex-shrink-0">
+                                        <i class="fab fa-whatsapp mr-2"></i>
                                         ${t.contact}
                                     </button>
                                 </div>
                                 
                                 ${review.comment ? `
-                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                                        <p class="text-gray-700 dark:text-gray-300 italic">"${review.comment}"</p>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg mb-3">
+                                        <p class="text-gray-700 dark:text-gray-300 italic break-words">"${review.comment}"</p>
                                     </div>
                                 ` : ''}
                             </div>
                             
-                            <div class="flex flex-col space-y-2 ml-4">
-                                <button onclick="markAsProcessed(${review.id})" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
-                                    <i class="fas fa-check mr-1"></i>
+                            <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2 w-full sm:w-auto sm:ml-4 flex-shrink-0">
+                                <button onclick="markAsProcessed(${review.id})" class="flex-1 sm:flex-none bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600 transition-colors flex items-center justify-center min-h-[44px]">
+                                    <i class="fas fa-check mr-2"></i>
                                     ${t.process}
                                 </button>
-                                <button onclick="deleteReview(${review.id})" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
-                                    <i class="fas fa-trash mr-1"></i>
+                                <button onclick="deleteReview(${review.id})" class="flex-1 sm:flex-none bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 transition-colors flex items-center justify-center min-h-[44px]">
+                                    <i class="fas fa-trash mr-2"></i>
                                     ${t.delete}
                                 </button>
                             </div>
@@ -1174,22 +1329,22 @@
                 
                 container.classList.remove('hidden');
                 
-                let pagination = '<div class="flex items-center justify-between">';
-                pagination += `<span class="text-sm text-gray-600">Mostrando ${data.from || 0} a ${data.to || 0} de ${data.total} avaliações</span>`;
+                let pagination = '<div class="flex flex-col sm:flex-row items-center justify-between gap-4">';
+                pagination += `<span class="text-sm text-gray-600 dark:text-gray-400 text-center sm:text-left">Mostrando ${data.from || 0} a ${data.to || 0} de ${data.total} avaliações</span>`;
                 
-                pagination += '<div class="flex space-x-2">';
+                pagination += '<div class="flex flex-wrap items-center justify-center gap-2">';
                 
                 if (data.current_page > 1) {
-                    pagination += `<button onclick="reviewsPanel.goToPage(${data.current_page - 1})" class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">Anterior</button>`;
+                    pagination += `<button onclick="reviewsPanel.goToPage(${data.current_page - 1})" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors min-h-[44px]">Anterior</button>`;
                 }
                 
                 for (let i = Math.max(1, data.current_page - 2); i <= Math.min(data.last_page, data.current_page + 2); i++) {
-                    const activeClass = i === data.current_page ? 'bg-purple-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300';
-                    pagination += `<button onclick="reviewsPanel.goToPage(${i})" class="px-3 py-1 ${activeClass} rounded transition-colors">${i}</button>`;
+                    const activeClass = i === data.current_page ? 'bg-purple-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600';
+                    pagination += `<button onclick="reviewsPanel.goToPage(${i})" class="px-4 py-2 ${activeClass} rounded transition-colors min-h-[44px] min-w-[44px]">${i}</button>`;
                 }
                 
                 if (data.current_page < data.last_page) {
-                    pagination += `<button onclick="reviewsPanel.goToPage(${data.current_page + 1})" class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">Próximo</button>`;
+                    pagination += `<button onclick="reviewsPanel.goToPage(${data.current_page + 1})" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors min-h-[44px]">Próximo</button>`;
                 }
                 
                 pagination += '</div></div>';
@@ -1426,6 +1581,22 @@
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             reviewsPanel = new ReviewsPanel();
+            
+            // Redimensionar gráficos quando a tela mudar de tamanho
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (reviewsPanel && reviewsPanel.charts) {
+                        if (reviewsPanel.charts.reviewsOverTime) {
+                            reviewsPanel.charts.reviewsOverTime.resize();
+                        }
+                        if (reviewsPanel.charts.ratingDistribution) {
+                            reviewsPanel.charts.ratingDistribution.resize();
+                        }
+                    }
+                }, 250);
+            });
         });
     </script>
 @endsection

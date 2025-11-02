@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/lopgosDASHBOARD.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/lopgosDASHBOARD.png') }}">
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -351,8 +353,8 @@
     <div class="login-container rounded-2xl p-8 w-full max-w-md relative z-10 fade-in">
         <!-- Logo and Title -->
         <div class="text-center mb-8 logo-container">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-600 rounded-full mb-4 pulse-animation">
-                <i class="fas fa-shield-alt text-white text-2xl"></i>
+            <div class="inline-flex items-center justify-center w-28 h-28 mb-4 pulse-animation">
+                <img src="{{ asset('assets/images/lopgosDASHBOARD.png') }}" alt="{{ __('app.name') }}" class="w-28 h-28 object-contain" style="background: transparent;">
             </div>
             <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ __('auth.welcome_back') }}</h1>
             <p class="text-gray-600">{{ __('auth.login_subtitle') }}</p>

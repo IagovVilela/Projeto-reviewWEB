@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Criar Novo Usuário')
-@section('page-title', 'Criar Novo Usuário')
-@section('page-description', 'Adicione um novo usuário ao sistema')
+@section('title', __('users.create_title'))
+@section('page-title', __('users.create_title'))
+@section('page-description', __('users.create_description'))
 
 @section('content')
 <div class="fade-in">
@@ -12,11 +12,11 @@
             <ol class="flex items-center space-x-2 text-sm text-gray-600">
                 <li>
                     <a href="{{ route('users.index') }}" class="hover:text-purple-600 transition-colors">
-                        <i class="fas fa-users"></i> Usuários
+                        <i class="fas fa-users"></i> {{ __('users.title') }}
                     </a>
                 </li>
                 <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-                <li class="text-purple-600 font-medium">Criar Novo</li>
+                <li class="text-purple-600 font-medium">{{ __('users.create_new') }}</li>
             </ol>
         </nav>
 
@@ -28,8 +28,8 @@
                         <i class="fas fa-user-plus text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-800">Informações do Novo Usuário</h2>
-                        <p class="text-sm text-gray-600">Preencha os dados abaixo para criar um novo usuário</p>
+                        <h2 class="text-lg font-semibold text-gray-800">{{ __('users.form_title') }}</h2>
+                        <p class="text-sm text-gray-600">{{ __('users.form_description') }}</p>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-user text-gray-400 mr-1"></i>
-                        Nome Completo <span class="text-red-500">*</span>
+                        {{ __('users.full_name') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="text" 
@@ -49,7 +49,7 @@
                         id="name" 
                         value="{{ old('name') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('name') border-red-500 @enderror" 
-                        placeholder="Digite o nome completo"
+                        placeholder="{{ __('users.full_name_placeholder') }}"
                         required
                     >
                     @error('name')
@@ -61,7 +61,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-envelope text-gray-400 mr-1"></i>
-                        Email <span class="text-red-500">*</span>
+                        {{ __('app.email') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="email" 
@@ -69,7 +69,7 @@
                         id="email" 
                         value="{{ old('email') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror" 
-                        placeholder="usuario@exemplo.com"
+                        placeholder="{{ __('users.email_placeholder') }}"
                         required
                     >
                     @error('email')
@@ -81,7 +81,7 @@
                 <div>
                     <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-user-tag text-gray-400 mr-1"></i>
-                        Função <span class="text-red-500">*</span>
+                        {{ __('users.role') }} <span class="text-red-500">*</span>
                     </label>
                     <select 
                         name="role" 
@@ -101,7 +101,7 @@
                         <input type="hidden" name="role" value="user">
                         <p class="mt-1 text-xs text-yellow-600">
                             <i class="fas fa-exclamation-triangle mr-1"></i>
-                            Como administrador, você só pode criar usuários comuns.
+                            {{ __('users.admin_only_message') }}
                         </p>
                     @elseif(Auth::user()->role === 'proprietario')
                         <p class="mt-1 text-xs text-gray-500">
@@ -118,14 +118,14 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-1"></i>
-                        Senha <span class="text-red-500">*</span>
+                        {{ __('app.password') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="password" 
                         name="password" 
                         id="password" 
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all @error('password') border-red-500 @enderror" 
-                        placeholder="Mínimo 6 caracteres"
+                        placeholder="{{ __('users.create_password_placeholder') }}"
                         required
                     >
                     @error('password')
@@ -137,14 +137,14 @@
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-1"></i>
-                        Confirmar Senha <span class="text-red-500">*</span>
+                        {{ __('users.confirm_new_password') }} <span class="text-red-500">*</span>
                     </label>
                     <input 
                         type="password" 
                         name="password_confirmation" 
                         id="password_confirmation" 
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" 
-                        placeholder="Digite a senha novamente"
+                        placeholder="{{ __('users.password_confirm_placeholder') }}"
                         required
                     >
                 </div>
@@ -156,12 +156,12 @@
                             <i class="fas fa-info-circle text-blue-600 text-lg"></i>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800 mb-1">Informações Importantes</h3>
+                            <h3 class="text-sm font-medium text-blue-800 mb-1">{{ __('users.important_info_title') }}</h3>
                             <div class="text-sm text-blue-700">
                                 <ul class="list-disc list-inside space-y-1">
-                                    <li>A senha deve ter no mínimo 6 caracteres</li>
-                                    <li>O usuário receberá um email com suas credenciais de acesso</li>
-                                    <li>Apenas administradores podem criar e gerenciar usuários</li>
+                                    <li>{{ __('users.important_info_password') }}</li>
+                                    <li>{{ __('users.important_info_email') }}</li>
+                                    <li>{{ __('users.important_info_admins_only') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -173,13 +173,13 @@
                     <a href="{{ route('users.index') }}" 
                        class="btn-secondary px-6 py-2.5 rounded-lg text-white font-medium shadow-sm hover:shadow-md transition-all inline-flex items-center gap-2">
                         <i class="fas fa-times"></i>
-                        Cancelar
+                        {{ __('app.cancel') }}
                     </a>
                     <button 
                         type="submit" 
                         class="btn-primary px-6 py-2.5 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                         <i class="fas fa-save"></i>
-                        Criar Usuário
+                        {{ __('users.create_user') }}
                     </button>
                 </div>
             </form>
@@ -190,11 +190,17 @@
 
 @section('scripts')
 <script>
+    // Translations
+    const translations = {
+        creating: '{{ __('users.creating') }}',
+        passwordMismatch: '{{ __('users.password_mismatch') }}'
+    };
+
     // Form validation feedback
     document.querySelector('form').addEventListener('submit', function(e) {
         const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Criando...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + translations.creating;
     });
 
     // Password strength indicator
@@ -208,7 +214,7 @@
 
     passwordConfirmInput.addEventListener('input', function() {
         if (this.value !== passwordInput.value) {
-            this.setCustomValidity('As senhas não coincidem');
+            this.setCustomValidity(translations.passwordMismatch);
         } else {
             this.setCustomValidity('');
         }

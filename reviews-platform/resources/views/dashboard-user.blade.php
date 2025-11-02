@@ -81,37 +81,38 @@
     </div>
     @elseif($selectedCompany)
     <!-- Single Company Info Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-6">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 sm:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
                 @if($selectedCompany->logo)
                     <img src="{{ asset('storage/' . $selectedCompany->logo) }}" 
                          alt="{{ $selectedCompany->name }}" 
-                         class="w-16 h-16 rounded-lg object-cover border-2 border-purple-200">
+                         class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover border-2 border-purple-200 flex-shrink-0">
                 @else
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-building text-white text-2xl"></i>
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-building text-white text-xl sm:text-2xl"></i>
                     </div>
                 @endif
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $selectedCompany->name }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">{{ $selectedCompany->negative_email }}</p>
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-lg sm:text-2xl font-bold text-gray-900 dark:text-gray-100 truncate">{{ $selectedCompany->name }}</h2>
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 truncate break-all sm:break-normal">{{ $selectedCompany->negative_email }}</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                 @if($selectedCompany->status === 'published')
-                    <span class="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg font-semibold">
+                    <span class="px-3 sm:px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg font-semibold text-sm sm:text-base whitespace-nowrap">
                         <i class="fas fa-check-circle mr-1"></i> {{ __('dashboard.active') }}
                     </span>
                 @else
-                    <span class="px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-lg font-semibold">
+                    <span class="px-3 sm:px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-lg font-semibold text-sm sm:text-base whitespace-nowrap">
                         <i class="fas fa-clock mr-1"></i> {{ __('dashboard.draft') }}
                     </span>
                 @endif
                 @if($selectedCompany->status === 'draft')
-                    <a href="{{ route('companies.edit', $selectedCompany->id) }}" class="btn-primary px-4 py-2 rounded-lg text-white inline-flex items-center gap-2">
+                    <a href="{{ route('companies.edit', $selectedCompany->id) }}" class="btn-primary px-3 sm:px-4 py-2 rounded-lg text-white inline-flex items-center gap-2 text-sm sm:text-base whitespace-nowrap">
                         <i class="fas fa-edit"></i>
-                        {{ __('app.edit') }}
+                        <span class="hidden sm:inline">{{ __('app.edit') }}</span>
+                        <span class="sm:hidden">{{ __('app.edit') }}</span>
                     </a>
                 @endif
             </div>

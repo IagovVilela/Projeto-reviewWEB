@@ -64,5 +64,20 @@ return [
     'save_changes' => 'Salvar Alterações',
     'saving' => 'Salvando...',
     'confirm_delete_permanent' => 'Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.',
+    
+    // Create User Page
+    'create_title' => 'Criar Novo Usuário',
+    'create_description' => 'Adicione um novo usuário ao sistema',
+    'create_new' => 'Criar Novo',
+    'form_title' => 'Informações do Novo Usuário',
+    'form_description' => 'Preencha os dados abaixo para criar um novo usuário',
+    'admin_only_message' => 'Como administrador, você só pode criar usuários comuns.',
+    'important_info_title' => 'Informações Importantes',
+    'important_info_password' => 'A senha deve ter no mínimo 6 caracteres',
+    'important_info_email' => 'O usuário receberá um email com suas credenciais de acesso',
+    'important_info_admins_only' => 'Apenas administradores podem criar e gerenciar usuários',
+    'creating' => 'Criando...',
+    'create_user' => 'Criar Usuário',
+    'create_password_placeholder' => 'Mínimo 6 caracteres',
 ];
 
