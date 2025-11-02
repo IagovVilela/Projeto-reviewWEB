@@ -750,9 +750,15 @@
                 padding-left: 1rem !important;
                 padding-right: 1rem !important;
                 padding-top: 1rem !important;
-                padding-bottom: 1rem !important;
+                padding-bottom: 3rem !important;
                 width: 100% !important;
                 max-width: 100% !important;
+                min-height: calc(100vh - 120px) !important;
+            }
+            
+            /* Garantir que o conteúdo possa fazer scroll completo */
+            main.content-area > * {
+                min-height: auto !important;
             }
             
             /* Sidebar fixo no mobile */

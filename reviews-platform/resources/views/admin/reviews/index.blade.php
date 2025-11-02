@@ -1438,6 +1438,25 @@
             window.open(`https://wa.me/${cleanNumber}`, '_blank');
         }
         
+        // Função auxiliar para escapar valores CSV
+        function escapeCsvValue(value) {
+            if (value === null || value === undefined) {
+                return '';
+            }
+            const stringValue = String(value);
+            // Se contém vírgula, aspas duplas ou quebra de linha, precisa ser envolvido em aspas
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n') || stringValue.includes('\r')) {
+                // Escapar aspas duplas duplicando-as
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        // Função auxiliar para criar linha CSV
+        function createCsvRow(values) {
+            return values.map(escapeCsvValue).join(',');
+        }
+        
         async function exportContacts(button) {
             if (!button) return;
             
@@ -1456,24 +1475,42 @@
                 const result = await response.json();
                 
                 if (result.success && result.data.contacts.length > 0) {
-                    const csvContent = [
-                        'WhatsApp,Nota,Comentário,Data',
-                        ...result.data.contacts.map(contact => 
-                            `"${contact.whatsapp}","${contact.rating}","${contact.comment || ''}","${formatDate(contact.created_at)}"`
-                        )
-                    ].join('\n');
+                    // BOM UTF-8 para Excel reconhecer encoding correto
+                    const BOM = '\uFEFF';
                     
-                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    // Cabeçalhos
+                    const headers = ['WhatsApp', 'Nota', 'Comentário', 'Data'];
+                    
+                    // Criar linhas CSV formatadas corretamente
+                    const csvRows = [
+                        createCsvRow(headers),
+                        ...result.data.contacts.map(contact => 
+                            createCsvRow([
+                                contact.whatsapp || '',
+                                contact.rating || '',
+                                (contact.comment || '').replace(/\r\n/g, ' ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                formatDate(contact.created_at) || ''
+                            ])
+                        )
+                    ];
+                    
+                    const csvContent = BOM + csvRows.join('\r\n');
+                    
+                    // Usar charset correto e BOM - usar Excel CSV MIME type para melhor compatibilidade
+                    const blob = new Blob([csvContent], { 
+                        type: 'application/vnd.ms-excel;charset=utf-8;' 
+                    });
+                    
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `contatos_${result.data.company.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
+                    a.download = `contatos_${result.data.company.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                     
-                    showNotification(`Arquivo exportado com sucesso! ${result.data.contacts.length} contatos.`, 'success');
+                    showNotification(`Arquivo exportado com sucesso! ${result.data.contacts.length} contato(s).`, 'success');
                 } else {
                     showNotification('Nenhum contato encontrado para esta empresa', 'warning');
                 }
@@ -1515,24 +1552,32 @@
                     return;
                 }
                 
-                // Cabeçalho do CSV
-                const csvContent = [
-                    'Empresa,Total,Positivas,Negativas,Média,Última Avaliação',
+                // BOM UTF-8 para Excel reconhecer encoding correto
+                const BOM = '\uFEFF';
+                
+                // Cabeçalhos
+                const headers = ['Empresa', 'Total', 'Positivas', 'Negativas', 'Média', 'Última Avaliação'];
+                
+                // Criar linhas CSV formatadas corretamente
+                const csvRows = [
+                    createCsvRow(headers),
                     ...rows.map(row => {
                         const cells = row.querySelectorAll('td');
-                        return [
-                            `"${cells[0].textContent.trim()}"`,
-                            cells[1].textContent.trim(),
-                            cells[2].textContent.trim(),
-                            cells[3].textContent.trim(),
-                            cells[4].textContent.trim(),
-                            `"${cells[5].textContent.trim()}"`
-                        ].join(',');
+                        return createCsvRow([
+                            cells[0]?.textContent.trim() || '',
+                            cells[1]?.textContent.trim() || '',
+                            cells[2]?.textContent.trim() || '',
+                            cells[3]?.textContent.trim() || '',
+                            cells[4]?.textContent.trim() || '',
+                            cells[5]?.textContent.trim() || ''
+                        ]);
                     })
-                ].join('\n');
+                ];
                 
-                // Criar e baixar arquivo
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const csvContent = BOM + csvRows.join('\r\n');
+                
+                // Criar e baixar arquivo - usar Excel CSV MIME type para melhor compatibilidade
+                const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;

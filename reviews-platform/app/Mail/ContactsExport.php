@@ -96,24 +96,26 @@ class ContactsExport extends Mailable
             mkdir($directory, 0755, true);
         }
 
-        $file = fopen($path, 'w');
+        // Abrir arquivo em modo binário para garantir BOM correto
+        $file = fopen($path, 'wb');
 
-        // BOM para UTF-8 (Excel compatibility)
+        // BOM para UTF-8 (Excel compatibility) - deve ser escrito primeiro
         fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-        // Headers
-        fputcsv($file, ['Data', 'Nota', 'WhatsApp', 'Comentário', 'Feedback', 'Tipo'], ';');
+        // Headers - ordem padronizada: WhatsApp, Nota, Comentário, Data
+        fputcsv($file, ['WhatsApp', 'Nota', 'Comentário', 'Data'], ',');
 
-        // Data
+        // Data - formatar valores corretamente
         foreach ($contacts as $contact) {
+            // Limpar quebras de linha dos comentários
+            $comment = isset($contact['Comentário']) ? str_replace(["\r\n", "\n", "\r"], ' ', $contact['Comentário']) : '';
+            
             fputcsv($file, [
-                $contact['Data'] ?? '',
-                $contact['Nota'] ?? '',
                 $contact['WhatsApp'] ?? '',
-                $contact['Comentário'] ?? '',
-                $contact['Feedback'] ?? '',
-                $contact['Tipo'] ?? '',
-            ], ';');
+                $contact['Nota'] ?? '',
+                $comment,
+                $contact['Data'] ?? '',
+            ], ',');
         }
 
         fclose($file);
