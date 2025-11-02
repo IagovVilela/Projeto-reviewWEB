@@ -36,7 +36,17 @@ Route::middleware(['auth'])->group(function () {
         $user = auth()->user();
         
         if ($user->role === 'admin') {
-            // Dashboard de administrador
+            // Dashboard de administrador - com visual moderno igual aos usuários
+            $allReviews = \App\Models\Review::all();
+            $allCompanies = \App\Models\Company::orderBy('created_at', 'desc')->get();
+            
+            $stats = [
+                'total_reviews' => $allReviews->count(),
+                'positive_reviews' => $allReviews->where('is_positive', true)->count(),
+                'negative_reviews' => $allReviews->where('is_positive', false)->count(),
+                'average_rating' => $allReviews->count() > 0 ? round($allReviews->avg('rating'), 1) : 0,
+            ];
+            
             $negativeCount = \App\Models\Review::where('is_positive', false)
                 ->where(function($query) {
                     $query->where('is_processed', false)
@@ -44,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
                 })
                 ->count();
             
-            return view('dashboard', compact('negativeCount'));
+            return view('dashboard', compact('negativeCount', 'stats', 'allCompanies'));
         } else {
             // Dashboard de usuário comum
             $companies = $user->companies()->orderBy('created_at', 'desc')->get();

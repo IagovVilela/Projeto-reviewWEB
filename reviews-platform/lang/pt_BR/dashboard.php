@@ -65,5 +65,6 @@ return [
     'positive_reviews_full' => 'Avaliações Positivas',
     'negative_reviews_full' => 'Avaliações Negativas',
     'average_rating_full' => 'Média de Avaliação',
+    'admin_dashboard' => 'Dashboard Administrativo',
 ];
 

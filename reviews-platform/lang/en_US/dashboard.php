@@ -65,5 +65,6 @@ return [
     'positive_reviews_full' => 'Positive Reviews',
     'negative_reviews_full' => 'Negative Reviews',
     'average_rating_full' => 'Average Rating',
+    'admin_dashboard' => 'Admin Dashboard',
 ];
 
