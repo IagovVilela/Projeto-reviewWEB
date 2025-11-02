@@ -739,6 +739,14 @@
                 justify-content: center;
             }
             
+            /* Garantir que botões mobile não apareçam no desktop */
+            @media (min-width: 1024px) {
+                #mobileMenuBtn,
+                #sidebar button[aria-label="Close menu"] {
+                    display: none !important;
+                }
+            }
+            
             /* Ensure main content takes full width on mobile */
             .page-container {
                 position: relative;
@@ -1025,6 +1033,7 @@
                     type="button"
                     class="lg:hidden absolute top-3 right-3 p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600 z-10"
                     aria-label="Close menu"
+                    id="sidebarCloseBtn"
                 >
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -1150,9 +1159,8 @@
                         <!-- Dark Mode Toggle -->
                         <button 
                             id="darkModeToggle"
-                            onclick="toggleDarkMode(); return false;"
                             type="button"
-                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation"
+                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation cursor-pointer"
                             style="min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"
                             aria-label="Toggle dark mode"
                         >
@@ -1619,9 +1627,9 @@
                 }
             }
             
-            // Add click handler to close button via event listener as well
+            // Add click handler to close button via event listener as well (only on mobile)
             const closeBtn = document.querySelector('#sidebar button[aria-label="Close menu"]');
-            if (closeBtn) {
+            if (closeBtn && window.innerWidth < 1024) {
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -1636,9 +1644,9 @@
                 }, { passive: false });
             }
             
-            // Ensure hamburger button also works via event listener
+            // Ensure hamburger button also works via event listener (only on mobile)
             const menuBtn = document.getElementById('mobileMenuBtn');
-            if (menuBtn) {
+            if (menuBtn && window.innerWidth < 1024) {
                 menuBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -1653,23 +1661,70 @@
                 }, { passive: false });
             }
             
-            // Dark mode toggle via event listener
+            // Dark mode toggle via event listener - funciona em todas as telas (mobile e desktop)
             const darkModeBtn = document.getElementById('darkModeToggle');
-            if (darkModeBtn) {
-                darkModeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDarkMode(e);
-                });
+            if (darkModeBtn && window.toggleDarkMode) {
+                // Remover event listeners antigos para evitar duplicação
+                const newBtn = darkModeBtn.cloneNode(true);
+                darkModeBtn.parentNode.replaceChild(newBtn, darkModeBtn);
                 
-                // Suporte touch para mobile
-                darkModeBtn.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDarkMode(e);
-                }, { passive: false });
+                // Adicionar event listeners ao novo botão
+                const btn = document.getElementById('darkModeToggle');
+                if (btn) {
+                    // Click event - funciona em desktop e mobile
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (window.toggleDarkMode) {
+                            window.toggleDarkMode(e);
+                        }
+                        return false;
+                    }, true); // Use capture phase to ensure it runs
+                    
+                    // Suporte touch para mobile
+                    btn.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (window.toggleDarkMode) {
+                            window.toggleDarkMode(e);
+                        }
+                        return false;
+                    }, { passive: false });
+                }
             }
         });
+        
+        // Dark mode toggle - garantir funcionamento no desktop
+        // Handler adicional que funciona independente de quando o DOM carrega
+        (function() {
+            function attachDarkModeHandler() {
+                const btn = document.getElementById('darkModeToggle');
+                if (btn && window.toggleDarkMode) {
+                    // Usar onclick direto para garantir funcionamento no desktop
+                    btn.onclick = function(e) {
+                        if (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        if (window.toggleDarkMode) {
+                            window.toggleDarkMode(e);
+                        }
+                        return false;
+                    };
+                }
+            }
+            
+            // Tentar várias vezes para garantir que funciona
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attachDarkModeHandler);
+            } else {
+                attachDarkModeHandler();
+            }
+            
+            // Tentar novamente após delay para garantir
+            setTimeout(attachDarkModeHandler, 200);
+            setTimeout(attachDarkModeHandler, 500);
+        })();
         
         // Add smooth page transitions
         document.addEventListener('DOMContentLoaded', function() {
