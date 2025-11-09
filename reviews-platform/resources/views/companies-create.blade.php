@@ -2,6 +2,114 @@
 
 @section('title', __('companies.create') . ' - Reviews Platform')
 
+@section('head')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<style>
+    /* Estilização do Slider de Zoom */
+    #zoomSlider {
+        background: linear-gradient(to right, #4b5563 0%, #a78bfa 50%, #4b5563 100%);
+        height: 6px;
+        border-radius: 4px;
+    }
+    
+    #zoomSlider::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+        border: 2px solid white;
+    }
+    
+    #zoomSlider::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+    }
+    
+    #zoomSlider::-webkit-slider-thumb:active {
+        transform: scale(1.05);
+    }
+    
+    #zoomSlider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+    }
+    
+    #zoomSlider::-moz-range-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+    }
+    
+    #zoomSlider::-moz-range-thumb:active {
+        transform: scale(1.05);
+    }
+    
+    /* Animação do Modal */
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    #cropModal > div {
+        animation: modalFadeIn 0.3s ease-out;
+    }
+    
+    /* Controle do Cropper.js */
+    #cropContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1a202c;
+    }
+    
+    #cropContainer .cropper-container {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 500px !important;
+    }
+    
+    #cropContainer .cropper-canvas {
+        max-width: 100% !important;
+        max-height: 500px !important;
+    }
+    
+    #cropContainer .cropper-view-box {
+        outline: 3px solid #a78bfa !important;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+    }
+    
+    #cropContainer .cropper-line,
+    #cropContainer .cropper-point {
+        background-color: #a78bfa;
+    }
+    
+    #cropContainer .cropper-point {
+        width: 8px;
+        height: 8px;
+        opacity: 0.9;
+    }
+    
+    #cropContainer .cropper-bg {
+        background-image: none;
+    }
+</style>
+@endsection
+
 @section('page-title', __('companies.create_company'))
 @section('page-description', __('companies.create_company_desc'))
 
@@ -346,12 +454,135 @@
             </div>
         </form>
     </div>
+
+    <!-- Modal de Crop -->
+    <div id="cropModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px;">
+        <div style="width: 100%; max-width: 1000px; background: #2d3748; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); overflow: hidden;">
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-crop-alt text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Ajustar Logo</h3>
+                        <p class="text-purple-100 text-xs">Posicione e ajuste sua imagem</p>
+                    </div>
+                </div>
+                <button type="button" onclick="cancelCrop()" class="w-8 h-8 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center justify-center transition-all">
+                    <i class="fas fa-times text-white"></i>
+                </button>
+            </div>
+            
+            <!-- Body -->
+            <div class="p-6" style="background: #2d3748;">
+                <!-- Container da Imagem -->
+                <div id="cropContainer" style="width: 100%; height: 500px; background: #1a202c; border-radius: 12px; overflow: hidden; position: relative; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);">
+                    <img id="cropImage" src="" alt="Crop" style="display: block; max-width: 100%;">
+                </div>
+                
+                <!-- Controles -->
+                <div class="mt-5 bg-gray-800 rounded-xl p-5">
+                    <!-- Zoom -->
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-300 flex items-center">
+                                <i class="fas fa-search-plus mr-2 text-purple-400"></i>Zoom
+                            </span>
+                            <span id="zoomLevel" class="text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded">100%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button type="button" onclick="zoomCrop(-0.1)" class="w-10 h-10 bg-gray-700 hover:bg-purple-600 text-white rounded-lg transition-all flex items-center justify-center">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="range" id="zoomSlider" min="-1" max="1" step="0.01" value="0" class="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" style="outline: none;" oninput="zoomSliderChange(this.value)">
+                            <button type="button" onclick="zoomCrop(0.1)" class="w-10 h-10 bg-gray-700 hover:bg-purple-600 text-white rounded-lg transition-all flex items-center justify-center">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Ações Rápidas -->
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-700">
+                        <button type="button" onclick="rotateCrop()" class="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all">
+                            <i class="fas fa-redo mr-2"></i>
+                            <span class="text-sm">Rotacionar 90°</span>
+                        </button>
+                        <button type="button" onclick="resetCrop()" class="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all">
+                            <i class="fas fa-undo mr-2"></i>
+                            <span class="text-sm">Resetar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="bg-gray-900 px-6 py-4 flex justify-end items-center space-x-3">
+                <button type="button" onclick="cancelCrop()" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-all">
+                    <i class="fas fa-times mr-2"></i>Cancelar
+                </button>
+                <button type="button" onclick="applyCrop()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
+                    <i class="fas fa-check mr-2"></i>Aplicar Corte
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
+    <!-- Carregar Cropper.js primeiro -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    
     <script>
-        // Formatação de Telefone
+        // Aguardar Cropper.js carregar
+        window.addEventListener('load', function() {
+            console.log('Cropper disponível:', typeof Cropper !== 'undefined');
+        });
+        
+        // Geração Automática de URL baseada no nome da empresa
         document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('name');
+            const urlInput = document.getElementById('url');
+            let urlManuallyEdited = false;
+            
+            // Função para converter nome em slug
+            function generateSlug(text) {
+                return text
+                    .toLowerCase()
+                    .normalize('NFD') // Normaliza caracteres acentuados
+                    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                    .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+                    .replace(/\s+/g, '-') // Substitui espaços por hífens
+                    .replace(/-+/g, '-') // Remove hífens duplicados
+                    .replace(/^-+|-+$/g, ''); // Remove hífens no início e fim
+            }
+            
+            // Gerar URL automaticamente quando nome mudar
+            if (nameInput && urlInput) {
+                nameInput.addEventListener('input', function(e) {
+                    if (!urlManuallyEdited) {
+                        const slug = generateSlug(e.target.value);
+                        urlInput.value = slug;
+                    }
+                });
+                
+                // Marcar URL como editada manualmente quando usuário alterar
+                urlInput.addEventListener('input', function() {
+                    urlManuallyEdited = true;
+                });
+                
+                // Se usuário limpar o campo URL, voltar a gerar automaticamente
+                urlInput.addEventListener('blur', function() {
+                    if (urlInput.value.trim() === '') {
+                        urlManuallyEdited = false;
+                        const slug = generateSlug(nameInput.value);
+                        urlInput.value = slug;
+                    }
+                });
+            }
+            
+            // Formatação de Telefone
             const phoneInput = document.getElementById('contact_number');
             if (phoneInput) {
                 phoneInput.addEventListener('input', function(e) {
@@ -411,31 +642,256 @@
             }
         }
         
-        // File Upload Handler
+        // File Upload Handler com Crop
+        let cropper = null;
+        let currentInput = null;
+        let currentType = null;
+        let originalFile = null;
+
         function handleFileUpload(input, type) {
             const file = input.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (type === 'logo') {
-                        const logoPreviewImg = document.getElementById('logoPreviewImg');
-                        const logoPreview = document.getElementById('logoPreview');
-                        const logoPlaceholder = document.getElementById('logoPlaceholder');
-                        if (logoPreviewImg) logoPreviewImg.src = e.target.result;
-                        if (logoPreview) logoPreview.classList.remove('hidden');
-                        if (logoPlaceholder) logoPlaceholder.classList.add('hidden');
-                    } else {
+                currentInput = input;
+                currentType = type;
+                originalFile = file;
+                
+                if (type === 'logo') {
+                    // Processar logo com crop
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = e.target.result;
+                        const image = document.getElementById('cropImage');
+                        
+                        // Destruir cropper anterior se existir
+                        if (cropper) {
+                            cropper.destroy();
+                            cropper = null;
+                        }
+                        
+                        // Abrir modal primeiro
+                        document.getElementById('cropModal').style.display = 'flex';
+                        
+                        // Aguardar um pouco para o modal aparecer
+                        setTimeout(() => {
+                            // Definir a imagem
+                            image.src = imageData;
+                            
+                            // Aguardar a imagem carregar completamente
+                            image.onload = function() {
+                                // Verificar se Cropper está disponível
+                                if (typeof Cropper === 'undefined') {
+                                    console.error('Cropper.js não está carregado!');
+                                    alert('Erro ao carregar editor de imagens. Recarregue a página e tente novamente.');
+                                    document.getElementById('cropModal').style.display = 'none';
+                                    return;
+                                }
+                                
+                                // Inicializar cropper após a imagem estar carregada
+                                cropper = new Cropper(image, {
+                                    aspectRatio: 1,
+                                    viewMode: 0,
+                                    dragMode: 'move',
+                                    autoCropArea: 0.75,
+                                    restore: false,
+                                    guides: true,
+                                    center: true,
+                                    highlight: true,
+                                    cropBoxMovable: true,
+                                    cropBoxResizable: true,
+                                    toggleDragModeOnDblclick: false,
+                                    minContainerWidth: 200,
+                                    minContainerHeight: 200,
+                                    responsive: true,
+                                    checkOrientation: true,
+                                    ready: function() {
+                                        console.log('Cropper pronto!');
+                                        updateZoomDisplay();
+                                    },
+                                    zoom: function(event) {
+                                        updateZoomDisplay();
+                                    }
+                                });
+                                
+                                // Resetar slider de zoom
+                                document.getElementById('zoomSlider').value = 0;
+                            };
+                        }, 100);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Background não precisa de crop
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
                         const bgPreviewImg = document.getElementById('bgPreviewImg');
                         const bgPreview = document.getElementById('bgPreview');
                         const bgPlaceholder = document.getElementById('bgPlaceholder');
                         if (bgPreviewImg) bgPreviewImg.src = e.target.result;
                         if (bgPreview) bgPreview.classList.remove('hidden');
                         if (bgPlaceholder) bgPlaceholder.classList.add('hidden');
-                    }
+                    };
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
             }
             updateProgress();
+        }
+        
+        function cancelCrop() {
+            // Fechar modal (mudar display para none)
+            document.getElementById('cropModal').style.display = 'none';
+            
+            // Destruir cropper
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            
+            // Limpar imagem do modal
+            const image = document.getElementById('cropImage');
+            if (image) {
+                image.src = '';
+                image.onload = null;
+            }
+            
+            // Resetar input de arquivo
+            if (currentInput) {
+                currentInput.value = '';
+            }
+            
+            // Limpar variáveis
+            currentInput = null;
+            currentType = null;
+            originalFile = null;
+        }
+        
+        function applyCrop() {
+            if (!cropper) {
+                alert('Erro: Editor de imagem não inicializado.');
+                return;
+            }
+            
+            try {
+                // Obter imagem cortada
+                const canvas = cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high'
+                });
+                
+                if (!canvas) {
+                    alert('Erro ao processar a imagem. Tente novamente.');
+                    return;
+                }
+                
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        alert('Erro ao processar a imagem. Tente novamente.');
+                        return;
+                    }
+                    
+                    // Criar novo arquivo com a imagem cortada
+                    const croppedFile = new File([blob], 'logo-cropped.png', {
+                        type: 'image/png',
+                        lastModified: Date.now()
+                    });
+                    
+                    // Criar DataTransfer para atualizar o input
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    currentInput.files = dataTransfer.files;
+                    
+                    // Mostrar preview da imagem cortada
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const logoPreviewImg = document.getElementById('logoPreviewImg');
+                        const logoPreview = document.getElementById('logoPreview');
+                        const logoPlaceholder = document.getElementById('logoPlaceholder');
+                        
+                        if (logoPreviewImg) {
+                            logoPreviewImg.src = e.target.result;
+                        }
+                        if (logoPreview) {
+                            logoPreview.classList.remove('hidden');
+                        }
+                        if (logoPlaceholder) {
+                            logoPlaceholder.classList.add('hidden');
+                        }
+                        
+                        // Atualizar progresso
+                        updateProgress();
+                    };
+                    reader.readAsDataURL(croppedFile);
+                    
+                    // Fechar modal (mudar display para none)
+                    document.getElementById('cropModal').style.display = 'none';
+                    
+                    // Destruir cropper
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                    
+                    // Limpar imagem do modal
+                    const image = document.getElementById('cropImage');
+                    if (image) {
+                        image.src = '';
+                        image.onload = null;
+                    }
+                    
+                    // Limpar variáveis temporárias
+                    currentType = null;
+                    originalFile = null;
+                    
+                }, 'image/png', 0.95);
+            } catch (error) {
+                console.error('Erro ao aplicar crop:', error);
+                alert('Erro ao processar a imagem. Tente novamente.');
+            }
+        }
+        
+        // Função de Zoom
+        function zoomCrop(ratio) {
+            if (cropper) {
+                cropper.zoom(ratio);
+                updateZoomDisplay();
+            }
+        }
+        
+        // Função de Rotação
+        function rotateCrop() {
+            if (cropper) {
+                cropper.rotate(90);
+            }
+        }
+        
+        // Função de Reset
+        function resetCrop() {
+            if (cropper) {
+                cropper.reset();
+                document.getElementById('zoomSlider').value = 0;
+                updateZoomDisplay();
+            }
+        }
+        
+        // Slider de Zoom
+        function zoomSliderChange(value) {
+            if (cropper) {
+                const currentData = cropper.getImageData();
+                const zoomRatio = parseFloat(value);
+                cropper.zoomTo(1 + zoomRatio);
+                updateZoomDisplay();
+            }
+        }
+        
+        // Atualizar Display de Zoom
+        function updateZoomDisplay() {
+            if (cropper) {
+                const containerData = cropper.getContainerData();
+                const imageData = cropper.getImageData();
+                const zoomRatio = imageData.width / imageData.naturalWidth;
+                const percentage = Math.round(zoomRatio * 100);
+                document.getElementById('zoomLevel').textContent = `Zoom: ${percentage}%`;
+            }
         }
         
         // Progress Tracking

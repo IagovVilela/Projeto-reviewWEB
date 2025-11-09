@@ -87,13 +87,13 @@ class CompanyController extends Controller
         // Adicionar user_id automaticamente
         $data['user_id'] = $user->id;
         
-        // Handle file uploads
+        // Handle file uploads with compression
         if ($request->hasFile('logo')) {
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+            $data['logo'] = $this->compressAndStoreImage($request->file('logo'), 'logos', 400, 400);
         }
         
         if ($request->hasFile('background_image')) {
-            $data['background_image'] = $request->file('background_image')->store('backgrounds', 'public');
+            $data['background_image'] = $this->compressAndStoreImage($request->file('background_image'), 'backgrounds', 1920, 1080);
         }
 
         // Definir status
@@ -265,5 +265,87 @@ class CompanyController extends Controller
         
         return redirect()->route('companies.index')
             ->with('success', 'Empresa excluída com sucesso!');
+    }
+    
+    /**
+     * Compress and store image
+     */
+    private function compressAndStoreImage($file, $folder, $maxWidth, $maxHeight)
+    {
+        try {
+            // Verificar se GD está disponível
+            if (!function_exists('imagecreatefromstring')) {
+                \Log::warning('Extensão GD não disponível. Fazendo upload direto sem compressão.');
+                return $file->store($folder, 'public');
+            }
+            
+            // Gerar nome único para o arquivo
+            $filename = uniqid() . '_' . time() . '.jpg';
+            $path = storage_path('app/public/' . $folder . '/' . $filename);
+            
+            // Criar diretório se não existir
+            if (!file_exists(storage_path('app/public/' . $folder))) {
+                mkdir(storage_path('app/public/' . $folder), 0755, true);
+            }
+            
+            // Carregar imagem
+            $imageData = file_get_contents($file->getRealPath());
+            $image = @imagecreatefromstring($imageData);
+            
+            if (!$image) {
+                // Se falhar, fazer upload normal
+                return $file->store($folder, 'public');
+            }
+            
+            // Obter dimensões originais
+            $originalWidth = imagesx($image);
+            $originalHeight = imagesy($image);
+            
+            // Calcular novas dimensões mantendo proporção
+            $ratio = min($maxWidth / $originalWidth, $maxHeight / $originalHeight);
+            
+            // Se a imagem já é menor que o máximo, não redimensionar
+            if ($ratio >= 1) {
+                $newWidth = $originalWidth;
+                $newHeight = $originalHeight;
+            } else {
+                $newWidth = intval($originalWidth * $ratio);
+                $newHeight = intval($originalHeight * $ratio);
+            }
+            
+            // Criar nova imagem redimensionada
+            $newImage = imagecreatetruecolor($newWidth, $newHeight);
+            
+            // Preservar transparência para PNGs
+            imagealphablending($newImage, false);
+            imagesavealpha($newImage, true);
+            
+            // Redimensionar
+            imagecopyresampled(
+                $newImage, $image,
+                0, 0, 0, 0,
+                $newWidth, $newHeight,
+                $originalWidth, $originalHeight
+            );
+            
+            // Salvar com compressão
+            imagejpeg($newImage, $path, 85); // 85% de qualidade
+            
+            // Liberar memória
+            imagedestroy($image);
+            imagedestroy($newImage);
+            
+            // Retornar caminho relativo
+            return $folder . '/' . $filename;
+            
+        } catch (\Exception $e) {
+            \Log::error('Erro ao comprimir imagem', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Em caso de erro, fazer upload normal
+            return $file->store($folder, 'public');
+        }
     }
 }

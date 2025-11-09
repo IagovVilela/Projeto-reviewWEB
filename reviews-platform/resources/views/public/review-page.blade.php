@@ -335,8 +335,16 @@
             <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">{{ __('public.how_was_experience') }}</h2>
                 
+                <!-- Promotional Text -->
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-xl p-4 mb-6 text-center">
+                    <p class="text-lg font-semibold text-gray-800">
+                        <i class="fas fa-gift text-yellow-500 mr-2"></i>
+                        Avalie e concorra a um prêmio de <span class="text-yellow-600">R$ 10.000!</span>
+                    </p>
+                </div>
+                
                 <!-- Rating Stars -->
-                <div class="text-center mb-6 sm:mb-8">
+                <div class="text-center mb-6 sm:mb-8" id="starsSection">
                     <div class="flex justify-center space-x-1 sm:space-x-2 mb-4" id="ratingStars">
                         <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="1"></i>
                         <i class="fas fa-star text-3xl sm:text-4xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors touch-target" data-rating="2"></i>
@@ -353,8 +361,8 @@
                     <input type="hidden" id="rating" name="rating" value="">
                     <input type="hidden" id="company_token" name="company_token" value="{{ $token }}">
                     
-                    <!-- WhatsApp -->
-                    <div>
+                    <!-- WhatsApp (Hidden initially) -->
+                    <div id="whatsappSection" style="display: none;">
                         <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fab fa-whatsapp text-green-500 mr-2"></i>
                             {{ __('public.whatsapp_number') }}
@@ -369,10 +377,15 @@
                             maxlength="15"
                         >
                         <p class="text-xs text-gray-500 mt-1">{{ __('public.whatsapp_hint') }}</p>
+                        
+                        <!-- Confirmation Message -->
+                        <p id="confirmMessage" class="text-sm text-gray-600 mt-3 text-center">
+                            Confirme seu WhatsApp e clique em enviar
+                        </p>
                     </div>
                     
-                    <!-- Comment -->
-                    <div>
+                    <!-- Comment (Hidden initially, shown for negative reviews) -->
+                    <div id="commentSection" style="display: none;">
                         <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-comment text-blue-500 mr-2"></i>
                             {{ __('public.comment_optional') }}
@@ -380,21 +393,22 @@
                         <textarea 
                             id="comment" 
                             name="comment"
-                            rows="3"
+                            rows="4"
                             class="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input resize-none"
-                            placeholder="{{ __('public.comment_placeholder') }}"
+                            placeholder="Conte-nos mais sobre sua experiência..."
+                            required
                         ></textarea>
                     </div>
                     
-                    <!-- Submit Button -->
+                    <!-- Submit Button (Hidden initially) -->
                     <button 
                         type="submit" 
                         id="submitBtn"
-                        disabled
-                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 btn-mobile touch-target"
+                        style="display: none;"
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 btn-mobile touch-target hover:shadow-lg"
                     >
                         <i class="fas fa-paper-plane mr-2"></i>
-                        {{ __('public.send_review') }}
+                        <span id="submitBtnText">Enviar</span>
                     </button>
                 </form>
                 
@@ -420,78 +434,7 @@
             </div>
         </div>
         
-        <!-- Company Info -->
-        <div class="bg-white rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-100 fade-in">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">{{ __('public.about_us') }}</h2>
-            
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">{{ __('public.contact_information') }}</h3>
-                    <div class="space-y-3 contact-info-mobile">
-                        @if(isset($company->contact_number) && $company->contact_number)
-                        <div class="flex items-center">
-                            <i class="fas fa-phone text-blue-500 mr-3"></i>
-                            <span class="text-gray-600 text-sm sm:text-base">{{ $company->contact_number }}</span>
-                        </div>
-                        @endif
-                        
-                        @if(isset($company->business_website) && $company->business_website)
-                        <div class="flex items-center">
-                            <i class="fas fa-globe text-blue-500 mr-3"></i>
-                            <a href="{{ $company->business_website }}" target="_blank" class="text-blue-600 hover:underline text-sm sm:text-base break-all">
-                                {{ $company->business_website }}
-                            </a>
-                        </div>
-                        @endif
-                        
-                        @if(isset($company->business_address) && $company->business_address)
-                        <div class="flex items-start">
-                            @if($company->google_maps_url)
-                                <a href="{{ $company->google_maps_url }}" 
-                                   target="_blank" 
-                                   class="flex items-start hover:opacity-80 transition-opacity duration-200"
-                                   title="Ver no Google Maps">
-                                    <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
-                                </a>
-                                <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
-                            @else
-                                <a href="https://www.google.com/maps/search/{{ urlencode($company->business_address) }}" 
-                                   target="_blank" 
-                                   class="flex items-start hover:opacity-80 transition-opacity duration-200"
-                                   title="Ver no Google Maps">
-                                    <i class="fas fa-map-marker-alt text-blue-500 mr-3 mt-1 cursor-pointer hover:text-blue-600 transition-colors duration-200 map-icon-clickable"></i>
-                                </a>
-                                <span class="text-gray-600 text-sm sm:text-base">{{ $company->business_address }}</span>
-                            @endif
-                        </div>
-                        @endif
-                    </div>
-                </div>
-                
-                <!-- Google Reviews -->
-                <div>
-                    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">{{ __('public.our_reviews') }}</h3>
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6">
-                            <div class="flex items-center mb-3 sm:mb-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-sm">
-                                    <img src="/assets/images/platforms/google.png" alt="Google" class="w-6 h-6 sm:w-8 sm:h-8 object-contain" loading="lazy">
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800 text-sm sm:text-base">{{ __('public.google_my_business') }}</h4>
-                                    <p class="text-xs sm:text-sm text-gray-600">{{ __('public.verified_reviews') }}</p>
-                                </div>
-                            </div>
-                            <a href="{{ $company->google_business_url ?? '#' }}" 
-                               target="_blank"
-                               class="text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base">
-                                {{ __('public.view_all_reviews') }} →
-                            </a>
-                        </div>
-                </div>
-            </div>
-        </div>
+        <!-- About Us Section Removed - Dados apenas para uso interno -->
         
         <!-- Footer -->
         <div class="text-center mt-8 sm:mt-16 fade-in">
@@ -642,8 +585,28 @@
                 this.selectedRating = rating;
                 this.highlightStars(rating);
                 this.updateRatingText(rating);
-                this.updateSubmitButton();
                 document.getElementById('rating').value = rating;
+                
+                // Novo comportamento: mostrar WhatsApp e botão após selecionar estrelas
+                const whatsappSection = document.getElementById('whatsappSection');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                // Mostrar campo WhatsApp e botão
+                whatsappSection.style.display = 'block';
+                submitBtn.style.display = 'block';
+                
+                // Determinar se é positiva ou negativa
+                const isPositive = rating >= this.positiveThreshold;
+                
+                if (!isPositive) {
+                    // Para avaliações negativas (1-3 estrelas)
+                    // Esconder estrelas e WhatsApp, mostrar apenas campo de comentário
+                    document.getElementById('confirmMessage').style.display = 'none';
+                    document.getElementById('submitBtnText').textContent = 'Enviar Avaliação';
+                } else {
+                    // Para avaliações positivas (4-5 estrelas)
+                    document.getElementById('submitBtnText').textContent = 'Enviar';
+                }
             }
             
             highlightStars(rating) {
@@ -683,6 +646,23 @@
             }
             
             async submitReview() {
+                const whatsapp = document.getElementById('whatsapp').value;
+                const isPositive = this.selectedRating >= this.positiveThreshold;
+                
+                // Se for avaliação negativa e ainda não mostrou campo de comentário
+                const commentSection = document.getElementById('commentSection');
+                if (!isPositive && commentSection.style.display === 'none') {
+                    // Ocultar estrelas e WhatsApp
+                    document.getElementById('starsSection').style.display = 'none';
+                    document.getElementById('whatsappSection').style.display = 'none';
+                    
+                    // Mostrar apenas campo de comentário
+                    commentSection.style.display = 'block';
+                    document.getElementById('submitBtnText').textContent = 'Enviar Avaliação';
+                    return; // Não enviar ainda, aguardar comentário
+                }
+                
+                // Enviar avaliação
                 const formData = new FormData(document.getElementById('reviewForm'));
                 
                 // Show loading state
@@ -702,7 +682,13 @@
                     if (result.success) {
                         // Store current review ID for private feedback
                         window.currentReviewId = result.data.review_id;
-                        this.showSuccessState(result);
+                        
+                        // Para avaliações positivas, redirecionar diretamente
+                        if (isPositive && result.data.google_business_url) {
+                            window.location.href = result.data.google_business_url;
+                        } else {
+                            this.showSuccessState(result);
+                        }
                     } else {
                         this.showErrorState(result.message);
                     }
